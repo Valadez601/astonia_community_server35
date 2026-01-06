@@ -18,3 +18,4 @@ version
 *.ilog
 *.elog
 *.log
+vers.c

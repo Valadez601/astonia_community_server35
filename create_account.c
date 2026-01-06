@@ -31,6 +31,7 @@
 #include "depot.h"
 #include "club.h"
 #include "badip.h"
+#include "argon.h"
 
 static MYSQL mysql;
 static char mysqlpass[80];
@@ -81,6 +82,7 @@ void exit_database(void) {
 
 int main(int argc, char **args) {
     char buf[256];
+    char hash[256];
 
     if (argc != 3) {
         fprintf(stderr, "Usage: %s <email> <password>\n", args[0]);
@@ -92,11 +94,16 @@ int main(int argc, char **args) {
         return 3;
     }
 
+    if (argon2id_hash_password(hash, sizeof(hash), args[2], NULL)) {
+        fprintf(stderr, "Argon failed. Call Mom!\n");
+        return 2;
+    }
+
     sprintf(buf, "insert account (email,password,creation_time) values ("
                  "'%s'," // email
                  "'%s'," // password
                  "%d)", // creation time
-            args[1], args[2], (int)time(NULL));
+            args[1], hash, (int)time(NULL));
 
     if (mysql_query(&mysql, buf)) {
         fprintf(stderr, "Failed to create account: Error: %s (%d)", mysql_error(&mysql), mysql_errno(&mysql));

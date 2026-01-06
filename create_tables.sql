@@ -162,7 +162,7 @@ CREATE TABLE storage (
 CREATE TABLE account (
   ID int(11) NOT NULL auto_increment,
   email varchar(80) not null,
-  password varchar(80) not null,
+  password varchar(255) not null,
   creation_time int(11) default '0',
   banned enum('Y','N','I') default 'I',
   karma int not null default '0',
