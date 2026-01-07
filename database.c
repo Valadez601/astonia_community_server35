@@ -458,7 +458,7 @@ void save_depot(int sID, struct depot_ppd *dat, int cID, int leaving) {
 int save_char(int cn, int area) {
     unsigned char cdata[sizeof(struct character)], idata[sizeof(struct item) * (INVENTORYSIZE + 1)], ddata[MAXDRDATA];
     unsigned char cbuf[sizeof(cdata) * 2], ibuf[sizeof(idata) * 2], dbuf[sizeof(ddata) * 2];
-    unsigned char buf[sizeof(cbuf) + sizeof(ibuf) + sizeof(dbuf) + 80];
+    unsigned char buf[sizeof(cbuf) + sizeof(ibuf) + sizeof(dbuf) + 256];
     int n, in, ilen = 0, dlen = 0, xilen = 0, xdlen = 0;
     struct item *itmp;
     struct data *dat;
@@ -752,7 +752,7 @@ int dlog(int cn, int in, char *format, ...) {
 }
 int add_note(int sID, int kind, char *desc, ...) {
     va_list args;
-    char buf[1024], buf2[1024];
+    char buf[1024], buf2[1024+256];
 
     va_start(args, desc);
     vsnprintf(buf, 900, desc, args);
@@ -2615,7 +2615,7 @@ void db_read_clanlog(char *query) {
 void db_exterminate(char *who, char *desc) {
     MYSQL_RES *result;
     MYSQL_ROW row;
-    char buf[256], buf2[256];
+    char buf[512], buf2[256];
     int sID, masterID, victimID, nrc, nrb;
 
     masterID = atoi(who);
@@ -3080,7 +3080,7 @@ void schedule_clubs(void) {
 
 // clans
 
-extern struct clan *clan;
+extern struct clan clan[];
 
 //create table clubs ( ID int primary key, name char(80) not null, paid int not null, money int not null, serial int not null );
 
@@ -3113,6 +3113,7 @@ void db_read_clans(void) {
             continue;
         }
 
+        printf("clan=%p, ID=%d\n",clan,ID);
         bzero(&clan[ID], sizeof(struct clan));
         if (row[1]) {
             memcpy(&clan[ID], row[1], sizeof(struct clan));
@@ -3164,7 +3165,7 @@ void db_read_clan_membercount(int cnr) {
 
 void db_update_clan(int cnr) {
     char dbuf[65536];
-    char qbuf[65536];
+    char qbuf[65536+256];
 
     if (cnr < 1 || cnr >= MAXCLAN) return;
 
@@ -3250,7 +3251,7 @@ int isbanned_iplog(int ip) {
 void db_punish(char *who, char *desc) {
     MYSQL_RES *result;
     MYSQL_ROW row;
-    char buf[256], buf2[256];
+    char buf[512], buf2[256];
     int karma, bantime, sID, masterID, victimID;
 
     masterID = atoi(who);
@@ -3366,7 +3367,7 @@ void db_punish(char *who, char *desc) {
 void db_warn(char *who, char *desc) {
     MYSQL_RES *result;
     MYSQL_ROW row;
-    char buf[256], buf2[256];
+    char buf[512], buf2[256];
     int sID, masterID, victimID;
 
     masterID = atoi(who);

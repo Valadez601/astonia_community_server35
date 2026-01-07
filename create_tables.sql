@@ -240,8 +240,8 @@ CREATE TABLE summary (
 
 
 CREATE TABLE clans (
-  ID int(11) NOT NULL default '0',
-  data blob not null,
+  ID int(11) NOT NULL,
+  data blob default null,
   PRIMARY KEY  (ID)
 );
 

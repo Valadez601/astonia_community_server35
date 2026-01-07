@@ -81,7 +81,7 @@ void exit_database(void) {
 }
 
 int main(int argc, char **args) {
-    char buf[256];
+    char buf[512];
     char hash[256];
 
     if (argc != 3) {

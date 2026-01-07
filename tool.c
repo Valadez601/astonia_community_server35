@@ -1000,7 +1000,7 @@ int get_army_rank_int(int cn) {
 char *get_army_rank_string(int cn) {
     struct rank_ppd *ppd;
 
-    if (!(ppd = set_data(cn, DRD_RANK_PPD, sizeof(struct rank_ppd)))) return 0; // OOPS
+    if (!(ppd = set_data(cn, DRD_RANK_PPD, sizeof(struct rank_ppd)))) return ""; // OOPS
 
     return rankname[min(24, ppd->army_rank)];
 }
