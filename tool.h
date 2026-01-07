@@ -2,7 +2,6 @@
  * Part of Astonia Server 3.5 (c) Daniel Brockhaus. Please read license.txt.
  */
 
-
 // defining NULL ourselves saves including stdio
 #ifndef NULL
 #define NULL (void *)0

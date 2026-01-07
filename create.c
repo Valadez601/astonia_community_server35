@@ -119,7 +119,7 @@ static char *load_zone(char *name) {
 static int load_zones(char *dirname, char *mask, int (*process)(char *)) {
     DIR *dir;
     struct dirent *de;
-    char name[NAME_MAX+256], *ptr;
+    char name[NAME_MAX + 256], *ptr;
 
     dir = opendir(dirname);
     if (!dir) return 1;

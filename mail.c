@@ -73,4 +73,3 @@ int sendmail(char *to, char *subject, char *body, char *from, int do_copy) {
 }
 
 #pragma GCC diagnostic pop
-

@@ -752,7 +752,7 @@ int dlog(int cn, int in, char *format, ...) {
 }
 int add_note(int sID, int kind, char *desc, ...) {
     va_list args;
-    char buf[1024], buf2[1024+256];
+    char buf[1024], buf2[1024 + 256];
 
     va_start(args, desc);
     vsnprintf(buf, 900, desc, args);
@@ -3164,7 +3164,7 @@ void db_read_clan_membercount(int cnr) {
 
 void db_update_clan(int cnr) {
     char dbuf[65536];
-    char qbuf[65536+256];
+    char qbuf[65536 + 256];
 
     if (cnr < 1 || cnr >= MAXCLAN) return;
 
@@ -3227,7 +3227,7 @@ int isbanned_iplog(int ip) {
     int flag = 0;
     char buf[256];
 
-    sprintf(buf, "select ID from ipban where ip=%u limit 1", ip & 0xffffff00);
+    sprintf(buf, "select ID from ipban where ip=%u and valid>%d limit 1", ip & 0xffffff00, time_now);
 
     if (mysql_query(&mysql, buf)) {
         elog("<p>select: Error: %s (%d)", mysql_error(&mysql), mysql_errno(&mysql));

@@ -175,8 +175,6 @@ void io_loop(void) {
     int panic = 0;
     unsigned long long prof;
 
-    if (ticker % 8) return;
-
     while (panic++ < 100) {
         FD_ZERO(&in_fd);
         FD_ZERO(&out_fd);
