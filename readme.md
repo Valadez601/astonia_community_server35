@@ -44,3 +44,14 @@ something like:
 ```
 bin\moac -uIshtar -p<password> -d<server IP or name> -v35
 ```
+
+Finally, you should setup your firewall. This isn't technically part of this
+guide, but it might be... wise.
+```
+sudo ufw allow 22/tcp
+sudo ufw deny 5554/tcp
+sudo ufw deny 3306/tcp
+sudo ufw allow 8080:8090/tcp
+sudo ufw allow 27584:27777/tcp
+sudo ufw enable
+```
