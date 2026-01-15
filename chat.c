@@ -79,7 +79,7 @@ struct cname cname[] = {
     {"God", "Ye God's private channel"} //32
 };
 
-#define CHATSERVER "chat.astonia.com"
+#define CHATSERVER "localhost"
 #define INBUFSIZE 1024
 
 static int connected = 0,
