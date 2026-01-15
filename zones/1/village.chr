@@ -59,39 +59,19 @@ WN_ARMS=sleeves2q2
 
 item=staff1q1
 item=staff1q2
-item=staff2q1
-item=staff2q2
-item=staff3q1
-item=staff3q2
-item=staff4q1
-item=staff4q2
+item=staff1q3
 
 item=dagger1q1
 item=dagger1q2
-item=dagger2q1
-item=dagger2q2
-item=dagger3q1
-item=dagger3q2
-item=dagger4q1
-item=dagger4q2
+item=dagger1q3
 
 item=sword1q1
 item=sword1q2
-item=sword2q1
-item=sword2q2
-item=sword3q1
-item=sword3q2
-item=sword4q1
-item=sword4q2
+item=sword1q3
 
 item=twohanded1q1
 item=twohanded1q2
-item=twohanded2q1
-item=twohanded2q2
-item=twohanded3q1
-item=twohanded3q2
-item=twohanded4q1
-item=twohanded4q2
+item=twohanded1q3
 
 arg="dir=3;"
 
@@ -160,39 +140,19 @@ WN_ARMS=sleeves2q2
 
 item=armor1q1
 item=armor1q2
-item=armor2q1
-item=armor2q2
-item=armor3q1
-item=armor3q2
-item=armor4q1
-item=armor4q2
+item=armor1q3
 
 item=helmet1q1
 item=helmet1q2
-item=helmet2q1
-item=helmet2q2
-item=helmet3q1
-item=helmet3q2
-item=helmet4q1
-item=helmet4q2
+item=helmet1q3
 
 item=sleeves1q1
 item=sleeves1q2
-item=sleeves2q1
-item=sleeves2q2
-item=sleeves3q1
-item=sleeves3q2
-item=sleeves4q1
-item=sleeves4q2
+item=sleeves1q3
 
 item=leggings1q1
 item=leggings1q2
-item=leggings2q1
-item=leggings2q2
-item=leggings3q1
-item=leggings3q2
-item=leggings4q1
-item=leggings4q2
+item=leggings1q3
 
 arg="dir=3;"
 
