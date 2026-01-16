@@ -1655,8 +1655,6 @@ void shutdown_warn(void) {
     if (min != shutdown_last) {
         if (min > 0) sprintf(buf, "#03The server will go down in %d minute%s. Expected downtime: %d minutes.", min, min > 1 ? "s" : "", shutdown_down);
         else sprintf(buf, "#03The server will go down NOW. Expected downtime: %d minutes.", shutdown_down);
-        //if (min>0) sprintf(buf,"\260c3The server will go down in %d minute%s. Expected downtime: %d minutes.",min,min>1?"s":"",shutdown_down);
-        //else sprintf(buf,"\260c3The server will go down NOW. Expected downtime: %d minutes.",shutdown_down);
         for (n = 1; n < MAXCHARS; n++) {
             if (!(ch[n].flags & CF_PLAYER)) continue;
             log_char(n, LOG_SYSTEM, 0, "%s", buf);

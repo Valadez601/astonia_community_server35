@@ -372,6 +372,7 @@ static void read_login(int nr) {
     if (!(ch[cn].flags & CF_AREACHANGE)) {
         show_motd(nr);
         show_clan_message(cn);
+        if (nologin && !shutdown_at) log_player(nr, LOG_SYSTEM, "\260c3Server is in nologin-mode. Use /shutdown 0 to open it for regular players.");
         plrnotes(ch[cn].ID, ch[cn].sID);
     } else ch[cn].flags &= ~CF_AREACHANGE;
 

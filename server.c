@@ -324,9 +324,7 @@ int main(int argc, char *args[]) {
         if (fork()) exit(0);
         for (n = 0; n < 256; n++) close(n);
         setsid();
-#ifndef STAFF
-        if (strcmp(buf, "testbed.intra.net")) nologin = 1;
-#endif
+        nologin = 1;
     }
 
     // ignore the silly pipe errors:
