@@ -2794,3 +2794,18 @@ unsigned int get_player_addr(int nr) {
 
     return player[nr]->addr;
 }
+
+int get_player_version(int nr) {
+    if (!player) return 0;
+    if (!player[nr]) return 0;
+
+    return player[nr]->client_version;
+}
+
+int get_char_version(int cn) {
+    int nr;
+
+    if ((nr = ch[cn].player) && player[nr]) return player[nr]->client_version;
+    else return 0;
+}
+
