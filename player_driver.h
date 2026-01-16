@@ -20,4 +20,3 @@ void player_driver_dig_off(int cn);
 void player_driver_dig_on(int cn);
 
 void tutorial_cmd(int cn, char *cmd);
-

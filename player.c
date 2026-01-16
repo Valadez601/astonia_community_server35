@@ -2808,4 +2808,3 @@ int get_char_version(int cn) {
     if ((nr = ch[cn].player) && player[nr]) return player[nr]->client_version;
     else return 0;
 }
-

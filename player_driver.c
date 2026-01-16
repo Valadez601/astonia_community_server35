@@ -282,7 +282,7 @@ int plr_attack_driver(int cn, int co, int isautoaction) {
 
 #define TF_TIMEOUT (60 * 60)
 
-#define TS_DISABLED (1u<<0)
+#define TS_DISABLED (1u << 0)
 
 struct tutorial_ppd {
     int state;
@@ -331,20 +331,20 @@ void tutorial_cmd(int cn, char *cmd) {
 
     while (isspace(*cmd)) cmd++;
 
-    if (!strncasecmp(cmd,"on",2)) {
-        ppd->state&=~TS_DISABLED;
+    if (!strncasecmp(cmd, "on", 2)) {
+        ppd->state &= ~TS_DISABLED;
         log_char(cn, LOG_SYSTEM, 0, "Tutorial enabled.");
         return;
     }
 
-    if (!strncasecmp(cmd,"off",3)) {
-        ppd->state|=TS_DISABLED;
+    if (!strncasecmp(cmd, "off", 3)) {
+        ppd->state |= TS_DISABLED;
         log_char(cn, LOG_SYSTEM, 0, "Tutorial disabled.");
         return;
     }
 
-    if (!strncasecmp(cmd,"reset",5)) {
-        bzero(ppd,sizeof(struct tutorial_ppd));
+    if (!strncasecmp(cmd, "reset", 5)) {
+        bzero(ppd, sizeof(struct tutorial_ppd));
         log_char(cn, LOG_SYSTEM, 0, "Tutorial reset!");
         return;
     }
@@ -356,9 +356,9 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
     int in, n, tmp, f, ver;
     char *sk = NULL;
 
-    if (ppd->state&TS_DISABLED) return;
+    if (ppd->state & TS_DISABLED) return;
 
-    ver=get_player_version(nr);
+    ver = get_player_version(nr);
 
     // newbie greeting
     if (realtime - ch[cn].login_time < 20 && ppd->welcome_cnt < 3 && realtime - ppd->welcome_last > TF_TIMEOUT) {
@@ -371,7 +371,7 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
     }
 
     // how to find first quest giver
-    if (ch[cn].level < 3 && (ppd2 = set_data(cn, DRD_AREA1_PPD, sizeof(struct area1_ppd))) && !ppd2->lydia_state && ppd->lydia_cnt < 10 && realtime - ppd->lydia_last > 60) {
+    if (areaID == 1 && ch[cn].level < 3 && (ppd2 = set_data(cn, DRD_AREA1_PPD, sizeof(struct area1_ppd))) && !ppd2->lydia_state && ppd->lydia_cnt < 10 && realtime - ppd->lydia_last > 60) {
         char *dirtext1, *dirtext2;
         int dir;
         static char *dir1[9] = {"unknown", "south-east", "south", "south-west", "west", "north-west", "north", "north-east", "east"};
@@ -389,7 +389,7 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
     }
 
     // how to find quest
-    if (ch[cn].level < 4 && (ppd2 = set_data(cn, DRD_AREA1_PPD, sizeof(struct area1_ppd))) && ppd2->lydia_state == 4 && realtime - ppd2->lydia_seen_timer > 60 && get_section(ch[cn].x, ch[cn].y) != 45 && !has_item(cn, IID_AREA1_WOODPOTION) && ppd->thief_cnt < 10 && realtime - ppd->thief_last > 60) {
+    if (areaID == 1 && ch[cn].level < 4 && (ppd2 = set_data(cn, DRD_AREA1_PPD, sizeof(struct area1_ppd))) && ppd2->lydia_state == 4 && realtime - ppd2->lydia_seen_timer > 60 && get_section(ch[cn].x, ch[cn].y) != 45 && !has_item(cn, IID_AREA1_WOODPOTION) && ppd->thief_cnt < 10 && realtime - ppd->thief_last > 60) {
         char *dirtext1, *dirtext2;
         int dir;
         static char *dir1[9] = {"unknown", "south-east", "south", "south-west", "west", "north-west", "north", "north-east", "east"};
@@ -411,7 +411,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
         // player has torch equipped?
         if ((in = ch[cn].item[WN_LHAND]) && it[in].driver == IDR_TORCH) {
             if (realtime - ppd->torch_last > TF_TIMEOUT) {
-                log_char(cn, LOG_SYSTEM, 0, "#It's pretty dark, isn't it? Why don't you light the torch you're holding by left-clicking on it?$You can use any item by left-clicking on it.");
+                if (!ver) log_char(cn, LOG_SYSTEM, 0, "#It's pretty dark, isn't it? Why don't you light the torch you're holding by left-clicking on it?$You can use any item by left-clicking on it.");
+                else log_char(cn, LOG_SYSTEM, 0, "#It's pretty dark, isn't it? Why don't you light the torch you're holding by right-clicking on it?$You can use any item by right-clicking on it.");
                 player_special(cn, 0, 5, 0);
                 ppd->torch_cnt++;
                 ppd->torch_last = realtime;
@@ -425,7 +426,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
             }
             if (n < INVENTORYSIZE) {
                 if (realtime - ppd->torch_last > TF_TIMEOUT) {
-                    log_char(cn, LOG_SYSTEM, 0, "#It's pretty dark, isn't it? Why don't you equip that torch you have in your inventory and light it?$To equip the torch, hold down SHIFT, left-click on it, then left-click on the torch slot.$To light the torch, left-click on it without holding SHIFT.$If you have trouble finding a torch in your inventory, right-click on the items there to read their descriptions.");
+                    if (!ver) log_char(cn, LOG_SYSTEM, 0, "#It's pretty dark, isn't it? Why don't you equip that torch you have in your inventory and light it?$To equip the torch, hold down SHIFT, left-click on it, then left-click on the torch slot.$To light the torch, left-click on it without holding SHIFT.$If you have trouble finding a torch in your inventory, right-click on the items there to read their descriptions.");
+                    else log_char(cn, LOG_SYSTEM, 0, "#It's pretty dark, isn't it? Why don't you equip that torch you have in your inventory and light it?$To equip the torch, left-click on it, then left-click on the torch slot.$To light the torch, right-click on it.$If you have trouble finding a torch in your inventory, hover your mouse over the individual items to read their descriptions.");
                     player_special(cn, 0, 17, 0);
                     ppd->torch_cnt++;
                     ppd->torch_last = realtime;
@@ -440,7 +442,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
                     it[in].carried = cn;
                     ch[cn].flags |= CF_ITEMS;
 
-                    log_char(cn, LOG_SYSTEM, 0, "#There you are, standing in the darkness, and no torch around. Well, I've just created one for you. It's there. Left-click on it to light it. But don't expect me to do this all the time.");
+                    if (!ver) log_char(cn, LOG_SYSTEM, 0, "#There you are, standing in the darkness, and no torch around. Well, I've just created one for you. It's there. Left-click on it to light it. But don't expect me to do this all the time.");
+                    else log_char(cn, LOG_SYSTEM, 0, "#There you are, standing in the darkness, and no torch around. Well, I've just created one for you. It's there. Right-click on it to light it. But don't expect me to do this all the time.");
                     player_special(cn, 0, 5, 0);
                     ppd->torch_cnt++;
                     ppd->torch_last = realtime;
@@ -453,7 +456,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
                     it[in].carried = cn;
                     ch[cn].flags |= CF_ITEMS;
 
-                    log_char(cn, LOG_SYSTEM, 0, "#There you are, standing in the darkness, and no torch around. Well, I've just created one for you. It there, on your mouse cursor. Hold down SHIFT and left-click on the torch slot. Then left-click on it without holding SHIFT to light it. But don't expect me to do this all the time.");
+                    if (!ver) log_char(cn, LOG_SYSTEM, 0, "#There you are, standing in the darkness, and no torch around. Well, I've just created one for you. It there, on your mouse cursor. Hold down SHIFT and left-click on the torch slot. Then left-click on it without holding SHIFT to light it. But don't expect me to do this all the time.");
+                    else log_char(cn, LOG_SYSTEM, 0, "#There you are, standing in the darkness, and no torch around. Well, I've just created one for you. It there, on your mouse cursor. Left-click on the torch slot. Then right-click the torch to light it. But don't expect me to do this all the time.");
                     player_special(cn, 0, 5, 0);
                     ppd->torch_cnt++;
                     ppd->torch_last = realtime;
@@ -468,7 +472,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
     tmp = get_section(ch[cn].x, ch[cn].y);
     if (ch[cn].flags & CF_WARRIOR) {
         if (areaID == 1 && (tmp < 55 || tmp > 57) && ppd->battle_cnt < 3 && realtime - ppd->battle_last > TF_TIMEOUT) {
-            if (ch[cn].flags & CF_WARRIOR) log_char(cn, LOG_SYSTEM, 0, "#You've left the village, and things might get dangerous. If you get into a fight, it might be wise to use the skill 'Warcry'. Hold down ALT and press 8 to do that.");
+            if (!ver) log_char(cn, LOG_SYSTEM, 0, "#You've left the village, and things might get dangerous. If you get into a fight, it might be wise to use the skill 'Warcry'. Hold down ALT and press 8 to do that.");
+            else log_char(cn, LOG_SYSTEM, 0, "#You've left the village, and things might get dangerous. If you get into a fight, it might be wise to use the skill 'Warcry'. Press 'i' or click on the 'shouting man' icon to do that.");
             ppd->battle_cnt++;
             ppd->battle_last = realtime;
             ppd->timer = realtime;
@@ -476,14 +481,16 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
         }
     } else {
         if (areaID == 1 && (tmp < 55 || tmp > 57) && ppd->battle_cnt < 3 && realtime - ppd->battle_last > TF_TIMEOUT && (may_add_spell(cn, IDR_BLESS) || ch[cn].lifeshield < POWERSCALE * 5)) {
-            log_char(cn, LOG_SYSTEM, 0, "#You've left the village, and things might get dangerous. You'd better prepare yourself by casting the spells 'Bless' and 'Magic Shield'. Hold down ALT and press first 6 and then 5.");
+            if (!ver) log_char(cn, LOG_SYSTEM, 0, "#You've left the village, and things might get dangerous. You'd better prepare yourself by casting the spells 'Bless' and 'Magic Shield'. Hold down ALT and press first 6 and then 5.");
+            else log_char(cn, LOG_SYSTEM, 0, "#You've left the village, and things might get dangerous. You'd better prepare yourself by casting the spells 'Bless' and 'Magic Shield'. Press 'u' and 't' or click on the icons.");
             ppd->battle_cnt++;
             ppd->battle_last = realtime;
             ppd->timer = realtime;
             return;
         }
         if (areaID == 1 && (tmp < 55 || tmp > 57) && ppd->battle2_cnt < 3 && ticker - ppd->battle2_last > TF_TIMEOUT) {
-            log_char(cn, LOG_SYSTEM, 0, "#When you get into a fight, remember that mages rely on spells. A good spell in close ranged combat is 'Lightning Flash' - use ALT-3 to cast it.");
+            if (!ver) log_char(cn, LOG_SYSTEM, 0, "#When you get into a fight, remember that mages rely on spells. A good spell in close ranged combat is 'Lightning Flash' - use ALT-3 to cast it.");
+            else log_char(cn, LOG_SYSTEM, 0, "#When you get into a fight, remember that mages rely on spells. A good spell in close ranged combat is 'Lightning Flash' - use 'e' to cast it, or click on its icon.");
             ppd->battle2_cnt++;
             ppd->battle2_last = realtime;
             ppd->timer = realtime;
@@ -502,7 +509,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
 
     // shopping tips, triggered by merchant window
     if (ch[cn].merchant && ppd->shop_cnt < 3 && realtime - ppd->shop_last > TF_TIMEOUT) {
-        log_char(cn, LOG_SYSTEM, 0, "#You've opened a shop window. The items you can buy are shown in the bottom left window. To buy anything, left-click on it. To find out what these items are, right-click on them.$Note that you'll sell any of your items if you left-click on them now.");
+        if (!ver) log_char(cn, LOG_SYSTEM, 0, "#You've opened a shop window. The items you can buy are shown in the bottom left window. To buy anything, left-click on it. To find out what these items are, right-click on them.$Note that you'll sell any of your items if you left-click on them now.");
+        else log_char(cn, LOG_SYSTEM, 0, "#You've opened a shop window. The items you can buy are shown in the bottom left window. To buy anything, left-click on it. Hover over the items to find out what they are.$Note that you'll sell any of your items if you left-click on them now.");
         ppd->shop_cnt++;
         ppd->shop_last = realtime;
         ppd->timer = realtime;
@@ -514,7 +522,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
         ((ch[cn].x >= 74 && ch[cn].x <= 78 && ch[cn].y >= 148 && ch[cn].y <= 152) ||
          (ch[cn].x >= 196 && ch[cn].x <= 201 && ch[cn].y >= 160 && ch[cn].y <= 166)) &&
         ppd->chest_cnt < 3 && realtime - ppd->chest_last > TF_TIMEOUT) {
-        log_char(cn, LOG_SYSTEM, 0, "#Do you see that chest? To search it, hold down SHIFT and left-click on it. If you do not have the right key, go through the building again and be sure to search all bodies.");
+        if (!ver) log_char(cn, LOG_SYSTEM, 0, "#Do you see that chest? To search it, hold down SHIFT and left-click on it. If you do not have the right key, go through the building again and be sure to search all bodies.");
+        else log_char(cn, LOG_SYSTEM, 0, "#Do you see that chest? To search it, hold down 'g' and move your mouse around until it lights up. Then let go of 'g'. If you do not have the right key, go through the building again and be sure to search all bodies.");
         ppd->chest_cnt++;
         ppd->chest_last = realtime;
         ppd->timer = realtime;
@@ -525,7 +534,8 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
     if (ch[cn].citem) {
         if (!ppd->citem_start) ppd->citem_start = realtime;
         if (realtime - ppd->citem_start > 30 && ppd->citem_cnt < 3 && realtime - ppd->citem_last > TF_TIMEOUT) {
-            log_char(cn, LOG_SYSTEM, 0, "#You've been carrying that item on your mouse cursor for quite a while now. Hold down SHIFT and click on the ground to drop it, or hold down SHIFT and click in your inventory to keep it.");
+            if (!ver) log_char(cn, LOG_SYSTEM, 0, "#You've been carrying that item on your mouse cursor for quite a while now. Hold down SHIFT and click on the ground to drop it, or hold down SHIFT and click in your inventory to keep it.");
+            else log_char(cn, LOG_SYSTEM, 0, "#You've been carrying that item on your mouse cursor for quite a while now. Hold down 'g' and point your mouse where you want to drop it, then let go of 'g'. Or left-click in your inventory to keep it.");
             ppd->citem_cnt++;
             ppd->citem_last = realtime;
             ppd->timer = realtime;
@@ -583,21 +593,22 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
             }
             if (n < INVENTORYSIZE) {
                 f = (n - 30) % 4 + 1;
-                log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$You should always watch your Hitpoints by looking at the small red line below your character's name. If they get too low, use a healing potion, either by left-clicking on it, or by pressing F%d.$Note that the F-key is assigned to first usable item in that column in your inventory, not to the item itself.", f);
+                if (!ver) log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$You should always watch your Hitpoints by looking at the small red line below your character's name. If they get too low, use a healing potion, either by left-clicking on it, or by pressing F%d.$Note that the F-key is assigned to the first usable item in that column in your inventory, not to the item itself.", f);
+                else log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$You should always watch your Hitpoints by keeping an eye on the red bar in the top left. If they get too low, use a healing potion, either by left-clicking on it, or by pressing F%d.$Note that the F-key is assigned to the first usable item in that column in your inventory, not to the item itself.", f);
                 ppd->potion_cnt++;
                 ppd->potion_last = realtime;
                 ppd->timer = realtime;
                 return;
             }
         }
-        if (ppd->shift_cnt < 3 && realtime - ppd->shift_last > TF_TIMEOUT) {
+        if (!ver && ppd->shift_cnt < 3 && realtime - ppd->shift_last > TF_TIMEOUT) {
             log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$As a general rule, anything that deals with items requires you to hold down SHIFT. But there is one exception: To use an item you have in your inventory or equipment field, you left-click on it without holding SHIFT.");
             ppd->shift_cnt++;
             ppd->shift_last = realtime;
             ppd->timer = realtime;
             return;
         }
-        if (ppd->ctrl_cnt < 3 && realtime - ppd->ctrl_last > TF_TIMEOUT) {
+        if (!ver && ppd->ctrl_cnt < 3 && realtime - ppd->ctrl_last > TF_TIMEOUT) {
             log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$Anything that deals with characters requires you to hold down CTRL. To look at another character, hold down CTRL and right-click on that character. To attack him instead, hold down CTRL and left-click.");
             ppd->ctrl_cnt++;
             ppd->ctrl_last = realtime;
@@ -605,14 +616,16 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
             return;
         }
         if (ppd->left_cnt < 3 && realtime - ppd->left_last > TF_TIMEOUT) {
-            log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$Clicking the left mouse button always initiates an action, while right-clicking merely looks at the item or character.");
+            if (!ver) log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$Clicking the left mouse button always initiates an action, while right-clicking merely looks at the item or character.");
+            else log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$Clicking the left mouse button on an item in your inventory takes it. Right-clicking uses it. Hold an item on your mouse cursor and click on a second item in your inventory to use one with the other.");
             ppd->left_cnt++;
             ppd->left_last = realtime;
             ppd->timer = realtime;
             return;
         }
         if (ppd->chat_cnt < 3 && realtime - ppd->chat_last > TF_TIMEOUT) {
-            log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$To talk with those you see on your screen, just type what you want to say and press RETURN. Some things you hear contain words in blue letters. You can click on those to use these texts as an answer.");
+            if (!ver) log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$To talk with those you see on your screen, just type what you want to say and press RETURN. Some things you hear contain words in blue letters. You can click on those to use these texts as an answer.");
+            else log_char(cn, LOG_SYSTEM, 0, "#Todays Hint:$$To talk with those you see on your screen, press RETURN, then type what you want to say and press RETURN again. Some things you hear contain words in blue letters. You can click on those to use these texts as an answer.");
             ppd->chat_cnt++;
             ppd->chat_last = realtime;
             ppd->timer = realtime;
@@ -846,13 +859,13 @@ void player_driver(int cn, int ret, int last_action) {
 
         if (msg->type == NT_NPC && msg->dat1 == NTID_TUTORIAL) {
             //say(cn,"got dat2=%d, dat=%s, diff1=%d, cnt=%d, diff2=%d",msg->dat2,ch[msg->dat3].name,realtime-ppd->timer,ppd->give_cnt,realtime-ppd->give_last);
-            if (!(ppd->state&TS_DISABLED) && msg->dat2 == 0 && msg->dat3 == cn && realtime - ppd->timer > 10 && ppd->give_cnt < 3 && realtime - ppd->give_last > TF_TIMEOUT && has_item(cn, IID_AREA1_WOODPOTION)) {
+            if (!(ppd->state & TS_DISABLED) && msg->dat2 == 0 && msg->dat3 == cn && realtime - ppd->timer > 10 && ppd->give_cnt < 3 && realtime - ppd->give_last > TF_TIMEOUT && has_item(cn, IID_AREA1_WOODPOTION)) {
                 log_char(cn, LOG_SYSTEM, 0, "#Now would be a good time to hand Lydia the potion you found. Hold down SHIFT and left-click on the potion. Then hold down CTRL (and release shift) and left-click on Lydia.");
                 ppd->give_cnt++;
                 ppd->give_last = realtime;
                 ppd->timer = realtime;
             }
-            if (!(ppd->state&TS_DISABLED) && msg->dat2 == 1 && msg->dat3 == cn && realtime - ppd->timer > 10 && ppd->give_cnt < 3 && realtime - ppd->give_last > TF_TIMEOUT && has_item(cn, IID_AREA1_SKELSKULL)) {
+            if (!(ppd->state & TS_DISABLED) && msg->dat2 == 1 && msg->dat3 == cn && realtime - ppd->timer > 10 && ppd->give_cnt < 3 && realtime - ppd->give_last > TF_TIMEOUT && has_item(cn, IID_AREA1_SKELSKULL)) {
                 log_char(cn, LOG_SYSTEM, 0, "#Now would be a good time to hand Gwendylon the skull you found. Hold down SHIFT and left-click on the skull. Then hold down CTRL (and release shift) and left-click on Gwendylon.");
                 ppd->give_cnt++;
                 ppd->give_last = realtime;
@@ -861,7 +874,7 @@ void player_driver(int cn, int ret, int last_action) {
             //if (msg->dat2==2525 && msg->dat3==cn) { bzero(ppd,sizeof(*ppd)); ppd->state=4; } // !!!!!!!!!!!!
         }
 
-        if (!(ppd->state&TS_DISABLED) && msg->type == NT_DEAD && msg->dat2 == cn && realtime - ppd->timer > 10 && ppd->grave_cnt < 3 && realtime - ppd->grave_last > TF_TIMEOUT) {
+        if (!(ppd->state & TS_DISABLED) && msg->type == NT_DEAD && msg->dat2 == cn && realtime - ppd->timer > 10 && ppd->grave_cnt < 3 && realtime - ppd->grave_last > TF_TIMEOUT) {
             co = msg->dat1;
             log_char(cn, LOG_SYSTEM, 0, "#Now that you've killed the %s, it would be wise to search %s body. Hold down SHIFT and left click on the body. You'll see all the things you find in the bottom left window.$To take any of the items, left-click on them.", ch[co].name, hisname(co));
             ppd->grave_cnt++;

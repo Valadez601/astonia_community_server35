@@ -157,4 +157,3 @@ unsigned int get_player_addr(int nr);
 void sendquestlog(int cn, int nr);
 int get_player_version(int nr);
 int get_char_version(int cn);
-

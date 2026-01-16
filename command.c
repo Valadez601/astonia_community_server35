@@ -2361,7 +2361,7 @@ int command(int cn, char *ptr) // 1=ok, 0=repeat
     }
 
     if ((len = cmdcmp(ptr, "hints", 3))) {
-        tutorial_cmd(cn, ptr+len);
+        tutorial_cmd(cn, ptr + len);
         return 1;
     }
 
