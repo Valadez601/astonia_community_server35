@@ -646,7 +646,6 @@ static int update_treasure(void) {
         if (clan[cnr].treasure.cost_per_week != cost) {
             clan[cnr].treasure.cost_per_week = cost;
             this_clan_changed[cnr] = 1;
-            //xlog("clan %d, cost per week changed",cnr);
         }
 
         diff = realtime - clan[cnr].treasure.payed_till;
@@ -656,7 +655,6 @@ static int update_treasure(void) {
             clan[cnr].treasure.debt += n;
             clan[cnr].treasure.payed_till += step * n;
             this_clan_changed[cnr] = 1;
-            //xlog("clan %d, deducted rent",cnr);
         }
         if (clan[cnr].treasure.debt >= 1000 && clan[cnr].treasure.jewels > 0) {
             n = clan[cnr].treasure.debt / 1000;

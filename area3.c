@@ -148,7 +148,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -1252,9 +1251,6 @@ void sir_jones_driver(int cn, int ret, int lastact) {
             // get current status with player
             ppd = set_data(co, DRD_AREA3_PPD, sizeof(struct area3_ppd));
 
-            //say(cn,"state=%d, bonus=%d",ppd->crypt_state,ppd->crypt_bonus);
-            //ppd->crypt_state=10;
-
             if (ppd) {
                 switch (ppd->crypt_state) {
                 case 0:
@@ -1463,8 +1459,6 @@ void carlos_driver(int cn, int ret, int lastact) {
             // get current status with player
             ppd = set_data(co, DRD_STAFFER_PPD, sizeof(struct staffer_ppd));
 
-            //say(cn,"state=%d",ppd->carlos_state);
-
             if (ppd) {
                 switch (ppd->carlos_state) {
                 case 0:
@@ -1632,7 +1626,6 @@ void lampghost_driver(int cn, int ret, int lastact) {
 
         if (msg->type == NT_CREATE) {
             fight_driver_set_dist(cn, 80, 0, 80);
-            //sprintf(ch[cn].name,"%d/%d",cn,dat->nr);
         }
 
         standard_message_driver(cn, msg, 1, 0);

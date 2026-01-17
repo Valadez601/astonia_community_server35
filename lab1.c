@@ -95,8 +95,6 @@ int use_and_attack_driver(int cn, int in, int spec, int *co) {
         return 0;
     }
 
-    //if (!char_see_item(cn,in)) { error=ERR_NOT_VISIBLE; return 0; }
-
     dx = it[in].x - ch[cn].x;
     dy = it[in].y - ch[cn].y;
 
@@ -172,7 +170,7 @@ void scan_gnometorches(int cn, struct labgnome_driver_data *dat) {
     for (y = sy; y < ey && dat->numtorch < MAX_GNOMETORCH; y++) {
         for (x = sx; x < ex && dat->numtorch < MAX_GNOMETORCH; x++) {
             m = x + y * MAXMAP;
-            if (map[m].it && it[map[m].it].driver == IDR_LABTORCH && los_can_see(cn, ch[cn].x, ch[cn].y, x, y, 15)) { //&& char_see_item(cn,map[m].it)*/) {
+            if (map[m].it && it[map[m].it].driver == IDR_LABTORCH && los_can_see(cn, ch[cn].x, ch[cn].y, x, y, 15)) {
                 if (pathfinder(ch[cn].x, ch[cn].y, x, y, 1, scan_gnometorch_check_target, 0) == -1) continue;
                 dat->torch[dat->numtorch++] = map[m].it;
             }

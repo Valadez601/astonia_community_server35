@@ -602,28 +602,23 @@ const char *Sirname(int cn) {
 
 void remove_spell(int cn, int in, int pos, int cserial, int iserial) {
     int old_speed;
-    //xlog("remove spell: %d %d %d %d %d",cn,in,pos,cserial,iserial);
 
     // char alive and the right one?
     if (!(ch[cn].flags) || ch[cn].serial != cserial) {
-        //xlog("char gone or wrong serial");
         return;
     }
 
     // item existant and the right one?
     if (!(it[in].flags) || it[in].serial != iserial) {
-        //xlog("item gone or wrong serial");
         return;
     }
 
     // item where we expect it to be?
     if (ch[cn].item[pos] != in) {
-        //xlog("item not found");
         return;
     }
 
     if (ticker < *(signed long *)(it[in].drdata)) {
-        //xlog("did not remove spell that lasts longer than expected");
         return;
     }
 
@@ -641,37 +636,26 @@ void remove_spell(int cn, int in, int pos, int cserial, int iserial) {
         real_dur = speed2(old_speed, ch[cn].speed_mode, ch[cn].duration);
         new_dur = speed(ch[cn].value[0][V_SPEED], ch[cn].speed_mode, real_dur);
 
-        //say(cn,"old_dur=%d, real_dur=%d, new_dur=%d",old_dur,real_dur,new_dur);
-        //say(cn,"dur=%d, step=%d",ch[cn].duration,ch[cn].step);
-
         ch[cn].duration = new_dur;
         ch[cn].step = ch[cn].step * new_dur / old_dur;
-
-        //say(cn,"dur=%d, step=%d",ch[cn].duration,ch[cn].step);
     }
-
-    //xlog("removed");
 }
 
 void heal_tick(int cn, int in, int pos, int cserial, int iserial) {
     int val;
-    //xlog("remove spell: %d %d %d %d %d",cn,in,pos,cserial,iserial);
 
     // char alive and the right one?
     if (!(ch[cn].flags) || ch[cn].serial != cserial) {
-        //xlog("char gone or wrong serial");
         return;
     }
 
     // item existant and the right one?
     if (!(it[in].flags) || it[in].serial != iserial) {
-        //xlog("heal tick: item gone or wrong serial");
         return;
     }
 
     // item where we expect it to be?
     if (ch[cn].item[pos] != in) {
-        //xlog("item not found");
         return;
     }
 
@@ -1251,7 +1235,7 @@ void set_item_requirements_sub(int in) {
     }
 
     lvl += sum - high;
-    it[in].min_level = lvl; //max(it[in].min_level,lvl);
+    it[in].min_level = lvl;
 }
 
 int level2maxitem(int level) {
@@ -1311,7 +1295,6 @@ int find_item_type(int in) {
         if (special_item[n].mod_index[2] != -1) need++;
 
         if (!dead && cnt == need) {
-            //xlog("found item, it's a %s (cnt=%d, need=%d).",special_item[n].name,cnt,need);
             return n;
         }
     }
@@ -1413,8 +1396,6 @@ int create_special_item(int strength, int potionprob, int maxchance) {
     if (!in) return 0;
 
     // strength
-    //if (strength==1) ;
-    //else strength=lowhi_random(strength);
     strength = 1; // !! fixme someday !!
     str_desc = item_strength_text(strength);
 
@@ -1823,8 +1804,6 @@ int give_char_item(int cn, int in) {
     }
     it[in].carried = cn;
     ch[cn].flags |= CF_ITEMS;
-
-    //if (ch[cn].flags&CF_PLAYER) dlog(cn,in,"was given %s from NPC",it[in].name);
     return 1;
 }
 
@@ -1875,11 +1854,6 @@ void tabunga(int cn, int co, char *ptr) {
         say(cn, "Offensive Value: %d, WV: %.2f", ch[cn].value[0][V_OFFENSE], ch[cn].value[0][V_WEAPON] / 20.0);
         say(cn, "Defensive Value: %d, AV: %.2f", ch[cn].value[0][V_DEFENSE], ch[cn].value[0][V_ARMOR] / 20.0);
         say(cn, "Speed          : %d", ch[cn].value[0][V_SPEED]);
-        //say(cn,"Mod Immunity: %d",ch[cn].value[0][V_IMMUNITY]+tactics2immune(ch[cn].value[0][V_TACTICS]+14));
-        //say(cn,"War Immunity: %d",ch[cn].value[0][V_IMMUNITY]+ch[cn].value[0][V_TACTICS]/10);
-        //say(cn,"Flash Power: %d",ch[cn].value[0][V_FLASH]+tactics2spell(ch[cn].value[0][V_TACTICS]));
-        //say(cn,"x=%d, y=%d, speedmode=%d",ch[cn].restx,ch[cn].resty,ch[cn].speed_mode);
-        //say(cn,"undead=%s, alive=%s",(ch[cn].flags&CF_UNDEAD) ? "yes" : "no",(ch[cn].flags&CF_ALIVE) ? "yes" : "no");
     }
 }
 

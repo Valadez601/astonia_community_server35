@@ -50,7 +50,6 @@ static int (*dr_check_target)(int) = NULL;
 static int normal_check_target(int m) {
     if (map[m].flags & MF_MOVEBLOCK) return 0;
     if (map[m].flags & MF_DOOR) return 1;
-    //if (map[m].ch && (ch[map[m].ch].flags&(CF_PLAYER|CF_PLAYERLIKE)) && ch[map[m].ch].action==AC_IDLE) return 1;
     if (map[m].flags & MF_TMOVEBLOCK) return 0;
 
     return 1;
@@ -138,9 +137,6 @@ int add_node(int x, int y, int dir, int ccost) {
 
     return 1;
 }
-
-//#define dr_check_target(m)	(!(map[m].flags&(MF_MOVEBLOCK|MF_TMOVEBLOCK)))
-//#define dr_check_target(m)	(!((*(unsigned char*)(&map[m].flags))&((unsigned char)(MF_MOVEBLOCK|MF_TMOVEBLOCK))))
 
 static void add_suc(struct node *node) {
     if (!node->dir) {
@@ -257,7 +253,6 @@ int pathfinder(int fx, int fy, int tx, int ty, int mindist, int (*check_target)(
 
     // are we there already?
     if (abs(fx - tx) + abs(fy - ty) == mindist) return -1;
-    //if (fx==tx && fy==ty && mindist==0) return -1;
 
     tx1 = tx;
     ty1 = ty;

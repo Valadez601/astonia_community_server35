@@ -333,11 +333,6 @@ int main(int argc, char *args[]) {
     // ignore sighup - just to be safe
     signal(SIGHUP, SIG_IGN);
 
-    /*signal(SIGSEGV,sig_crash);
-	signal(SIGFPE,sig_crash);
-	signal(SIGBUS,sig_crash);
-	signal(SIGSTKFLT,sig_crash);*/
-
     // shutdown gracefully if possible:
     signal(SIGQUIT, sig_leave);
     signal(SIGINT, sig_leave);
@@ -494,8 +489,6 @@ int main(int argc, char *args[]) {
 }
 
 // ****** profiler ********
-
-//#define BIGPROF
 
 #ifdef BIGPROF
 #define MAXDEPTH 10
@@ -663,46 +656,6 @@ int profcomp(const void *va, const void *vb) {
 }
 #endif
 
-/*void xcheck(void)
-{
-	int co,n,ser,in,cn;
-	int storage[MAXCHARS];
-
-	for (cn=1; cn<2048; cn++) {
-                if (!ch[cn].flags) continue;
-
-                if (!strcmp(ch[cn].name,"Demon")) {
-			int in,n,ser;
-	
-			for (in=1; in<16384; in++) {
-				if (it[in].driver!=30) continue;
-				
-				for (n=0; n<3; n++) {
-					co=*(unsigned short*)(it[in].drdata+4+n*4);
-					ser=*(unsigned short*)(it[in].drdata+6+n*4);
-					if (co==cn && ser==ch[cn].serial) break;
-
-					if (cn==co) printf("co=%d, ser=%d (%d,%d)\n",co,ser,cn,ch[cn].serial);
-				}
-				if (co==cn && ser==ch[cn].serial) break;
-			}
-			if (co!=cn || ser!=ch[cn].serial) {
-				printf("%d: %d,%d: %d; I'm lost!\n",cn,ch[cn].x,ch[cn].y,ch[cn].serial);
-			}
-		} else printf("%d: %s\n",cn,ch[cn].name);
-	}
-
-#if 0				
-	for (n=0; n<MAXCHARS; n++) {
-		if (!(storage[n]=alloc_char())) break;
-	}
-	xlog("%d free chars",n);
-	for (n--; n>=0; n--) {
-		free_char(storage[n]);
-	}
-#endif
-}*/
-
 void show_prof(void) {
     int n, m;
     double proz;
@@ -745,7 +698,6 @@ void show_prof(void) {
     bzero(prof, sizeof(prof));
     maxprof = 0;
 #endif
-    //xcheck();
 
     xlog("serials: char=%d, item=%d", sercn, serin);
 }

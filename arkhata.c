@@ -188,7 +188,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -1017,7 +1016,6 @@ void gladiator_driver(int cn, int ret, int lastact) {
 
     if (spell_self_driver(cn)) return;
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 
@@ -1102,7 +1100,6 @@ void bridgeguard_driver(int cn, int ret, int lastact) {
         dat->misc = ticker + TICKS * 60 * 60;
     }
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 
@@ -2147,7 +2144,6 @@ void judge_driver(int cn, int ret, int lastact) {
                     dat->last_talk = 0;
                     ppd->judge_state = 4;
                 }
-                //if (ppd && ppd->judge_state>=7 && ppd->judge_state<=9) { dat->last_talk=0; ppd->judge_state=7; }
                 break;
             }
             if (didsay) {
@@ -2288,7 +2284,6 @@ void fortressguard_driver(int cn, int ret, int lastact) {
             if (ch[cn].item[30] && (ch[cn].flags & CF_NOBODY)) {
                 ch[cn].flags &= ~(CF_NOBODY);
                 ch[cn].flags |= CF_ITEMDEATH;
-                //xlog("transformed item %s",it[ch[cn].item[30]].name);
             }
             break;
 
@@ -2421,7 +2416,6 @@ void fortressguard_driver(int cn, int ret, int lastact) {
 
             if (dat->notsecure) {
                 if (move_driver(cn, ch[cn].tmpx, ch[cn].tmpy, dat->mindist)) return;
-                //say(cn,"move failed, %d, target=%d,%d",pathnodes(),ch[cn].tmpx,ch[cn].tmpy);
             } else {
                 if (ticker - dat->lastfight > TICKS * 10) {
                     if (secure_move_driver(cn, ch[cn].tmpx, ch[cn].tmpy, dat->dir, ret, lastact)) return;
@@ -2450,7 +2444,6 @@ void fortressguard_driver(int cn, int ret, int lastact) {
     // help friend by blessing him. all checks already done in message loop
     if (friend && do_bless(cn, friend)) return;
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 
@@ -3623,7 +3616,6 @@ void kidnappee_driver(int cn, int ret, int lastact) {
             switch ((didsay = analyse_text_driver(cn, msg->dat1, (char *)msg->dat2, co))) {
             case 2:
                 ppd = set_data(co, DRD_ARKHATA_PPD, sizeof(struct arkhata_ppd));
-                //if (ppd && ppd->kid_state>0 && ppd->kid_state<=6) { dat->last_talk=0; ppd->kid_state=1; }
                 break;
             }
             if (didsay) {

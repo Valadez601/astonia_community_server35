@@ -104,8 +104,6 @@ void add_char_sector(int cn) {
     if (co) ch[co].sec_prev = cn;
 
     char_sector[m] = cn;
-
-    //xlog("added %d (%s) to sector %d",cn,ch[cn].name,m);
 }
 
 void del_char_sector(int cn) {
@@ -122,8 +120,6 @@ void del_char_sector(int cn) {
     }
 
     if (next) ch[next].sec_prev = prev;
-
-    //xlog("removed %d (%s) from sector %d",cn,ch[cn].name,m);
 }
 
 int getfirst_char_sector(int x, int y) {
@@ -270,7 +266,6 @@ void init_sound_sector(void) {
         for (x = 0; x < MAXMAP; x++) {
             if (!sound_sector[x + y * MAXMAP]) {
                 if (fill_shout_sector(x, y, nr)) {
-                    //xlog("shout sector %d at %d,%d",nr,x,y);
                     nr++;
                 }
             }
@@ -285,7 +280,6 @@ void init_sound_sector(void) {
         for (x = 0; x < MAXMAP; x++) {
             if (!sound_sector[x + y * MAXMAP]) {
                 if (fill_sound_sector(x, y, nr)) {
-                    //xlog("sector %d at %d,%d",nr,x,y);
                     nr++;
                 }
             }
@@ -300,8 +294,6 @@ void init_sound_sector(void) {
 
     for (n = 0; n < MAXDOOR; n++) {
         if (door[n].nr1 == 0 && door[n].nr2 == 0) continue;
-
-        //xlog("door %d: %d,%d connecting %d with %d",n,door[n].x,door[n].y,door[n].nr1,door[n].nr2);
 
         nr = door[n].nr1;
         to = door[n].nr2;

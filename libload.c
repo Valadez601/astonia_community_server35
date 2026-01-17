@@ -50,7 +50,6 @@ static int load_lib(struct lib *lib) {
         elog("Error loading library %s, not present.", lib->name);
         if (lib->handle) {
             dlclose(lib->handle);
-            //bzero(lib,sizeof(*lib));
             lib->handle = NULL;
             lib->time = 0;
             lib->driver = NULL;
@@ -65,7 +64,6 @@ static int load_lib(struct lib *lib) {
         lib->handle = dlopen(lib->name, RTLD_NOW);
         if (!lib->handle) {
             elog("Error loading library %s (%s).", lib->name, dlerror());
-            //bzero(lib,sizeof(*lib));
             lib->handle = NULL;
             lib->time = 0;
             lib->driver = NULL;
@@ -76,7 +74,6 @@ static int load_lib(struct lib *lib) {
         if (!lib->driver) {
             dlclose(lib->handle);
             elog("Error resolving symbol driver in library %s.", lib->name);
-            //bzero(lib,sizeof(*lib));
             lib->handle = NULL;
             lib->time = 0;
             lib->driver = NULL;
@@ -171,8 +168,6 @@ int char_driver(int nr, int type, int cn, int ret, int last_action) {
 
     if ((n = fast_chdrv[nr]) && libs[n].used && load_lib(libs + n) && (val = libs[n].driver(type, nr, cn, ret, last_action))) return val;
 
-    //xlog("Fast lookup failed for character driver %d.",nr);
-
     for (n = 1; n < MAXLIB; n++)
         if (libs[n].used && load_lib(libs + n) && (val = libs[n].driver(type, nr, cn, ret, last_action))) break;
 
@@ -259,8 +254,6 @@ int item_driver(int nr, int in, int cn) {
     }
 
     if ((n = fast_itdrv[nr]) && libs[n].used && load_lib(libs + n) && (tmp = libs[n].driver(CDT_ITEM, nr, in, cn, 0))) return tmp;
-
-    //xlog("Fast lookup failed for item driver %d.",nr);
 
     for (n = 1; n < MAXLIB; n++)
         if (libs[n].used && load_lib(libs + n) && (tmp = libs[n].driver(CDT_ITEM, nr, in, cn, 0))) break;

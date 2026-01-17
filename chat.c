@@ -102,7 +102,7 @@ static int connect_chat(void) {
 
     addr.sin_family = AF_INET;
     addr.sin_port = htons(5554);
-    addr.sin_addr.s_addr = *(unsigned long *)(*he->h_addr_list); //htonl((195<<24)+(50<<16)+(130<<8)+3);
+    addr.sin_addr.s_addr = *(unsigned long *)(*he->h_addr_list);
 
     ioctl(sock, FIONBIO, (u_long *)&one); // non-blocking mode
 
@@ -316,7 +316,6 @@ void tick_chat(void) {
         }
 
         if (state == 0) {
-            //xlog("trying chat connect");
             connect_chat();
             state = 1;
             delay = 10;
@@ -357,9 +356,7 @@ void tick_chat(void) {
                     state = 0;
                 } else {
                     connected = 1;
-                    //xlog("chat connect success");
                 }
-                //xlog("sol=%d, sollen=%d",sol,sollen);
             }
         }
     }

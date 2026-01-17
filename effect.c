@@ -567,7 +567,6 @@ static void add_strike(int xc, int yc, int x, int y, int str, int cn, int cc, in
             dam -= min(dam / 4, (dam * max(0, ch[cn].value[1][V_DEMON] - ch[cc].value[1][V_DEMON])) / 10);
         }
         hurt(cn, dam, cc, 8, 60, 85);
-        //say(cn,"hit by strike, str=%d (%d), cnt=%d, damage=%d (%.2f), tick=%d",str,immunity_reduction(cc,cn,str),cnt,dam,(double)dam/1000*TICKS*2,ticker);
     }
 }
 
@@ -767,15 +766,7 @@ static void ef_flash(int fn) {
         free_effect(fn);
         return;
     }
-
-    /*while (ef[fn].field_cnt) {
-		ef[fn].field_cnt--;
-		remove_effect_map(fn,ef[fn].m[ef[fn].field_cnt]);
-	}
-
-	set_effect_map(fn,ch[cn].x,ch[cn].y);*/
     check_strike_near(fn, ch[cn].x, ch[cn].y);
-    //set_sector(ch[cn].x,ch[cn].y);
 }
 
 int create_flash(int cn, int str, int duration) {
@@ -860,7 +851,6 @@ static void ef_earthrain(int fn) {
     for (n = 0; n < ef[fn].field_cnt; n++) {
         m = ef[fn].m[n];
         if (!(cn = map[m].ch)) continue;
-        //if (!can_attack(ef[fn].cn,cn)) continue;
         if (!(ch[cn].flags & CF_PLAYER)) continue;
 
         dam = edemon_reduction(cn, ef[fn].strength) * 150;
@@ -868,7 +858,7 @@ static void ef_earthrain(int fn) {
 
         per = 50 - min(50, edemon_reduction(cn, ef[fn].strength));
 
-        if (!RANDOM(10)) hurt(cn, dam, 0, 8, per, per + 25); //hurt(cn,dam,ef[fn].cn,8,per,per+25);
+        if (!RANDOM(10)) hurt(cn, dam, 0, 8, per, per + 25);
     }
     if (ticker >= ef[fn].stop) {
         remove_effect(fn);
@@ -895,7 +885,7 @@ int create_earthrain(int cn, int x, int y, int strength) {
     if (!n) return 0;
 
     ef[n].light = 10;
-    ef[n].cn = 0; //ef[n].cn=cn;
+    ef[n].cn = 0;
     ef[n].sercn = 0;
     ef[n].field_cnt = 0;
     ef[n].stop = ticker + TICKS * 60;
@@ -1222,10 +1212,6 @@ void create_pulse(int x, int y, int str) {
 
 void tick_effect(void) {
     int n, next;
-    /*static int cnt=0;
-
-	if (++cnt<TICKS) return;
-	cnt=0;*/
 
     for (n = getfirst_effect(); n; n = next) {
 

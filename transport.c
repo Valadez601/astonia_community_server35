@@ -153,7 +153,6 @@ void transport_driver(int in, int cn) {
         }
 
         if (nr < 0 || nr >= ARRAYSIZE(trans)) {
-            //elog("illegal transport nr %d #2",nr);
             log_char(cn, LOG_SYSTEM, 0, "Nothing happens - BUG (%d,#2).", nr);
             return;
         }

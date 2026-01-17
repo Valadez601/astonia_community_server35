@@ -24,7 +24,6 @@ void stats_update(int cn, int onl, int gold) {
         lidx = (lidx + 1) % MAXSTAT;
         bzero(ppd->stats + lidx, sizeof(ppd->stats[0]));
     }
-    //if (idx!=lidx) bzero(ppd->stats+idx,sizeof(ppd->stats[0]));
 
     ppd->last_update = realtime;
 

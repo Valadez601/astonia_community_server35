@@ -268,8 +268,6 @@ void ratling_died(int cn, int co) {
 
     set_treasure(co, ppd);
 
-    //xlog("%d,%d",ppd->treasure_x,ppd->treasure_y);
-
     if (ppd->treasure_x && RANDOM(2)) {
         if (abs(ch[co].x - ppd->treasure_x) > abs(ch[co].y - ppd->treasure_y)) {
             if (ppd->treasure_x > ch[co].x) say(cn, "Arrgh. Not kill us. Is south-east. Go there. Take from grate. And leave.");

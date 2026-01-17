@@ -122,7 +122,6 @@ void palace_guard(int cn, int ret, int lastact) {
             if (ch[cn].item[30] && (ch[cn].flags & CF_NOBODY)) {
                 ch[cn].flags &= ~(CF_NOBODY);
                 ch[cn].flags |= CF_ITEMDEATH;
-                //xlog("transformed item %s",it[ch[cn].item[30]].name);
             }
         }
 
@@ -274,7 +273,6 @@ void palace_guard(int cn, int ret, int lastact) {
         }
     }
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 
@@ -283,7 +281,6 @@ void palace_bomb(int in, int cn) {
 
     if (cn) {
         if (it[in].drdata[0] == 2) {
-            //log_char(cn,LOG_SYSTEM,0,"boom");
 
             fn = create_explosion(8, 50050);
             add_explosion(fn, it[in].x, it[in].y);
@@ -502,7 +499,6 @@ void palace_islena(int cn, int ret, int lastact) {
             co = msg->dat1;
 
             if ((ch[co].flags & CF_PLAYER) && char_see_char(cn, co) && (ppd = set_data(co, DRD_ISLENA_PPD, sizeof(struct islena_ppd)))) {
-                //ppd->islena_state=0;
 
                 if (ppd->islena_state >= 10) {
                     fight_driver_add_enemy(cn, co, 1, 1);
@@ -599,7 +595,6 @@ void palace_islena(int cn, int ret, int lastact) {
     fight_driver_update(cn);
 
     if (fight_driver_attack_visible(cn, 0)) {
-        //say(cn,"action=%d, washit=%d",ch[cn].action,washit);
         if (washit && ch[cn].action == AC_IDLE) {
             if (ticker - dat->last_power_msg > TICKS * 15) {
                 say(cn, "I call on thee, the Power of none! Save me from this treacherous attack!");

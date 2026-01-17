@@ -34,8 +34,6 @@ static inline void map_add_light(int x, int y, int v) {
     map[m].light += v;
 
     if (map[m].light < 0) {
-        //elog("Error in light computations at %d,%d (%d%+d=%d).",x,y,map[m].light-v,v,map[m].light);
-        //btrace("map_add_light");
         map[m].light = 0;
     }
 }
@@ -48,8 +46,6 @@ static void add_light(int xc, int yc, int stren, int cn) {
     unsigned long long prof;
 
     if (!stren) return;
-
-    //if (cn) xlog("light: %03d, %03d: %+04d (%d, %s)",xc,yc,stren,cn,cn ? ch[cn].name : "");
 
     prof = prof_start(16);
 
@@ -65,7 +61,6 @@ static void add_light(int xc, int yc, int stren, int cn) {
     if (stren > 100) stren = 100;
 
     dist = sqrt(stren - 1) + 1;
-    //xlog("stren=%d, dist=%d",stren,dist);
 
     // trigger recomputation of LOS
     los_can_see(cn, xc, yc, xc, yc, dist);
@@ -78,7 +73,6 @@ static void add_light(int xc, int yc, int stren, int cn) {
     for (y = ys; y < ye; y++) {
         for (x = xs; x < xe; x++) {
             if (x == xc && y == yc) continue;
-            //if ((xc-x)*(xc-x)+(yc-y)*(yc-y)>(LIGHTDIST*LIGHTDIST+1)) continue;
 
             if (fast_los_light(cn, x, y, dist) != 0) {
                 d = stren / ((xc - x) * (xc - x) + (yc - y) * (yc - y) + 1);
@@ -191,7 +185,6 @@ void compute_shadow(int xc, int yc) {
     for (y = ys; y < ye; y++) {
         m = y * MAXMAP + xs;
         for (x = xs; x < xe; x++, m++) {
-            //if (xc==x && yc==y) continue;
 
             if (map[m].fsprite >= 20276 && map[m].fsprite <= 20282) {
                 shadow += 7 - abs(xc - x) - abs(yc - y);
@@ -238,7 +231,6 @@ int compute_dlight(int xc, int yc) {
             if ((xc - x) * (xc - x) + (yc - y) * (yc - y) > (LIGHTDIST * LIGHTDIST + 1)) continue;
             if (!(map[m].flags & MF_INDOORS)) {
                 if ((v = los_can_see(0, xc, yc, x, y, LIGHTDIST)) == 0) continue;
-                //d=256/(v*(abs(xc-x)+abs(yc-y)));
                 d = 256 / ((xc - x) * (xc - x) + (yc - y) * (yc - y) + 1);
                 if (d > best) best = d;
                 if (best > 63) break;
@@ -295,8 +287,6 @@ int reset_dlight(int xc, int yc) {
             }
         }
     }
-
-    //xlog("change=%d",change);
 
     prof_stop(31, prof);
 

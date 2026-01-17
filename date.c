@@ -54,23 +54,11 @@ int moonday = 0; // 0...27
 int realtime = 0; // seconds realtime since beginning of our epoch
 
 extern int dlight_override;
-//float new_system=0.0f;
-//float old_system=1.0f;
 
 void tick_date(void) {
     int t, daytime;
 
     t = (time_now - STARTTIME); // local time starts on 01/01/2001
-
-    /*{
-		int start=1054677600,stop=1062540000;
-		if (time_now>start) {
-			if (time_now<stop) {
-				new_system=(double)(time_now-start)/(double)(stop-start);
-			} else new_system=1.0;
-		} else new_system=0.0;
-		old_system=1.0f-new_system;
-	}*/
 
     realtime = t;
 

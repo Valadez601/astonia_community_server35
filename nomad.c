@@ -151,7 +151,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -830,7 +829,6 @@ void nomad(int cn, int ret, int lastact) {
         if (msg->type == NT_CHAR) {
             co = msg->dat1;
             if ((ch[co].flags & CF_PLAYER) && ticker - dat->lasttalk > TICKS * 5 && char_dist(cn, co) < 12 && char_see_char(cn, co) && (ppd = set_data(co, DRD_NOMAD_PPD, sizeof(struct nomad_ppd)))) {
-                //say(cn,"nr=%d, state=%d",dat->nr,ppd->nomad_state[dat->nr]);
                 switch (dat->nr) {
                 case 1:
                     didsay = nomad_1(cn, co, ppd, dat->nr);
@@ -1022,12 +1020,8 @@ void nomad_dice(int in, int cn) {
 }
 
 void madhermit_driver(int cn, int ret, int lastact) {
-    //struct simple_baddy_driver_data *dat;
     struct msg *msg, *next;
     int co, in;
-
-    //dat=set_data(cn,DRD_SIMPLEBADDYDRIVER,sizeof(struct simple_baddy_driver_data));
-    //if (!dat) return;	// oops...
 
     // loop through our messages
     for (msg = ch[cn].msg; msg; msg = next) {

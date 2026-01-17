@@ -117,8 +117,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
 
     if (!(ch[co].flags & (CF_PLAYER | CF_PLAYERLIKE))) return 0;
 
-    //if (char_dist(cn,co)>16) return 0;
-
     if (!char_see_char(cn, co)) return 0;
 
     while (isalpha(*text)) text++;
@@ -158,7 +156,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -187,7 +184,6 @@ void call_guard(int cn, int co) {
             }
         }
     }
-    //say(cn,"best is %s (%d,%d)",ch[bestcc].name,ch[bestcc].x,ch[bestcc].y);
     if (bestcc) notify_char(bestcc, NT_NPC, NTID_TWOCITY, ch[co].level, ch[cn].x + ch[co].y * MAXMAP);
 }
 
@@ -283,9 +279,6 @@ void guard_driver(int cn, int ret, int lastact) {
         in = ch[cn].item[WN_LHAND] = create_item("torch");
         it[in].carried = cn;
     }
-
-    //if (it[in].drdata[0]) tlight=it[in].mod_value[0];
-    //else tlight=0;
     tlight = ch[cn].value[0][V_LIGHT];
 
     light = check_dlight(ch[cn].x, ch[cn].y);
@@ -295,10 +288,8 @@ void guard_driver(int cn, int ret, int lastact) {
     light = check_light(ch[cn].x, ch[cn].y);
     if (light < 10) on++;
     if (light - tlight > 10) off++;
-
-    //say(cn,"on=%d, off=%d,light=%d, tlight=%d",on,off,light,tlight);
-    if (!it[in].drdata[0] && on == 2) { use_item(cn, in); /* say(cn,"on! (%d)",cn); */ }
-    if (it[in].drdata[0] && off) { use_item(cn, in); /* say(cn,"off! (%d)",cn); */ }
+    if (!it[in].drdata[0] && on == 2) { use_item(cn, in); }
+    if (it[in].drdata[0] && off) { use_item(cn, in); }
 
     if (it[in].drdata[0]) ch[cn].sprite = 317;
     else ch[cn].sprite = 318;
@@ -325,7 +316,6 @@ void guard_driver(int cn, int ret, int lastact) {
                 (!ppd->current_guard || ppd->current_guard == cn || realtime - ppd->current_guard_time > 3) &&
                 char_see_char(cn, co) &&
                 (place = illegal_place(ch[co].x, ch[co].y))) {
-                //say(cn,"%d - %d",illegal_place(ch[co].x,ch[co].y),ppd->citizen_status);
                 if (ppd->legal_status == LS_DEAD) {
                     dat->current_victim = co;
                     dat->victim_timeout = ticker;
@@ -508,7 +498,6 @@ void guard_driver(int cn, int ret, int lastact) {
                         say(cn, "We do not allow strangers to commit any crime here. Leave at once!");
                         ppd->citizen_status = CS_ENEMY;
                     } else say(cn, "Hey %s! Fine for attacking a city guard: 20G! Say \260c4pay\260c0 to pay it!", ch[co].name);
-                    //charlog(cn,"fine for %s (1): 20G",ch[co].name);
                 }
                 ppd->last_attack = realtime;
             }
@@ -524,7 +513,6 @@ void guard_driver(int cn, int ret, int lastact) {
                         say(cn, "Protect the innocent! We do not allow strangers to commit any crime here. Leave at once!");
                         ppd->citizen_status = CS_ENEMY;
                     } else say(cn, "Protect the innocent! Stop at once and \260c4pay\260c0 your fine, %s!", ch[cc].name);
-                    //charlog(cn,"fine for %s (2): 75G",ch[cc].name);
                 }
                 if (ticker - dat->nofight_timer > TICKS * 3) fight_driver_add_enemy(cn, cc, 1, 1);
                 ppd->last_attack = realtime;
@@ -536,7 +524,6 @@ void guard_driver(int cn, int ret, int lastact) {
                 dat->tx = msg->dat3 % MAXMAP;
                 dat->ty = msg->dat3 / MAXMAP;
                 dat->good_tx_try = ticker;
-                //charlog(cn,"got called to %d,%d",dat->tx,dat->ty);
             }
             if (msg->dat1 == NTID_TWOCITY_PICK) {
                 co = msg->dat2;
@@ -556,7 +543,6 @@ void guard_driver(int cn, int ret, int lastact) {
                             say(cn, "Hey! Stop thief! Fine for breaking a lock: 30G.");
                             ppd->last_attack = realtime;
                         }
-                        //charlog(cn,"fine for %s (3): 30G",ch[co].name);
                     }
                 }
             }
@@ -641,7 +627,6 @@ void guard_dead(int cn, int co) {
     ppd->legal_status = LS_FINE;
     ppd->legal_fine += 5000;
     if (ppd->citizen_status == CS_GUEST) ppd->citizen_status = CS_ENEMY;
-    //charlog(cn,"fine for %s (4): 50G",ch[co].name);
 }
 
 struct barkeeper_data {
@@ -1245,7 +1230,6 @@ void burndown(int in, int cn) {
                 map[it[in].x + it[in].y * MAXMAP].fsprite = 0;
                 it[in].mod_index[0] = V_LIGHT;
                 it[in].mod_value[0] = 0;
-                //add_light(it[in].x,it[in].y,-200,0);
                 call_item(it[in].driver, in, 0, ticker + TICKS * 5);
             } else if (it[in].drdata[0] == 0) {
                 it[in].sprite = 21115;
@@ -1273,7 +1257,6 @@ void burndown(int in, int cn) {
     it[in].mod_index[0] = V_LIGHT;
     it[in].mod_value[0] = 200;
     add_item_light(in);
-    //add_light(it[in].x,it[in].y,200,0);
     call_item(it[in].driver, in, 0, ticker + TICKS * 5);
 
     notify_area(ch[cn].x, ch[cn].y, NT_NPC, NTID_TWOCITY_PICK, cn, 0);
@@ -2710,6 +2693,7 @@ void alchemist(int cn, int ret, int lastact) {
     if (dat->last_talk + TICKS * 30 < ticker) {
         if (secure_move_driver(cn, ch[cn].tmpx, ch[cn].tmpy, DX_LEFT, ret, lastact)) return;
     }
+
     do_idle(cn, TICKS);
 }
 

@@ -103,7 +103,6 @@ int look_values(int cn, char *name) {
 
     coID = lookup_name(name, NULL);
     if (coID == 0) {
-        //log_char(cn,LOG_SYSTEM,0,"Please repeat.");
         return 0;
     }
     if (coID == -1) {
@@ -123,7 +122,6 @@ int show_values(int cn, char *name) {
 
     coID = lookup_name(name, NULL);
     if (coID == 0) {
-        //log_char(cn,LOG_SYSTEM,0,"Please repeat.");
         return 0;
     }
     if (coID == -1) {
@@ -184,7 +182,6 @@ int lollipop_cmd(int cn, char *name) {
 
     coID = lookup_name(name, NULL);
     if (coID == 0) {
-        //log_char(cn,LOG_SYSTEM,0,"Please repeat.");
         return 0;
     }
     if (coID == -1) {
@@ -641,7 +638,6 @@ static int cmd_tell(int cn, char *ptr) {
         return 1;
     }
     if (uID == 0) {
-        //log_char(cn,LOG_SYSTEM,0,"Please repeat");
         return 0;
     }
     if (strlen(ptr) < 1) {
@@ -864,32 +860,6 @@ static void cmd_noarch(int cn, char *ptr) {
     ch[co].flags &= ~CF_ARCH;
     update_char(co);
 }
-
-/*static void cmd_questfix(int cn,char *ptr)
-{
-        struct quest *quest;
-	char name[80];
-        int co,n;
-
-	for (n=0; isalpha(*ptr)	&& n<79; name[n++]=*ptr++) ;
-	name[n]=0;
-	
-	while (isspace(*ptr)) ptr++;
-
-        for (co=getfirst_char(); co; co=getnext_char(co)) {
-		if (!strcasecmp(name,ch[co].name)) break;
-	}
-	if (!co) {
-		log_char(cn,LOG_SYSTEM,0,"Sorry, no one by the name %s around.",name);
-		return;
-	}
-
-	if (!(quest=set_data(cn,DRD_QUESTLOG_PPD,sizeof(struct quest)*MAXQUEST))) return;
-	
-	quest[MAXQUEST-1].done=0;
-	questlog_init(co);
-	sendquestlog(cn,ch[cn].player);
-}*/
 
 static void cmd_reset(int cn, char *ptr) {
     char name[80];
@@ -1178,9 +1148,6 @@ void demonspeak(int cn, int nr, char *buf) {
     v4 = val % ARRAYSIZE(syl);
 
     sprintf(buf, "%s%s %s%s%s", syl[v1], syl[v2], lead[nr], syl[v3], syl[v4]);
-
-    //charlog(cn,"%d demonspeak=%s, base=%d, %d %d %d %d, %d",nr,buf,ch[cn].ID,v1,v2,v3,v4,val);
-    //Ishtar (696): 2 demonspeak=shirsli sausgadul, base=6, 0 7 9 5, 677125
 }
 
 void demontest(int cn, char *ptr) {
@@ -1719,7 +1686,6 @@ int command(int cn, char *ptr) // 1=ok, 0=repeat
             ch[cn].clan = nr;
             ch[cn].clan_serial = clan_serial(nr);
             ch[cn].clan_rank = 4;
-            //if (nr) ch[cn].clan_join_date=realtime;
         }
 
         for (n = 1; n < MAXPLAYER; n++)

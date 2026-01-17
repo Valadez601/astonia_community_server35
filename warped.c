@@ -109,8 +109,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
 
     if (!(ch[co].flags & (CF_PLAYER | CF_PLAYERLIKE))) return 0;
 
-    //if (char_dist(cn,co)>16) return 0;
-
     if (!char_see_char(cn, co)) return 0;
 
     while (isalpha(*text)) text++;
@@ -150,7 +148,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -262,8 +259,6 @@ void warpteleport_driver(int in, int cn) {
     }
 
     target = (it[in].drdata[0] - 1) * 5 + (it[in2].drdata[0] - 1);
-
-    //log_char(cn,LOG_SYSTEM,0,"target=%d",target);
     if (teleport_char_driver(cn, tl[target].x, tl[target].y)) {
         ch[cn].citem = 0;
         ch[cn].flags |= CF_ITEMS;
@@ -600,8 +595,6 @@ int warptrialdoor_driver(int in, int cn) {
             }
         }
 
-        //xlog("xs=%d, ys=%d, xe=%d, ye=%d, in=%d, in2=%d",xs,ys,xe,ye,in,in2);
-
         it[in].drdata[2] = xs;
         it[in].drdata[3] = ys;
         it[in].drdata[4] = xe;
@@ -771,7 +764,6 @@ void warpfighter(int cn, int ret, int lastact) {
     if (!ch[co].flags || ch[co].serial != dat->cser || ch[co].x < dat->xs || ch[co].y < dat->ys || ch[co].x > dat->xe || ch[co].y > dat->ye) {
         remove_char(cn);
         destroy_char(cn);
-        //xlog("self-destruct %d %d %d %d %d %d (%d)",!ch[co].flags,ch[co].serial!=dat->cser,ch[co].x<dat->xs,ch[co].y<dat->ys,ch[co].x>dat->xe,ch[co].y>dat->ye,dat->co);
         return;
     }
 
@@ -799,14 +791,6 @@ void warpfighter(int cn, int ret, int lastact) {
             }
         }
     }
-
-    /*if (ch[cn].lifeshield<POWERSCALE*5 && ch[cn].endurance<ch[cn].value[0][V_WARCRY]*POWERSCALE/3 && dat->pot_done<3) {
-		dat->pot_done++;
-		if (ch[cn].level>50 && !RANDOM(4)) {
-			emote(cn,"drinks an endurance potion");
-			ch[cn].endurance=min(ch[cn].value[0][V_ENDURANCE]*POWERSCALE,ch[cn].endurance+32*POWERSCALE);
-		}
-	}*/
 
     if (ch[cn].hp < ch[cn].value[0][V_HP] * POWERSCALE / 2 && dat->pot_done < 5) {
         dat->pot_done++;
@@ -844,7 +828,6 @@ void warpfighter_died(int cn, int co) {
     }
 
     teleport_char_driver(co, dat->tx, dat->ty);
-    //xlog("3 %d %d",dat->tx,dat->ty);
 }
 
 int give_key(int cn, int cnt) {

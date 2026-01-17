@@ -59,7 +59,6 @@ int set_item_map(int in, int x, int y) {
     add_item_light(in);
 
     set_sector(it[in].x, it[in].y);
-    //notify_area(it[in].x,it[in].y,NT_ITEM,in,0,0);
 
     return 1;
 }
@@ -391,35 +390,19 @@ int drop_item_extended(int in, int x, int y, int maxdist) {
     if (set_item_map(in, x, y)) return 1;
 
     for (dx = 1; dx < maxdist; dx++) {
-        //xlog("trying %d,%d",dx,0);
         if (x + dx < MAXMAP - 1 && pathfinder(x, y, x + dx, y, 0, path_ignore_char, 20) != -1 && set_item_map(in, x + dx, y)) return 1;
-
-        //xlog("trying %d,%d",0,dx);
         if (y + dx < MAXMAP - 1 && pathfinder(x, y, x, y + dx, 0, path_ignore_char, 20) != -1 && set_item_map(in, x, y + dx)) return 1;
-
-        //xlog("trying %d,%d",-dx,0);
         if (x - dx > 1 && pathfinder(x, y, x - dx, y, 0, path_ignore_char, 20) != -1 && set_item_map(in, x - dx, y)) return 1;
-
-        //xlog("trying %d,%d",0,-dx);
         if (y - dx > 1 && pathfinder(x, y, x, y - dx, 0, path_ignore_char, 20) != -1 && set_item_map(in, x, y - dx)) return 1;
 
         for (dy = 1; dy <= dx; dy++) {
-            //xlog("trying %d,%d",dx,dy);
             if (x + dx < MAXMAP - 1 && y + dy < MAXMAP - 1 && pathfinder(x, y, x + dx, y + dy, 0, path_ignore_char, 20) != -1 && set_item_map(in, x + dx, y + dy)) return 1;
-            //xlog("trying %d,%d",-dx,dy);
             if (x - dx > 1 && y + dy < MAXMAP - 1 && pathfinder(x, y, x - dx, y + dy, 0, path_ignore_char, 20) != -1 && set_item_map(in, x - dx, y + dy)) return 1;
-            //xlog("trying %d,%d",dx,-dy);
             if (x + dx < MAXMAP - 1 && y - dy > 1 && pathfinder(x, y, x + dx, y - dy, 0, path_ignore_char, 20) != -1 && set_item_map(in, x + dx, y - dy)) return 1;
-            //xlog("trying %d,%d",-dx,-dy);
             if (x - dx > 1 && y - dy > 1 && pathfinder(x, y, x - dx, y - dy, 0, path_ignore_char, 20) != -1 && set_item_map(in, x - dx, y - dy)) return 1;
-
-            //xlog("trying %d,%d",dy,dx);
             if (x + dy < MAXMAP - 1 && y + dx < MAXMAP - 1 && pathfinder(x, y, x + dy, y + dx, 0, path_ignore_char, 20) != -1 && set_item_map(in, x + dy, y + dx)) return 1;
-            //xlog("trying %d,%d",-dy,dx);
             if (x - dy > 1 && y + dx < MAXMAP - 1 && pathfinder(x, y, x - dy, y + dx, 0, path_ignore_char, 20) != -1 && set_item_map(in, x - dy, y + dx)) return 1;
-            //xlog("trying %d,%d",dy,-dx);
             if (x + dy < MAXMAP - 1 && y - dx > 1 && pathfinder(x, y, x + dy, y - dx, 0, path_ignore_char, 20) != -1 && set_item_map(in, x + dy, y - dx)) return 1;
-            //xlog("trying %d,%d",-dy,-dx);
             if (x - dy > 1 && y - dx > 1 && pathfinder(x, y, x - dy, y - dx, 0, path_ignore_char, 20) != -1 && set_item_map(in, x - dy, y - dx)) return 1;
         }
     }

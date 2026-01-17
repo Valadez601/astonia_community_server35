@@ -189,8 +189,6 @@ int say(int cn, char *format, ...) {
 
     if (len == 1020) return 0;
 
-    //if (strchr(buf,'"')) return 0;
-
     if (ch[cn].flags & CF_PLAYER) dlog(cn, 0, "says: \"%s\"", buf);
 
     if (ch[cn].flags & CF_PLAYER) return log_area(ch[cn].x, ch[cn].y, LOG_TALK, cn, SAYDIST, "%s says: \"%s\"", ch[cn].name, buf);

@@ -147,7 +147,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -510,7 +509,7 @@ void clanclerk_driver(int cn, int ret, int lastact) {
         // did we see someone?
         if (msg->type == NT_CHAR) {
 
-            ; //co=msg->dat1;
+            ;
         }
 
         // talk back
@@ -799,9 +798,6 @@ void clanspawn_driver(int in, int cn) {
     value = 10 + it[in].drdata[0] / 10;
     if (realtime >= *(unsigned int *)(it[in].drdata + 36)) mode = 1;
     else mode = 0;
-    /*if (cn) {
-		log_char(cn,LOG_SYSTEM,0,"%.2f min mode=%d",(*(unsigned int*)(it[in].drdata+36)-realtime)/60.0,mode);
-	}*/
 
     if (!cn) { // timer calls
         call_item(IDR_CLANSPAWN, in, 0, ticker + TICKS * 2);
@@ -1091,7 +1087,6 @@ void clandefense_driver(int in, int cn) {
 
     for (n = 0; n < 25; n++) {
         for (co = getfirst_char_sector(it[in].x + offx[n], it[in].y + offy[n]); co; co = ch[co].sec_next) {
-            //if (get_char_clan(co)==cnr) continue;
             if (clan_alliance_self(get_char_clan(co), cnr)) continue;
             if (abs(ch[co].x - it[in].x) > 15 || abs(ch[co].y - it[in].y) > 15) continue;
 
@@ -1205,20 +1200,6 @@ void clanvault_driver(int cn, int ret, int lastact) {
             }
             dat->last_hp = ch[cn].hp;
             break;
-
-            /*case NT_GIVE:
-				co=msg->dat1;
-
-				if ((in=ch[cn].citem)) {	// we still have it
-					if (it[in].driver==1 && clan_alliance_self(ch[cn].clan,get_char_clan(co))) {
-						str=min(it[in].drdata[1]*POWERSCALE/10,ch[cn].value[0][V_HP]*POWERSCALE-ch[cn].hp);
-						ch[cn].hp+=str;
-						emote(cn,"Uses a potion for %.2f%%",100.0/POWERSCALE/100.0*str);
-					}
-					destroy_item(in);
-					ch[cn].citem=0;
-				}
-				break;*/
         }
         remove_message(cn, msg);
     }

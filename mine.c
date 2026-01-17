@@ -157,9 +157,7 @@ void minewall(int in, int cn) {
                 if (!in2) elog("silver not found");
 
                 amount = RANDOM(it[in].drdata[0] * 2 + 1) + it[in].drdata[0];
-                //xlog("amount=%d",amount);
                 if (ch[cn].prof[P_MINER]) amount += amount * ch[cn].prof[P_MINER] / 10;
-                //xlog("amount=%d",amount);
                 if (!amount && in2) {
                     destroy_item(in2);
                 }
@@ -403,18 +401,15 @@ void minedoor(int in, int cn) {
             if (it[in2].driver != IDR_MINEDOOR) continue;
 
             nr = it[in2].drdata[0];
-            //xlog("found something at %d,%d",it[in2].x,it[in2].y);
 
             if (!it[in2].drdata[1]) { // source door
                 if (it[in2].drdata[3]) { // usable source door
                     if (sdoor[nr]) xlog("confused: two source doors");
                     sdoor[nr] = in2;
-                    //xlog("source %d is at %d,%d",it[in2].drdata[0],it[in2].x,it[in2].y);
                 }
             } else { // target door
                 if (tdoor[nr]) xlog("confused: two target doors");
                 tdoor[nr] = in2;
-                //xlog("target %d is at %d,%d",it[in2].drdata[0],it[in2].x,it[in2].y);
             }
         }
         door_init = 1;
@@ -436,7 +431,6 @@ void minedoor(int in, int cn) {
             !(map[it[in].x + it[in].y * MAXMAP + 1 - MAXMAP].flags & (MF_SIGHTBLOCK | MF_TSIGHTBLOCK)) ||
             !(map[it[in].x + it[in].y * MAXMAP - 1 + MAXMAP].flags & (MF_SIGHTBLOCK | MF_TSIGHTBLOCK)) ||
             !(map[it[in].x + it[in].y * MAXMAP - 1 - MAXMAP].flags & (MF_SIGHTBLOCK | MF_TSIGHTBLOCK))) {
-            //xlog("dug out 1");
             return;
         }
         if ((in2 = sdoor[nr])) { // there is a source door already, close it
@@ -448,7 +442,6 @@ void minedoor(int in, int cn) {
                 !(map[it[in2].x + it[in2].y * MAXMAP + 1 - MAXMAP].flags & (MF_MOVEBLOCK | MF_TMOVEBLOCK)) ||
                 !(map[it[in2].x + it[in2].y * MAXMAP - 1 + MAXMAP].flags & (MF_MOVEBLOCK | MF_TMOVEBLOCK)) ||
                 !(map[it[in2].x + it[in2].y * MAXMAP - 1 - MAXMAP].flags & (MF_MOVEBLOCK | MF_TMOVEBLOCK))) {
-                //xlog("dug out 2");
                 return;
             }
             if (RANDOM(20)) return; // some randomness
@@ -457,7 +450,6 @@ void minedoor(int in, int cn) {
             it[in2].flags &= ~IF_USE;
             it[in2].drdata[3] = 0;
             set_sector(it[in2].x, it[in2].y);
-            //xlog("closed source door %d at %d,%d",nr,it[in2].x,it[in2].y);
         }
 
         switch (it[in].drdata[2]) {
@@ -474,7 +466,6 @@ void minedoor(int in, int cn) {
         it[in].drdata[3] = 1;
         set_sector(it[in].x, it[in].y);
         sdoor[nr] = in;
-        //xlog("opened source door %d at %d,%d",nr,it[in].x,it[in].y);
 
         return;
     }

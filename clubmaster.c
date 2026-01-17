@@ -141,7 +141,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -295,7 +294,6 @@ void clubmaster_driver(int cn, int ret, int lastact) {
                         } else if (strcasecmp(dat->join, tmp)) {
                             quiet_say(cn, "%s has not invited you, %s.", tmp, ch[co].name);
                         } else {
-                            //add_member(co,dat->accept_clan,dat->join);
                             ch[co].clan = dat->accept_clan + CLUBOFFSET;
                             ch[co].clan_serial = club[dat->accept_clan].serial;
                             ch[co].clan_rank = 0;

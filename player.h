@@ -132,7 +132,6 @@ struct player {
 };
 
 extern struct player **player;
-//extern struct player *player;
 #endif
 
 void tick_player(void);

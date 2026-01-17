@@ -283,7 +283,6 @@ int remove_party(int code, char *msg) {
 
     for (m = 0; m < area[n].max_item; m++) {
         in = area[n].item[m];
-        //xlog("item %s",it[in].name);
 
         if (*(unsigned int *)(it[in].drdata + 0) == code) {
             if (it[in].driver == IDR_STR_SPAWNER) {
@@ -768,7 +767,6 @@ void strategy_driver(int cn, int ret, int lastact) {
                     dat->or1 = in;
                     dat->or2 = in2;
                     say(cn, "%s, sir, yes, sir, transfer, sir!", get_army_rank_string(co));
-                    //say(cn,"from %s to %s",it[in].name,it[in2].name);
                 }
                 if ((!me || me == cn) && strstr(text, "train")) {
                     if (!(in = finditem(co, IDR_STR_STORAGE))) {
@@ -992,8 +990,6 @@ void mine(int in, int cn) {
 
     *(unsigned int *)(it[in].drdata + 4) -= am;
     dat->platin += am;
-
-    //say(cn,"Got %d gold, %d left, carrying %d",am,*(unsigned int*)(it[in].drdata+4),dat->gold);
 }
 
 void storage(int in, int cn) {
@@ -1088,7 +1084,6 @@ int spawner_sub(int in, int in2, int group, char *name, struct strategy_ppd *ppd
             dat->order != OR_ETERNALGUARD)
             cnt++;
     }
-    //xlog("cnt=%d, max=%d",cnt,ppd->max_worker);
     if (cnt >= ppd->max_worker) return 0;
 
     *(unsigned int *)(it[in2].drdata + 4) -= NPCPRICE;
@@ -1227,7 +1222,6 @@ void nosnow(int in, int m) {
     if (map[m].gsprite >= 21380 && map[m].gsprite <= 21398) {
         map[m].gsprite |= (map[m].gsprite - 21380 + 21400) << 16;
         set_sector(m % MAXMAP, m / MAXMAP);
-        //call_item(it[in].driver,in,m,ticker+TICKS*120);
     }
 }
 
@@ -1260,7 +1254,6 @@ void strategy_boss(int cn, int ret, int lastact) {
                     ppd->eguardlvl = 50;
                     ppd->init_done = 1;
                 }
-                //say(cn,"stage=%d",ppd->boss_stage);
                 switch (ppd->boss_stage) {
                 case 0:
                     if (get_army_rank_int(co) < 8 || ch[co].level < 30) {
@@ -1393,8 +1386,6 @@ void strategy_boss(int cn, int ret, int lastact) {
 
     if (regenerate_driver(cn)) return;
     if (spell_self_driver(cn)) return;
-
-    //say(cn,"i am %d",cn);
     turn(cn, DX_RIGHT);
     do_idle(cn, TICKS);
 }
@@ -1616,7 +1607,6 @@ void subtask_move(int n) {
             ad->an[n].or1 = ad->ap[t].x;
             ad->an[n].or2 = ad->ap[t].y;
             ad->an[n].walktype = WT_DIRECT;
-            //xlog("direct");
             return;
         }
 
@@ -1629,7 +1619,6 @@ void subtask_move(int n) {
                 ad->an[n].or1 = ad->ap[last].x;
                 ad->an[n].or2 = ad->ap[last].y;
                 ad->an[n].walktype = WT_DOWN;
-                //xlog("to %d,%d (1) target=%d, last=%d, NPC is at %d",ad->ap[last].x,ad->ap[last].y,t,last,ad->an[n].current);
                 return;
             }
             last = m;
@@ -1645,7 +1634,6 @@ void subtask_move(int n) {
         ad->an[n].or1 = ad->ap[t].x;
         ad->an[n].or2 = ad->ap[t].y;
         ad->an[n].walktype = WT_UP;
-        //xlog("to %d,%d (2) target=%d, NPC ist at %d",ad->ap[t].x,ad->ap[t].y,t,ad->an[n].current);
         return;
     }
 }
@@ -1667,8 +1655,6 @@ void task_idle(int n) {
     ad->an[n].order = OR_GUARD;
     ad->an[n].or1 = restplace(ad->an[n].cn, ad->ap[t].x + ad->ap[t].y * MAXMAP, dat) % MAXMAP;
     ad->an[n].or2 = restplace(ad->an[n].cn, ad->ap[t].x + ad->ap[t].y * MAXMAP, dat) / MAXMAP;
-
-    //xlog("home");
 }
 
 void task_take(int n) {
@@ -1685,8 +1671,6 @@ void task_take(int n) {
     ad->an[n].order = OR_TAKE;
     ad->an[n].or1 = ad->ap[t].in;
     ad->an[n].or2 = 0;
-
-    //xlog("home");
 }
 
 void task_guard(int n) {
@@ -1703,8 +1687,6 @@ void task_guard(int n) {
     ad->an[n].order = OR_GUARD;
     ad->an[n].or1 = ad->ap[t].x;
     ad->an[n].or2 = ad->ap[t].y;
-
-    //xlog("home");
 }
 
 void task_mine(int n) {
@@ -1721,8 +1703,6 @@ void task_mine(int n) {
     ad->an[n].order = OR_MINE;
     ad->an[n].or1 = ad->ap[t].in;
     ad->an[n].or2 = ad->ap[ad->ap[t].parent].in;
-
-    //xlog("mine");
 }
 
 void task_transfer(int n) {
@@ -1739,8 +1719,6 @@ void task_transfer(int n) {
     ad->an[n].order = OR_TRANSFER;
     ad->an[n].or1 = ad->ap[t].in;
     ad->an[n].or2 = ad->ap[ad->ap[t].parent].in;
-
-    //xlog("transfer");
 }
 
 void task_train(int n) {
@@ -1757,8 +1735,6 @@ void task_train(int n) {
     ad->an[n].order = OR_TRAIN;
     ad->an[n].or1 = ad->ap[t].in;
     ad->an[n].or2 = 0;
-
-    //xlog("train");
 }
 
 void task_fight(int n) {
@@ -1775,8 +1751,6 @@ void task_fight(int n) {
     ad->an[n].order = OR_GUARD;
     ad->an[n].or1 = ad->ap[t].x;
     ad->an[n].or2 = ad->ap[t].y;
-
-    //xlog("train");
 }
 
 int assign_npc(int n) {
@@ -1800,8 +1774,6 @@ int assign_npc(int n) {
 
         ad->an[m].used = n;
         ad->free_workers--;
-
-        //xlog("assigned NPC %d to place %d",m,n);
         return 1;
     }
     return 0;
@@ -1901,8 +1873,6 @@ int assign_guards(int place, double count, int level, int ragnarok) {
     for (n = 0; n < MAXGUARD; n++) {
         if ((m = ad->guard[n]) == -1) continue;
         if (ad->nagguard == m) continue;
-
-        //xlog("guard %d, target %d (%d %d), used %d",ad->an[m].cn,ad->an[m].target,ad->ap[place].parent,place,ad->an[m].used);
         if (ad->an[m].ftarget == place) {
             // we already have too many, or the level req went up
             if ((ad->an[m].level + 5 < level || have > count) && !ragnarok) {
@@ -1912,7 +1882,6 @@ int assign_guards(int place, double count, int level, int ragnarok) {
                 have += THREAT(ad->an[m].cn);
                 use[n] = 2;
                 if (ad->an[m].current != ad->ap[place].parent && ad->an[m].current != place) attarget = 0;
-                //xlog("found guard %d going to target already",ad->an[m].cn);
             }
         }
     }
@@ -1931,8 +1900,6 @@ int assign_guards(int place, double count, int level, int ragnarok) {
         }
     }
 
-    //xlog("place %d, count %.0f, have %.0f",place,count,have);
-
     // we have enough to attack
     if (have > count || ragnarok) {
         have = 0.0;
@@ -1948,7 +1915,6 @@ int assign_guards(int place, double count, int level, int ragnarok) {
                     ad->an[m].used = ad->ap[place].parent;
                 }
                 have += THREAT(ad->an[m].cn);
-                //xlog("sending guard %d (%d) to %d",ad->an[m].cn,ad->an[m].current,ad->an[m].target);
             }
         }
         return 1;
@@ -1957,7 +1923,6 @@ int assign_guards(int place, double count, int level, int ragnarok) {
             if ((m = ad->guard[n]) != -1 && use[n] == 2) {
                 ad->an[m].target = ad->an[m].ftarget = 0;
                 ad->an[m].used = 0;
-                //xlog("recalling guard %d",ad->an[m].cn);
             }
         }
     }
@@ -2016,7 +1981,6 @@ void nag_attack(void) {
 
     // attack if possible
     if (cnt > 1 && mindist < 99) {
-        //xlog("we nag with guard %d, level %d, at place %d",ad->an[guard].cn,ad->an[guard].level,place);
         ad->lastnag = ticker;
         ad->nagplace = place;
         ad->nagguard = guard;
@@ -2064,7 +2028,6 @@ void ai_init(int in, unsigned int code) {
         if (it[n].drdata[8] != it[in].drdata[8]) continue;
 
         if (it[n].driver == IDR_STR_DEPOT) {
-            //xlog("%d: found depot %d %s at %d,%d",ad->max_ap,n,it[n].name,it[n].x,it[n].y);
             ad->ap[ad->max_ap].type = PT_DEPOT;
             ad->ap[ad->max_ap].in = n;
             ad->ap[ad->max_ap].dist = -1;
@@ -2075,7 +2038,6 @@ void ai_init(int in, unsigned int code) {
             ad->max_ap++;
         }
         if (it[n].driver == IDR_STR_MINE) {
-            //xlog("%d: found mine %d %s at %d,%d",ad->max_ap,n,it[n].name,it[n].x,it[n].y);
             ad->ap[ad->max_ap].type = PT_MINE;
             ad->ap[ad->max_ap].in = n;
             ad->ap[ad->max_ap].dist = -1;
@@ -2086,7 +2048,6 @@ void ai_init(int in, unsigned int code) {
             ad->max_ap++;
         }
         if (it[n].driver == IDR_STR_STORAGE && n != ad->storage_in) {
-            //xlog("%d: found storage %d %s at %d,%d",ad->max_ap,n,it[n].name,it[n].x,it[n].y);
             ad->ap[ad->max_ap].type = PT_STORAGE;
             ad->ap[ad->max_ap].in = n;
             ad->ap[ad->max_ap].dist = -1;
@@ -2097,7 +2058,6 @@ void ai_init(int in, unsigned int code) {
             ad->ap[ad->max_ap].eguard = -1;
 
             if (it[n].drdata[8] == it[ad->storage_in].drdata[8]) {
-                //xlog("found partner storage %d (%d)",ad->max_ap,it[n].drdata[8]);
                 ad->partner[ad->max_partner++] = n;
             }
             ad->max_ap++;
@@ -2108,16 +2068,13 @@ void ai_init(int in, unsigned int code) {
     for (cdepth = 0; cdepth < MAXDISTANCE; cdepth++) {
         for (n = 0; n < ad->max_ap; n++) {
             if (ad->ap[n].dist == cdepth) {
-                //xlog("checking place %d at %d,%d",n,ad->ap[n].x,ad->ap[n].y);
                 for (i = 0; i < ad->max_ap; i++) {
                     if (ad->ap[i].dist != -1) continue;
                     if (abs(ad->ap[i].x - ad->ap[n].x) < 20 && abs(ad->ap[i].y - ad->ap[n].y) < 20 &&
                         abs(ad->ap[i].x - ad->ap[n].x) + abs(ad->ap[i].y - ad->ap[n].y) < 25 &&
                         pathfinder(ad->ap[i].x, ad->ap[i].y, ad->ap[n].x, ad->ap[n].y, 0, ai_check_target, 200) != -1) {
-                        //xlog("%d/%d: path to %d,%d found",cdepth,i,ad->ap[i].x,ad->ap[i].y);
                         ad->ap[i].dist = cdepth + 1;
                         ad->ap[i].parent = n;
-                        //xlog("place %d, dist %d, parent %d",i,ad->ap[i].dist,ad->ap[i].parent);
                     }
                 }
             }
@@ -2129,7 +2086,6 @@ void ai_init(int in, unsigned int code) {
         if (ad->ap[n].dist == -1) {
             xlog("unconnected place %d at %d,%d", n, ad->ap[n].x, ad->ap[n].y);
         }
-        //xlog("place %d, dist %d",n,ad->ap[n].dist);
     }
 
     // check where an enemy could come from
@@ -2137,7 +2093,6 @@ void ai_init(int in, unsigned int code) {
         if (ad->ap[n].enemy_possible) {
             for (m = n; m != -1; m = ad->ap[m].parent) {
                 ad->ap[m].enemy_possible = 1;
-                //xlog("enemy place %d at %d,%d",m,ad->ap[m].x,ad->ap[m].y);
             }
         }
     }
@@ -2158,14 +2113,11 @@ void ai_init(int in, unsigned int code) {
                 add_etguard(m);
                 ad->an[m].task = T_IGNORE;
                 ad->etguardcnt++;
-                //xlog("%d: found NPC %d %s (ignore)",m,n,ch[n].name);
             } else if (dat->exp || ch[n].level > 50) {
                 add_guard(m);
                 ad->an[m].task = T_EGUARD;
-                //xlog("%d: found NPC %d %s (eguard)",m,n,ch[n].name);
             } else {
                 ad->an[m].task = T_IDLE;
-                //xlog("%d: found NPC %d %s (worker)",m,n,ch[n].name);
             }
             ad->an[m].used = -1;
             m++;
@@ -2200,7 +2152,6 @@ void ai_main(int in, unsigned int code) {
         if (ad->an[n].cn) {
             if (!ch[ad->an[n].cn].flags || ch[ad->an[n].cn].serial != ad->an[n].cserial) {
                 ad->an[n].cn = 0;
-                //xlog("deleted NPC %d from list",n);
             } else {
                 ad->an[n].x = ch[ad->an[n].cn].x;
                 ad->an[n].y = ch[ad->an[n].cn].y;
@@ -2280,10 +2231,9 @@ void ai_main(int in, unsigned int code) {
                     if (ch[cn].driver == CDR_STRATEGY && ch[cn].group != code &&
                         abs(ad->ap[n].x - ch[cn].x) < 10 && abs(ad->ap[n].y - ch[cn].y) < 10) {
 
-                        if (seen[cn]) { /* xlog("ignoring %s ad dist %d",ch[cn].name,ad->ap[n].dist); */
+                        if (seen[cn]) {
                             continue;
                         }
-                        //else xlog("found %s at dist %d",ch[cn].name,ad->ap[n].dist);
                         seen[cn] = 1;
 
                         ad->ap[n].threatcount += THREAT(cn) * 1.25;
@@ -2304,10 +2254,6 @@ void ai_main(int in, unsigned int code) {
         // move threat one down the parent list
         if (ad->ap[n].threatcount && ad->ap[n].parent != -1) ad->ap[ad->ap[n].parent].threat = ad->ap[n].threat / 2;
 
-        /*if (ad->ap[n].threatcount) {
-			xlog("place %d at %d,%d, threat=%d, level=%d, count=%.0fM",n,ad->ap[n].x,ad->ap[n].y,ad->ap[n].threat,ad->ap[n].threatlevel,ad->ap[n].threatcount/1000);
-		}*/
-
         if (*(unsigned int *)(it[ad->ap[n].in].drdata + 4) > 0 && ad->ap[n].wcnt > 0) {
             for (m = ad->ap[n].parent; m != -1 && ad->ap[m].wcnt > 0; m = ad->ap[m].parent) {
                 ad->ap[m].platin = max(ad->ap[m].platin, 50);
@@ -2319,7 +2265,7 @@ void ai_main(int in, unsigned int code) {
             if (ad->ap[n].dist < mindist) mindist = ad->ap[n].dist;
         }
         if (ad->ap[n].platin && !ad->ap[n].threat) {
-            if (n > 0) nogoldleft = 0; //xlog("nogo: %d",n); }
+            if (n > 0) nogoldleft = 0;
             if (n == 0) {
                 if (ad->ap[n].platin / 2 > ad->ppd.max_level && cantrain) { ragnarok = 0; }
             } else {
@@ -2445,7 +2391,6 @@ void ai_main(int in, unsigned int code) {
             if (bm && bd <= mindist) {
                 remove_worker(n);
                 add_worker(T_TAKE, n, bm);
-                //xlog("%d take %d",ad->an[n].cn,bm);
                 continue;
             }
 
@@ -2476,10 +2421,8 @@ void ai_main(int in, unsigned int code) {
         // find places with too little workers
         for (n = 0; n < ad->max_ap; n++) {
             if (n != 0 && ad->ap[n].dist <= mindist && ad->ap[n].platin && !ad->ap[n].threat) {
-                //xlog("place %d, %d platin, %d workers",n,ad->ap[n].platin,ad->ap[n].wcnt);
                 if (ad->ap[n].wcnt < ad->worklevel - 1 && ad->ap[n].wcnt * WORKERPLATIN < ad->ap[n].platin) {
                     missing = 1;
-                    //xlog("missing at %d (%d,%d)",n,ad->ap[n].x,ad->ap[n].y);
                 }
             }
         }
@@ -2499,8 +2442,8 @@ void ai_main(int in, unsigned int code) {
                 for (m = 0; m < ad->max_at; m++) {
                     if (ad->at[m].place == n) {
                         ad->at[m].ticker = ticker;
-                        ad->at[m].count = ad->ap[n].threatcount + ad->ap[n].threatncount; //max(ad->at[m].count,ad->ap[n].threatcount+ad->ap[n].threatncount);
-                        ad->at[m].level = max(ad->ap[n].threatlevel, ad->ap[n].threatnlevel); //max(max(ad->at[m].level,ad->ap[n].threatlevel),ad->ap[n].threatnlevel);
+                        ad->at[m].count = ad->ap[n].threatcount + ad->ap[n].threatncount;
+                        ad->at[m].level = max(ad->ap[n].threatlevel, ad->ap[n].threatnlevel);
                         break;
                     }
                 }
@@ -2509,8 +2452,8 @@ void ai_main(int in, unsigned int code) {
                         if (ad->at[m].place == 0) break;
                     ad->at[m].place = n;
                     ad->at[m].ticker = ticker;
-                    ad->at[m].count = ad->ap[n].threatcount + ad->ap[n].threatncount; //max(ad->at[m].count,ad->ap[n].threatcount+ad->ap[n].threatncount);
-                    ad->at[m].level = max(ad->ap[n].threatlevel, ad->ap[n].threatnlevel); //max(max(ad->at[m].level,ad->ap[n].threatlevel),ad->ap[n].threatnlevel);
+                    ad->at[m].count = ad->ap[n].threatcount + ad->ap[n].threatncount;
+                    ad->at[m].level = max(ad->ap[n].threatlevel, ad->ap[n].threatnlevel);
                     ad->max_at = max(ad->max_at, m + 1);
                 }
             }
@@ -2531,7 +2474,6 @@ void ai_main(int in, unsigned int code) {
                     }
                 }
                 if (i == -1) {
-                    //xlog("place %d at %d,%d, count=%.0fM, level=%d, age=%.2fm",ad->at[m].place,ad->ap[ad->at[m].place].x,ad->ap[ad->at[m].place].y,ad->at[m].count/1000.0,ad->at[m].level,(ticker-ad->at[m].ticker)/((double)TICKS*60));
                     if (assign_guards(ad->at[m].place, ad->at[m].count + 1, ad->at[m].level, ad->ragnarok)) ragnarok = ad->ragnarok;
                 }
                 n = m;
@@ -2573,7 +2515,6 @@ void ai_main(int in, unsigned int code) {
                     }
                     add_etguard(i);
                     ad->etguardcnt++;
-                    //xlog("created etguard for place %d",n);
                 }
             }
         }
@@ -2585,11 +2526,8 @@ void ai_main(int in, unsigned int code) {
     ad->ragnarok = ragnarok;
     ad->nogoldleft = nogoldleft;
 
-    //xlog("%s: dist=%d, free=%d, cnt=%d, level=%d, guards=%d, panic=%d, nogo=%d, rag=%d, ctrain=%d",preset[code-0xfffff001].name,mindist,ad->free_workers,ad->npc_cnt,ad->worklevel,ad->gcnt,ad->panic,nogoldleft,ragnarok,cantrain);
-
     // make NPCs do their jobs
     for (n = 0; n < ad->max_an; n++) {
-        //xlog("NPC %d, target %d at %d,%d",n,ad->an[n].target,ad->ap[ad->an[n].target].x,ad->ap[ad->an[n].target].y);
         switch (ad->an[n].task) {
         case T_IDLE:
             task_idle(n);

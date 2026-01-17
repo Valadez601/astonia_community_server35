@@ -14,8 +14,6 @@
 #define CDR_BALLTRAP 10 // specific enemy, area1, wood
 #define CDR_TERION 11 // specific NPC in area1, village
 #define CDR_JAMES 12 // specific NPC in area1, knight castle
-
-//#define CDR_GEREWIN		14	// specific NPC in area1, knight castle
 #define CDR_NOOK 15 // specific NPC in area1, knight castle
 #define CDR_LYDIA 16 // specific NPC in area1, knight castle
 #define CDR_ROBBER 17 // specific enemy in area1, wood

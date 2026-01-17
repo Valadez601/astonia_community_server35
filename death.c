@@ -67,8 +67,6 @@ static void respawn_callback(int tmp, int tmpx, int tmpy, int tmpa, int dum) {
 
         register_respawn_respawn(cn);
 
-        //charlog(cn,"created by respawn");
-
         return;
     }
 
@@ -625,8 +623,6 @@ int hurt(int cn, int dam, int cc, int armordiv, int armorper, int shieldper) {
         if (!cc || !(in = ch[cc].item[WN_RHAND]) || it[in].ID != IID_HARDKILL || it[in].drdata[37] < ch[cn].level) dam = 0;
     }
 
-    //say(cn,"hurt: %d damage, %d HP",dam,ch[cn].hp);
-
     // less damage to clanvault character
     if (ch[cn].driver == CDR_CLANVAULT) {
         if (cc && clan_can_attack_inside(ch[cn].clan, ch[cc].clan) && char_dist(cn, cc) < 3) dam /= 500;
@@ -651,8 +647,6 @@ int hurt(int cn, int dam, int cc, int armordiv, int armorper, int shieldper) {
                 str = ch[cn].lifeshield;
                 ch[cn].lifeshield = 0;
             }
-
-            //say(cn,"hurt: damage=%d, str=%d, shield=%d",dam,str,ch[cn].lifeshield);
 
             dam -= str;
         }

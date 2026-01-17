@@ -28,7 +28,6 @@ int used_timers;
 static inline void free_timer(struct timer *t) {
     t->next = free_t;
     free_t = t;
-    //xfree(t);
 
     used_timers--;
 }
@@ -101,8 +100,6 @@ void tick_timer(void) {
 // initialise timer lists
 int init_timer(void) {
     used_timers = 0;
-
-    //set_timer(ticker+TICKS*10,display_queue,TICKS*10,0,0,0,0);
 
     return 1;
 }

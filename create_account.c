@@ -44,10 +44,8 @@ static void makemysqlpass(void) {
 
     for (n = 0; key1[n]; n++) {
         mysqlpass[n] = key1[n] ^ key2[n] ^ key3[n];
-        //printf("%d, ",mysqlpass[n]);
     }
     mysqlpass[n] = 0;
-    //printf("\n%s\n",mysqlpass);
     strcpy(mysqlpass, "tgbdwf3h"); // FIXME!!!
 }
 

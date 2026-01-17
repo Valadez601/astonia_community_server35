@@ -103,8 +103,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
 
     if (!(ch[co].flags & (CF_PLAYER | CF_PLAYERLIKE))) return 0;
 
-    //if (char_dist(cn,co)>16) return 0;
-
     if (!char_see_char(cn, co)) return 0;
 
     while (isalpha(*text)) text++;
@@ -144,7 +142,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {

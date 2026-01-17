@@ -356,13 +356,11 @@ void pent_driver(int in, int cn) {
 
             areadone[level]++;
             areastatus = *(unsigned char *)(it[in].drdata + 4) = areaser[level];
-            //xlog("area %d done = %d of %d",level,areadone[level],areacnt[level]);
             if (areadone[level] >= areacnt[level]) {
                 areaser[level]++;
                 if (areaser[level] > 255) areaser[level] = 1;
                 areadone[level] = 0;
                 lastareasolve[level] = ticker;
-                //xlog("area %d will reset: %d",level,areaser[level]);
             }
 
             if (active >= solve) {
@@ -403,7 +401,6 @@ void pent_driver(int in, int cn) {
         } else if (!status) { // pent is not active, but quest has not been solved
             if (!RANDOM(35)) cnt = 1; // spawn one on normal timer call
             else return;
-            //cnt=1;
         } else return;
     }
 
@@ -426,8 +423,6 @@ void pent_driver(int in, int cn) {
                 ch[co].tmpx = ch[co].x;
                 ch[co].tmpy = ch[co].y;
 
-                //pentenhance_char(co);
-
                 update_char(co);
 
                 if (ch[co].value[0][V_BLESS]) bless_someone(co, ch[co].value[0][V_BLESS], BLESSDURATION);
@@ -439,8 +434,6 @@ void pent_driver(int in, int cn) {
 
                 ch[co].dir = DX_RIGHTDOWN;
                 ch[co].flags |= CF_NONOTIFY;
-
-                //if (!demon) ch[co].group=RANDOM(1000)+1;
 
                 *(unsigned short *)(it[in].drdata + 6 + n * 4) = co;
                 *(unsigned short *)(it[in].drdata + 8 + n * 4) = ch[co].serial;

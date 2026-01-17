@@ -156,7 +156,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -726,8 +725,6 @@ void gate_fight_dead(int cn, int co) {
         dlog(co, 0, "turned arch-seyan");
         break;
     case 8: // seyan'du
-        //if (ch[co].flags&CF_ARCH) return;
-        //if ((ch[co].flags&CF_WARRIOR) && (ch[co].flags&CF_MAGE)) return;
         turn_seyan(co);
         log_char(co, LOG_SYSTEM, 0, "You are a Seyan'Du now.");
 

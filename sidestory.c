@@ -270,7 +270,6 @@ int do_story(int cn, int co, struct sidestory_ppd *ppd, struct story_npc *me, st
     char buf[512];
 
     if (realtime - me->last_say < 60) return 0;
-    //say(cn,"bits=%X, state=%d",ppd->bits,me->state);
 
     for (n = 0; story[n].text; n++) {
         if (story[n].state == me->state && check_story_special(cn, co, ppd, me, story, n, story[n].opt)) {
@@ -283,7 +282,7 @@ int do_story(int cn, int co, struct sidestory_ppd *ppd, struct story_npc *me, st
                     pos += sprintf(buf + pos, story[n].a[m].text, ch[cn].name);
                     pos += sprintf(buf + pos, "\260c0");
                 }
-                pos += sprintf(buf + pos, " ]"); // (state=%d, like=%d)",me->state,me->like);
+                pos += sprintf(buf + pos, " ]");
                 me->last_say = realtime;
                 say(cn, "%s", buf);
                 do_story_special(cn, co, ppd, me, story, n, story[n].opt);
@@ -395,8 +394,6 @@ static int find_weapon(int cn, int *pskill, int *plevel) {
 int ruby_create_item(struct ruby_aston_npc *me) {
     int sprite, dam, flags, in;
     char *name, *desc;
-
-    //xlog("skl=%d, level=%d, mod1=%d, mod2=%d, add=%d",me->skl,me->level,me->mod1,me->mod2,me->add);
 
     switch (me->skl) {
     case V_TWOHAND:
@@ -519,7 +516,6 @@ int ruby_aston_char(int cn, int co, struct sidestory_ppd *ppd) {
             } // sum=260
         }
     }
-    //say(cn,"IN: bitvalue=%d, bitcount=%d, state=%d",bitvalue,bitcount,ppd->ruby3.state);
 
     switch (ppd->ruby3.state) {
     case 0:
@@ -612,7 +608,6 @@ int ruby_aston_char(int cn, int co, struct sidestory_ppd *ppd) {
         }
         quiet_say(cn, "Ok, %s it is.", skill[ppd->ruby3.mod2].name);
         ppd->ruby3.state++;
-        //didsay=1;
         break;
     case 11:
         if (ppd->ruby3.skl < V_DAGGER || ppd->ruby3.skl > V_TWOHAND) {
@@ -696,7 +691,6 @@ int ruby_aston_char(int cn, int co, struct sidestory_ppd *ppd) {
         didsay = 1;
         break;
     }
-    //say(cn,"OUT: bitvalue=%d, state=%d",bitvalue,ppd->ruby3.state);
 
     if (didsay) ppd->ruby3.last_say = realtime;
     return didsay;

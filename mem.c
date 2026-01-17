@@ -74,8 +74,6 @@ static char *memname[] = {
 static void rem_block(struct mem_block *mem) {
     struct mem_block *prev, *next;
 
-    //xlog("remove block at %p, size %d",mem,mem->size);
-
     pthread_mutex_lock(&alloc_mutex);
 
     msize -= mem->size;
@@ -103,8 +101,6 @@ static void add_block(struct mem_block *mem) {
     mb = mem;
 
     pthread_mutex_unlock(&alloc_mutex);
-
-    //xlog("add block at %p, size %d",mem,mem->size);
 }
 
 void *xmalloc(int size, int ID) {
@@ -254,7 +250,6 @@ void list_mem(void) {
 
     pthread_mutex_lock(&alloc_mutex);
     for (mem = mb; mem; mem = mem->next) {
-        //xlog("%p: size=%d, ID=%s",mem,mem->size,memname[mem->ID]);
         if (mem->ID > 99 || mem->ID < 1) {
             elog("list_mem found illegal mem ID: %d at %p, giving up.", mem->ID, mem);
             pthread_mutex_unlock(&alloc_mutex);
@@ -319,7 +314,6 @@ void list_mem(void) {
                  get_region_freesize(n) / 1024.0,
                  get_region_free(n));
             rsize += get_region_size(n);
-            //_list_free(n);
         }
     }
     xlog("total: %d blocks, total size: %.2fM (%.2fM, r=%.2fM/%.2fM)", tcnt, tsize / (1024.0 * 1024.0), msize / (1024.0 * 1024.0), rsize / 1024.0 / 1024.0, mmem_usage / 1024.0 / 1024.0);
@@ -428,7 +422,7 @@ void *size_region(int nr, int diff) {
     if (nr < 0 || nr >= 32) return NULL;
 
     region[nr].usedsize += diff;
-    start = reg_addr[nr].start; //(void*)(0x50000000+(nr*24*1024*1024)); !!!!!!!!!!
+    start = reg_addr[nr].start;
 
     change = region[nr].usedsize - region[nr].havesize;
     if (change >= 0) change = ((change + 4095) / 4096) * 4096;
@@ -476,19 +470,6 @@ int get_region_maxsize(int nr) {
     return reg_addr[nr].size;
 }
 
-/*int _list_free(int nr)
-{
-	struct header *p;
-	
-        for (p=region[nr].base.ptr; ; ) {
-		xlog("block at %p, size %d",p,p->size*sizeof(struct header));
-		p=p->ptr;
-		if (p==region[nr].base.ptr) break;		
-	}	
-	
-	return 0;
-}*/
-
 int scompact(int nr) {
     struct header *p, *q;
     int size;
@@ -515,9 +496,7 @@ void sfree_nolock(void *ap, int dorelease) {
     struct header *p, *q;
     int nr;
 
-    nr = smalloc_addr2nr(ap); //(((int)ap)-0x50000000)/(24*1024*1024); !!!!!!!!!!!!!!!
-
-    //xlog("free for nr %d address %p",nr,ap);
+    nr = smalloc_addr2nr(ap);
 
     region[nr].freeblocks++;
     region[nr].usedblocks--;
@@ -563,8 +542,6 @@ struct header *morecore(int nu, int nr) {
     struct header *up;
 
     if (!(cp = size_region(nr, nu * sizeof(struct header)))) return NULL;
-
-    //xlog("Adding region %d at %p, size %d",nr,cp,nu*sizeof(struct header));
 
     up = (void *)cp;
     up->size = nu;
@@ -633,76 +610,3 @@ void *srealloc(void *ptr, int nbytes, int nr) {
 }
 
 //-------------------------------------------
-
-/*#define TESTCNT		10000000
-#define KEEPPTRCNT	1000
-#define PTRCNT		2000
-
-#define TESTMINSIZE	64
-#define TESTMAXSIZE	(64*1024)
-#define RANDOM(a)	(rand()%(a))
-
-void minfo(void)
-{
-	int nr,used=0,ublocks=0,fblocks=0;
-
-	for (nr=0; nr<3; nr++) {
-		scompact(nr);
-		//printf("region %d: size=%.2fM/%.2fM (%d/%d blocks)\n",nr,region[nr].usedsize/1024.0/1024.0,region[nr].havesize/1024.0/1024.0,region[nr].freeblocks,region[nr].usedblocks);
-		used+=region[nr].havesize;
-		ublocks+=region[nr].usedblocks;
-		fblocks+=region[nr].freeblocks;
-		
-	}
-	printf("size=%.2fM (%d/%d blocks)\n",used/1024.0/1024.0,fblocks,ublocks);
-}
-
-void memtest(void)
-{
-	char *a,*b,*c;
-
-	a=smalloc(200,1);
-	b=smalloc(200,1);
-	c=smalloc(200,1);
-
-	sfree(a);
-	sfree(b);
-	sfree(c);
-}
-
-
-void memtest2(void)
-{
-	void *ptr[PTRCNT],*kptr[KEEPPTRCNT];
-        int n,i,keep=0;
-
-        bzero(ptr,sizeof(ptr));
-	bzero(kptr,sizeof(kptr));
-
-	for (n=0; n<TESTCNT; n++) {
-		i=RANDOM(PTRCNT);
-		if (ptr[i]) { sfree(ptr[i]); ptr[i]=NULL; }	
-		else {
-			if (RANDOM(10)) ptr[i]=smalloc(TESTMINSIZE,0);
-			else ptr[i]=smalloc(TESTMAXSIZE,1);
-		}
-		if (n%1000==0) {
-			if (kptr[keep]) sfree(kptr[keep]);
-			kptr[keep]=smalloc(TESTMINSIZE,2);
-			keep++;
-			if (keep>=KEEPPTRCNT) keep=0;
-		}
-		if (n%100000==0) minfo();
-	}
-        minfo();
-	
-        for (i=0; i<PTRCNT; i++) {
-                if (ptr[i]) sfree(ptr[i]);
-	}
-	minfo();
-	
-	for (i=0; i<KEEPPTRCNT; i++) {
-                if (kptr[i]) sfree(kptr[i]);
-	}
-	minfo();
-}*/

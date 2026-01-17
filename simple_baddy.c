@@ -153,7 +153,6 @@ void simple_baddy_driver(int cn, int ret, int lastact) {
             if (ch[cn].item[30] && (ch[cn].flags & CF_NOBODY)) {
                 ch[cn].flags &= ~(CF_NOBODY);
                 ch[cn].flags |= CF_ITEMDEATH;
-                //xlog("transformed item %s",it[ch[cn].item[30]].name);
             }
             break;
 
@@ -284,7 +283,6 @@ void simple_baddy_driver(int cn, int ret, int lastact) {
 
             if (dat->notsecure) {
                 if (move_driver(cn, ch[cn].tmpx, ch[cn].tmpy, dat->mindist)) return;
-                //say(cn,"move failed, %d, target=%d,%d",pathnodes(),ch[cn].tmpx,ch[cn].tmpy);
             } else {
                 if (ticker - dat->lastfight > TICKS * 10) {
                     if (secure_move_driver(cn, ch[cn].tmpx, ch[cn].tmpy, dat->dir, ret, lastact)) return;
@@ -310,7 +308,6 @@ void simple_baddy_driver(int cn, int ret, int lastact) {
 
     if (spell_self_driver(cn)) return;
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 

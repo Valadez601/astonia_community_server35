@@ -160,7 +160,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //quiet_say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -315,7 +314,6 @@ void generate_mission(int cn, struct military_ppd *ppd) {
     if (lvl < 7) lvl = 7;
 
     generate_demon_mission(lvl, ppd);
-    //generate_mine_mission(lvl,ppd);
 
     ppd->mission_yday = yday + 1;
 }
@@ -324,7 +322,6 @@ void offer_missions(int cn, int co, struct military_ppd *ppd) {
     int n;
 
     for (n = 0; n < 7; n++) {
-        //if (ppd->mis[n].pts>1 && ppd->mis[n].pts>ppd->current_pts) continue;
 
         switch (ppd->mis[n].type) {
         case 1:

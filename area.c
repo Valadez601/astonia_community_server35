@@ -734,8 +734,6 @@ void show_section(int x, int y, int cn) {
 
     sec = &section[n];
 
-    //log_char(cn,LOG_SYSTEM,0,"If the following message seems wrong, please report these numbers to Ishtar: %d,%d - %d",x,y,n);
-
     if (!sec->level) {
         log_char(cn, LOG_SYSTEM, 0, "%s. (%d,%d)", sec->name, x, y);
         return;

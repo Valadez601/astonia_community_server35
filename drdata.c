@@ -21,8 +21,6 @@ void *set_data(int cn, int ID, int size) {
 
     prof = prof_start(35);
 
-    //xlog("set_data(): ID=%d, size=%d, dat=%p",ID,size,dat);
-
     for (dat = ch[cn].dat; dat; dat = dat->next)
         if (dat->ID == ID) break;
 
@@ -39,13 +37,7 @@ void *set_data(int cn, int ID, int size) {
 
             dat->data = tmp;
             dat->size = size;
-        } /*else if (size<dat->size) { safe to use this one??
-			tmp=xrealloc(dat->data,size,IM_DRDATA);
-			if (!tmp) { elog("PANIC: realloc failed in set_data()"); return NULL; }
-			mem_usage-=size-dat->size;
-			dat->data=tmp;
-			dat->size=size;
-		}*/
+        }
         prof_stop(35, prof);
         return dat->data;
     } else { // no block for ID yet
@@ -119,9 +111,6 @@ int del_data(int cn, int ID) {
 
     // all done, now free the data block itself
     mem_usage -= sizeof(struct data) + dat->size;
-
-    //dat->next=empty;
-    //empty=dat;
     xfree(dat);
 
     return 1;
@@ -136,8 +125,6 @@ void *get_data(int cn, int ID, int size) {
 
     if (dat->size < size) return NULL; // user expects more memory than we have
 
-    //xlog("get_data: ID=%d, size=%d, dat=%p",ID,size,dat);
-
     return dat->data;
 }
 
@@ -150,9 +137,6 @@ void del_all_data(int cn) {
 
         next = dat->next;
         xfree(dat->data);
-
-        //dat->next=empty;
-        //empty=dat;
         xfree(dat);
     }
 

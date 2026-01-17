@@ -128,9 +128,7 @@ void rec_chat(int nr) {
     printf("received %d bytes from client %d\n", len, nr);
 
     if (len < 1) { // receive failure
-        //if (errno!=EWOULDBLOCK) {
         kick_chat(nr);
-        //}
         return;
     }
     chat[nr].in_len += len;

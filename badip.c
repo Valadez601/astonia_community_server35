@@ -82,12 +82,6 @@ void clean_badpass_ips(MYSQL *mysql) {
     }
 }
 
-/*
-
-create table badip (IP int unsigned not null, t int not null, key lookup(IP,t), key(t));
-
-*/
-
 static int get_count2(MYSQL *mysql, unsigned int ip, int timeout) {
     MYSQL_RES *result;
     MYSQL_ROW row;
@@ -147,10 +141,3 @@ void clean_createpass_ips(MYSQL *mysql) {
         return;
     }
 }
-
-/*
-
-use merc35;
-create table createip (IP int unsigned not null, t int not null, key lookup(IP,t), key(t));
-
-*/

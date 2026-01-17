@@ -387,8 +387,6 @@ static int sub_surround(int cn, int dx, int dy) {
 
     vcn = get_surround_attack_skill(cn) + (ch[cn].rage / RAGEMOD / POWERSCALE);
     vco = ch[co].value[0][V_DEFENSE] + (ch[co].rage / RAGEMOD / POWERSCALE);
-
-    //if (ch[cn].flags&CF_PLAYER) say(cn,"sub attack %s %s (surround)",ch[cn].name,ch[co].name);
     return sub_attack(cn, co, vcn, vco, 0);
 }
 
@@ -435,7 +433,6 @@ static int act_attack(int cn) {
 
     vcn = ch[cn].value[0][V_OFFENSE] + (ch[cn].rage / RAGEMOD / POWERSCALE);
     vco = ch[co].value[0][V_DEFENSE] + (ch[co].rage / RAGEMOD / POWERSCALE);
-    //if (ch[cn].flags&CF_PLAYER) say(cn,"rage=%d/%d",ch[cn].rage/POWERSCALE,ch[cn].rage/RAGEMOD/POWERSCALE);
 
     if (!is_facing(co, cn)) { // attacking someone from the side or back gets a bonus
         vco -= 4;
@@ -655,16 +652,12 @@ static int act_earthrain(int cn) {
 
     create_earthrain(cn, ch[cn].act1 % MAXMAP, ch[cn].act1 / MAXMAP, ch[cn].act2);
 
-    //notify_area(ch[cn].x,ch[cn].y,NT_SPELL,cn,V_FIRE,fn);
-
     return 1;
 }
 
 static int act_earthmud(int cn) {
 
     create_earthmud(cn, ch[cn].act1 % MAXMAP, ch[cn].act1 / MAXMAP, ch[cn].act2);
-
-    //notify_area(ch[cn].x,ch[cn].y,NT_SPELL,cn,V_FIRE,fn);
 
     return 1;
 }
@@ -891,11 +884,7 @@ static void warcry_someone(int cn, int co, int pwr) {
 
     if (!(in = ch[co].item[fre])) in = create_item("warcry_spell");
     if (!in) return;
-
-    //say(cn,"%d vs %d",str,it[in].mod_value[0]);
     if (it[in].mod_value[0] >= str) {
-
-        //say(cn,"replacing weaker warcry");
 
         it[in].mod_value[0] = (int)(round(str * 1.3334));
         it[in].mod_value[1] = (int)(round(str / 10.0));
@@ -916,8 +905,7 @@ static void warcry_someone(int cn, int co, int pwr) {
         ch[co].item[fre] = in;
 
         update_char(co);
-
-    } // else say(cn,"keeping stronger warcry");
+    }
 
     dam = warcry_damage(cn, co, pwr);
 
@@ -999,7 +987,6 @@ static int ice_curse(int co, int str, int max) {
         if (-it[in].mod_value[0] >= max) return 0;
         if (-it[in].mod_value[0] + str > max) {
             str = max + it[in].mod_value[0];
-            //log_char(co,LOG_SYSTEM,0,"reduced str to %d",str);
         }
 
         it[in].mod_value[0] -= str;
@@ -1030,7 +1017,6 @@ static void freeze_someone(int cn, int co) {
     if (!char_see_char(cn, co)) return;
 
     str = freeze_value(cn, co);
-    //say(cn,"freeze of pwr %d giving str %d",ch[cn].value[0][V_FREEZE],str);
     if (str >= 0) return; // no speed ups!
 
     if (!(fre = add_same_spell(co, IDR_FREEZE))) return;
@@ -1061,7 +1047,7 @@ static void freeze_someone(int cn, int co) {
         if ((ch[cn].flags & CF_IDEMON) && ch[cn].value[1][V_DEMON] > ch[co].value[0][V_COLD] &&
             ice_curse(co, ch[cn].value[1][V_DEMON] - ch[co].value[0][V_COLD], (ch[cn].value[1][V_DEMON] - ch[co].value[0][V_COLD]) * 50)) {
             log_char(co, LOG_SYSTEM, 0, "You have been frozen by %s. You feel like you'll never thaw again.", ch[cn].name);
-        } //else log_char(co,LOG_SYSTEM,0,"You have been frozen by %s.",ch[cn].name);
+        }
     }
 
     return;
@@ -1141,8 +1127,6 @@ static int act_heal(int cn, int flag) {
 
     str = ch[cn].act2;
     if (str < 1) return 0;
-
-    //ch[co].hp=min(ch[co].value[0][V_HP]*POWERSCALE,ch[co].hp+str/2);
     heal_someone(co, str / 2, 0, 0);
 
     if (!(ch[cn].flags & CF_NONOTIFY)) notify_area(ch[cn].x, ch[cn].y, NT_CHAR, cn, 0, 0);
@@ -1393,16 +1377,6 @@ void regenerate(int cn) {
     diff = (ticker - ch[cn].last_regen) / TICKS;
 
     if (diff > 0 && (!(map[m].flags & MF_NOREGEN) || !(ch[cn].flags & CF_PLAYER))) {
-        /*if (ch[cn].speed_mode!=SM_FAST) {
-                        if (ch[cn].value[1][V_REGENERATE] && ch[cn].endurance<ch[cn].value[0][V_ENDURANCE]*POWERSCALE) {
-				ch[cn].endurance=min(ch[cn].value[0][V_ENDURANCE]*POWERSCALE,ch[cn].endurance+(ch[cn].value[0][V_REGENERATE]+ch[cn].value[1][V_REGENERATE])*diff*5);
-				ch[cn].flags|=CF_SMALLUPDATE;
-			}
-			if (ch[cn].value[1][V_MAGICSHIELD] && ch[cn].value[1][V_MEDITATE] && ch[cn].lifeshield<ch[cn].value[0][V_MAGICSHIELD]*POWERSCALE && areaID!=33) {
-				ch[cn].lifeshield=min(ch[cn].value[0][V_MAGICSHIELD]*POWERSCALE/MAGICSHIELDMOD,ch[cn].lifeshield+(ch[cn].value[0][V_MEDITATE]+ch[cn].value[1][V_MEDITATE])*diff*4);
-				ch[cn].flags|=CF_SMALLUPDATE;
-			}
-		}*/
         // no more slow regeneration while moving
         if (areaID == 33) ch[cn].lifeshield = 0;
         ch[cn].last_regen += diff * TICKS;
@@ -1466,8 +1440,7 @@ void tick_char(void) {
         if (lastact != AC_IDLE || ch[n].action != AC_IDLE || !lastdur || (ch[n].flags & CF_SMALLUPDATE)) {
             set_sector(ch[n].x, ch[n].y);
             ch[n].flags &= ~CF_SMALLUPDATE;
-            //if (ch[n].flags&CF_PLAYER) xlog("up");
-        } //else if (ch[n].flags&CF_PLAYER) xlog("no");
+        }
     }
 }
 
@@ -1479,21 +1452,15 @@ void hurt_item(int in, int cn, int divi) {
 
     dam = it[in].complexity / 250000.0 / divi;
 
-    //log_char(cn,LOG_SYSTEM,0,"1: dam=%.3f, divi=%d",dam,divi);
-
     if (ch[cn].flags & CF_PAID) pv = 0.5 - clan_preservation_bonus(cn) / 100.0;
     else pv = 1.0 - clan_preservation_bonus(cn) / 50.0;
-
-    //log_char(cn,LOG_SYSTEM,0,"1: dam=%.3f, pv=%.2f",dam,pv);
     dam = dam * pv;
-    //log_char(cn,LOG_SYSTEM,0,"2: dam=%.3f, pv=%.2f",dam,pv);
 
     loss = (int)(dam / 10) * 10;
     dam -= loss;
 
     chance = dam * 10000;
     if (RANDOM(100000) <= chance) loss += 10;
-    //log_char(cn,LOG_SYSTEM,0,"tick %d: loss=%d, dam=%.8f, chance=%d (%.4f%%)",ticker,loss,dam,chance,chance/1000.0);
 
     if (!loss) return;
     if (loss >= it[in].quality) it[in].quality = 1;

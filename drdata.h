@@ -12,9 +12,6 @@
 
 // use this macro to build the drdata IDs
 #define MAKE_DRD(dev_id, nr) (((dev_id) << 24) | (nr))
-
-//#define DRD_MOVEDRIVER		MAKE_DRD(DEV_ID_DB,1)
-//#define DRD_GUARDDRIVER		MAKE_DRD(DEV_ID_DB,2)
 #define DRD_SCANITEM MAKE_DRD(DEV_ID_DB, 3)
 
 #define DRD_CHARMEM MAKE_DRD(DEV_ID_DB, 4)

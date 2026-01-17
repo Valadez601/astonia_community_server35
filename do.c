@@ -142,13 +142,11 @@ int do_walk(int cn, int dir) {
         if (ch[cn].endurance < ch[cn].value[0][V_ENDURANCE] * POWERSCALE) hurt = 1;
 
         if (spr >= 20327 && spr <= 20335) { // other clan may not enter
-            //if (spr2>=59121 && spr2<=59129 && hurt) { error=ERR_BLOCKED; return 0; }
             if (clan_alliance_self(get_char_clan(cn), cnr)) {
                 error = ERR_BLOCKED;
                 return 0;
             }
         } else if (spr >= 59575 && spr <= 59583) { // own clan may not enter
-            //if (spr2>=59121 && spr2<=59129 && hurt) { error=ERR_BLOCKED; return 0; }
             if (!clan_alliance_self(get_char_clan(cn), cnr)) {
                 error = ERR_BLOCKED;
                 return 0;
@@ -542,17 +540,6 @@ int do_give(int cn, int dir) {
 
 int warcried(int cn) {
     return 0;
-
-    /*int n,in;
-
-	for (n=12; n<30; n++) {	
-		if ((in=ch[cn].item[n]) && it[in].driver==IDR_WARCRY) {
-			if (it[in].mod_value[0]<-100) return 1;
-                        else return 0;
-		}
-	}
-	
-	return 0;*/
 }
 
 int do_bless(int cn, int co) {
@@ -1094,7 +1081,7 @@ int do_flash(int cn) {
     }
 
     mod = ch[cn].value[0][V_FLASH] / 20;
-    cost = FLASHCOST; //+mod*POWERSCALE;
+    cost = FLASHCOST;
 
     if (ch[cn].mana < cost) {
         error = ERR_MANA_LOW;
@@ -1450,7 +1437,6 @@ int look_map(int cn, int x, int y) {
     if (map[m].flags & MF_PEACE) {
         log_char(cn, LOG_SYSTEM, 0, "This place is a peaceful zone.");
     }
-    //log_char(cn,LOG_SYSTEM,0,"Light=%d.",map[m].light);
 
     return 1;
 }

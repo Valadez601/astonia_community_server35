@@ -847,40 +847,6 @@ int create_item_nr(int tmp) {
     it[n].flags |= IF_USED;
     it[n].serial = serin++;
 
-    /*if (it[n].driver==IDR_DEMONSHRINE) {
-		static int cnt=0;
-		xlog("created shrine %d.",++cnt);
-	}
-	if (it[n].driver==IDR_ITEMSPAWN) {
-                xlog("created spawner %s.",it_temp[tmp].name);
-	}
-
-	if (it[n].driver==IDR_CLANSPAWN) {
-                xlog("created clan-spawner %s.",it_temp[tmp].name);
-	}
-
-	if (it[n].driver==IDR_EXPLORE) {
-                xlog("created exploration point level %d.",it_temp[tmp].item.drdata[0]);
-	}*/
-
-    /*if (it[n].driver==IDR_RANDCHEST) {
-		static int cnt=0;
-                xlog("created random chest %d, level %d (avg %.2fG, max %.2fG).",
-		     ++cnt,
-		     it_temp[tmp].item.drdata[0],
-		     it_temp[tmp].item.drdata[0]*it_temp[tmp].item.drdata[0]/400.0*4,
-		     it_temp[tmp].item.drdata[0]*it_temp[tmp].item.drdata[0]/100.0*4);
-	}*/
-
-    /*if (it[n].driver) {
-                xlog("created item with driver %d.",it[n].driver);
-	}
-
-	if (it[n].driver==IDR_WARPBONUS) {
-		static int cnt=0;
-                xlog("created warped bonus %d",++cnt);
-	}*/
-
     if (it[n].ID == IID_ALCHEMY_INGREDIENT) {
         if (it[n].drdata[0] == 0x17 && !it[n].complexity) {
             it[n].quality = 23 + die(2, 25);
@@ -984,24 +950,6 @@ int create_char_nr(int ctmp, int tmpa) {
         strcmp(ch[n].name, "Hrus-tak-lan") &&
         strcmp(ch[n].name, "Newbie")) elog("%s (lvl %d) is not immortal and has no first-kill-class", ch[n].name, ch[n].level);
 
-    /*if (ch[n].flags&CF_DEMON) {
-		int nr;
-
-		nr=atoi(ch_temp[ctmp].name+6)+5;
-		if (nr!=ch[n].level) xlog("created %s (%s - %d), %d exp, level %d (%.2f%%, %d exp to next level)",ch[n].name,ch_temp[ctmp].name,ch[n].tmpa,ch[n].exp,ch[n].level,100.0/80977100*ch[n].exp,level2exp(ch[n].level-1)-ch[n].exp);
-	}*/
-    /*{
-		int v;
-
-		v=atoi(ch_temp[ctmp].name+6)+5;
-		if (v!=ch[n].level) {
-			xlog("%s: has lvl %d instead of %d, %d exp to next level",ch_temp[ctmp].name,ch[n].level,v,level2exp(ch[n].level-1)-ch[n].exp);
-		}
-		
-	}*/
-
-    //xlog("created %s (%s - %d), %d exp, level %d (%.2f%%, )",ch[n].name,ch_temp[ctmp].name,ch[n].tmpa,ch[n].exp,ch[n].level,100.0/80977100*ch[n].exp,level2exp(ch[n].level-1)-ch[n].exp);
-
     for (m = 0; m < INVENTORYSIZE; m++) {
         if ((itmp = ch[n].item[m])) {
             in = create_item_nr(itmp);
@@ -1023,7 +971,6 @@ int create_char_nr(int ctmp, int tmpa) {
                 if (f < INVENTORYSIZE) {
                     ch[n].item[f] = in;
                     it[in].carried = n;
-                    //xlog("created %s (%s) %.2fG for %s (lvl %d).",it[in].name,it[in].description,it[in].value/100.0,ch[n].name,ch[n].level);
                 } else {
                     elog("carrying capacity exceeded");
                     free_item(in);
@@ -1039,7 +986,6 @@ int create_char_nr(int ctmp, int tmpa) {
             if (f < INVENTORYSIZE) {
                 ch[n].item[f] = in;
                 it[in].carried = n;
-                //xlog("created special item %s (%s) %.2fG for %s (lvl %d).",it[in].name,it[in].description,it[in].value/100.0,ch[n].name,ch[n].level);
             } else {
                 elog("carrying capacity exceeded");
                 free_item(in);
@@ -1102,8 +1048,6 @@ int create_char(char *name, int tmpa) {
         elog("create_char(): could not find char \"%s\".", name);
         return 0;
     }
-
-    //xlog("creating char %s",name);
 
     return create_char_nr(tmp, tmpa);
 }
@@ -1173,8 +1117,6 @@ static int process_map(char *ptr) {
             ch[tmp].x = ch[tmp].tmpx = x;
             ch[tmp].y = ch[tmp].tmpy = y;
             ch[tmp].dir = DX_RIGHTDOWN;
-
-            //ch[tmp].group=RANDOM(100);	//!!!!!!!!!!!!
 
             add_char_sector(tmp);
 
@@ -1344,13 +1286,10 @@ void free_char(int cn) {
     ch[cn].flags = 0;
 
     used_chars--;
-
-    //elog("freed char %d",cn);
 }
 
 // get first character in used list
 int getfirst_char(void) {
-    //xlog("getfirst: %d",uchar-ch);
     if (!uchar) return 0;
     return uchar - ch;
 }
@@ -1361,8 +1300,6 @@ int getnext_char(int cn) {
     struct character *tmp;
 
     if (!(tmp = ch[cn].next)) return 0;
-
-    //xlog("getnext2: %d",tmp-ch);
 
     return tmp - ch;
 }

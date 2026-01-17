@@ -141,7 +141,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -547,8 +546,6 @@ void yoakin_driver(int cn, int ret, int lastact) {
                 remove_message(cn, msg);
                 continue;
             }
-
-            //quiet_say(cn,"diff=%d, victim=%d (%s)",ticker-dat->last_talk,dat->current_victim,ch[dat->current_victim].name);
 
             // only talk every ten seconds
             if (ticker < dat->last_talk + TICKS * 5) {
@@ -1399,8 +1396,6 @@ void lydia_driver(int cn, int ret, int lastact) {
                 continue;
             }
 
-            //quiet_say(cn,"diff=%d, victim=%d (%s)",ticker-dat->last_talk,dat->current_victim,ch[dat->current_victim].name);
-
             // only talk every ten seconds
             if (ticker < dat->last_talk + TICKS * 5) {
                 remove_message(cn, msg);
@@ -1607,7 +1602,6 @@ void balltrap_skelly_driver(int cn, int ret, int lastact) {
         if (do_use(cn, DX_LEFT, 0)) return;
     }
 
-    //quiet_say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 
@@ -1922,7 +1916,6 @@ void reskin_driver(int cn, int ret, int lastact) {
                 case 0:
                     if (ppd->gwendy_state < 6) break; // dont offer alchemy quests before skull 2
                     if (ppd->terion_state < 4) break; // wait for terion to finish skelly2 story
-                    //if (hour>23 || hour<5) break;	// dont give out quest while player is supposed to do skelly 2
                     quiet_say(cn, "Hello, %s! I am %s, the bartender.", ch[co].name, ch[cn].name);
                     ppd->reskin_state++;
                     didsay = 1;
@@ -2888,7 +2881,6 @@ int ch_respawn_driver(int nr, int cn) {
         return 1;
     case CDR_JAMES:
         return 1;
-        //case CDR_GEREWIN:	return 1;
     case CDR_NOOK:
         return 1;
     case CDR_LYDIA:

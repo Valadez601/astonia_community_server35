@@ -12,7 +12,6 @@
 #include "see.h"
 
 static inline int check_lightm(int m) {
-    //if (!(map[m].flags&MF_INDOORS)) return min(256,max(map[m].light,dlight));
 
     return min(255, max(map[m].light, (dlight * map[m].dlight) / 256));
 }
@@ -48,8 +47,6 @@ int char_see_char_nolos(int cn, int co) {
     if (!light && (abs(ch[cn].x - ch[co].x) > 1 || abs(ch[cn].y - ch[co].y) > 1)) return 0;
 
     if (dist < 3) return 1;
-
-    //dist*=4;
     dist = dist * dist;
 
     light = max(32 - light, 0) * 2;
@@ -86,8 +83,6 @@ int char_see_char(int cn, int co) {
     if (cn == co) return 1;
 
     if (ch[co].flags & CF_INVISIBLE) return 0;
-
-    //xlog("char_see_char (%d): %s (%d) %s (%d)",ticker,ch[cn].name,cn,ch[co].name,co);
 
     if (!los_can_see(cn, ch[cn].x, ch[cn].y, ch[co].x, ch[co].y, DIST)) return 0;
 

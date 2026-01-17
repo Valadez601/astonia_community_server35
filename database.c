@@ -143,10 +143,8 @@ static void makemysqlpass(void) {
 
     for (n = 0; key1[n]; n++) {
         mysqlpass[n] = key1[n] ^ key2[n] ^ key3[n];
-        //printf("%d, ",mysqlpass[n]);
     }
     mysqlpass[n] = 0;
-    //printf("\n%s\n",mysqlpass);
     strcpy(mysqlpass, "tgbdwf3h"); // FIXME!!!
 }
 
@@ -158,9 +156,6 @@ int mysql_query_con(MYSQL *my, const char *query) {
     int err, ret, nr;
     unsigned long long start, diff;
     char buf[80];
-
-    //xlog("size %d, query %.80s",strlen(query),query);
-    //if (!demon && areaID==9) { int tmp; tmp=RANDOM(3); if (tmp) sleep(tmp); }
 
     start = timel();
 
@@ -256,32 +251,9 @@ static void wait_db_thread(void) {
          save_char_cnt, save_area_cnt, exit_char_cnt, save_subscriber_cnt, save_char_mirror_cnt, load_char_cnt);
 }
 
-/*void *my_mysql_malloc(unsigned int size)
-{
-	return xmalloc(size,IM_MYSQL);
-}
-
-void my_mysql_free(void *ptr)
-{
-	return xfree(ptr);
-}
-
-void *my_mysql_realloc(void *ptr,unsigned int size)
-{
-	return xrealloc(ptr,size,IM_MYSQL);
-}
-
-void mysql_set_malloc_proc(void* (*new_malloc_proc)(size_t));
-void mysql_set_free_proc(void (*new_free_proc)(void*));
-void mysql_set_realloc_proc(void* (*new_realloc_proc)(void *,size_t));*/
-
 // start connection to database and initialise database if needed
 int init_database(void) {
     char buf[1024];
-
-    //mysql_set_malloc_proc(my_mysql_malloc);
-    //mysql_set_free_proc(my_mysql_free);
-    //mysql_set_realloc_proc(my_mysql_realloc);
 
     // init database client
     if (!mysql_init(&mysql)) {
@@ -380,7 +352,6 @@ int compress_escape_string(MYSQL *my, unsigned char *dst, unsigned char *src, in
     mysql_real_escape_string(my, dst, buf, olen + 12);
 
     rlen = strlen(dst);
-    //xlog("ilen=%d, olen=%d, rlen=%d",ilen,olen+12,rlen);
 
     if (xlen) *xlen = olen + 12;
 
@@ -419,8 +390,6 @@ int uncompress_string(unsigned char *dst, unsigned char *src, int maxout) {
         btrace("oopsie in uncompress_string()");
     }
 
-    //xlog("size=%d/%d",size,maxout);
-
     return size;
 }
 
@@ -440,13 +409,11 @@ void save_depot(int sID, struct depot_ppd *dat, int cID, int leaving) {
             sprintf(query, "update depot set area=-1,mirror=-1,cID=-1 where ID=%d and area=%d and mirror=%d and cID=%d", sID, areaID, areaM, cID);
             if (!add_query(DT_QUERY, query, "save_depot", 0)) elog("Failed to update (small) depot (sID=%d) on logout", sID);
         }
-        //xlog("not saving depot, no change");
         return;
     }
     dat->lastsave = dat->changes;
 
     compress_escape_string(&mysql, buf, (unsigned char *)dat, sizeof(struct depot_ppd), &xlen);
-    //xlog("depot for sID=%d: %d/%d bytes",sID,xlen,sizeof(struct depot_ppd));
 
     if (leaving) sprintf(query, "update depot set data=\"%s\",area=-1,mirror=-1,cID=-1 where ID=%d and area=%d and mirror=%d and cID=%d", buf, sID, areaID, areaM, cID);
     else sprintf(query, "update depot set data=\"%s\" where ID=%d and area=%d and mirror=%d and cID=%d", buf, sID, areaID, areaM, cID);
@@ -463,8 +430,6 @@ int save_char(int cn, int area) {
     struct item *itmp;
     struct data *dat;
 
-    //xlog("save char %s (%d, ID=%d)",ch[cn].name,cn,ch[cn].ID);
-
     // character data
     memcpy(cdata, ch + cn, sizeof(struct character));
 
@@ -478,7 +443,6 @@ int save_char(int cn, int area) {
             if (IDR_ISSPELL(itmp->driver)) { // make drdata contain the remaining duration
                 *(signed long *)(itmp->drdata) -= ticker;
                 *(signed long *)(itmp->drdata + 4) -= ticker;
-                //xlog("save: remembering time for spell. time left: %ld ticks",*(unsigned long*)(itmp->drdata));
             }
             itmp++;
         }
@@ -503,8 +467,6 @@ int save_char(int cn, int area) {
         dlen += 4;
         memcpy(ddata + dlen, dat->data, dat->size);
         dlen += dat->size;
-
-        //if (dat->size>1024) xlog("ppd: id=%d, size=%d",(dat->ID&65535),dat->size);
     }
 
     mysql_real_escape_string(&mysql, cbuf, cdata, sizeof(struct character));
@@ -695,8 +657,6 @@ int change_area(int cn, int area, int x, int y) {
 
     if (nr) player_to_server(nr, server, port);
 
-    //xlog("sending %s (%d,%d) to area %d",ch[cn].name,cn,nr,area);
-
     return 1;
 }
 
@@ -783,7 +743,7 @@ int add_clanlog(int clan, int serial, int cID, int prio, char *format, ...) {
 }
 //select 278527,clan,serial,time,content from clanlog where time>=1055577172 and time<=1059173572 and clan=14 and serial=15 and cID=104665
 int lookup_clanlog(int cnID, int clan, int serial, int coID, int prio, int from_time, int to_time) {
-    char buf[512]; //,len;
+    char buf[512];
     int len;
 
     len = sprintf(buf, "select %d,clan,serial,time,content from clanlog where time>=%d and time<=%d", cnID, from_time, to_time);
@@ -1239,14 +1199,10 @@ int find_login(char *name, char *password, int *area_ptr, int *cn_ptr, int *mirr
     for (ptr = name; *ptr; ptr++) {
         if (!isalpha(*ptr)) return -3;
     }
-
-    //xlog("find login called: %s %s",name,password);
-    //xlog("have %d %s %s",login.status,login.name,login.password);
     pthread_mutex_lock(&data_mutex);
 
     // remove stale login data if it wasnt collected for two ticks
     if (login.status > LS_CREATE && ticker > login.age + 2) {
-        //xlog("removed stale login from %s %s (status=%d)",login.name,login.password,login.status);
         if (login.status == LS_OK) { // character has been created but client did not pick it up - we must destroy it.
             if (!login.didusurp) {
                 release_char_nolock(login.cn);
@@ -1265,7 +1221,6 @@ int find_login(char *name, char *password, int *area_ptr, int *cn_ptr, int *mirr
         strcpy(login.name, name);
         strcpy(login.password, password);
         login.ip = ip;
-        //xlog("set login.ip=%u",login.ip);
         pthread_mutex_unlock(&data_mutex);
 
         add_query(DT_LOAD, name, password, 0); // send query to database
@@ -1509,7 +1464,6 @@ void tick_login(void) {
         for (n = 1; n < MAXCHARS; n++) {
             if (ch[n].flags && ch[n].ID == login.ID) { // and return it
                 if (ch[n].flags & CF_PLAYER) {
-                    //xlog("usurping existing character %s (%d)",ch[n].name,n);
                     xfree(login.chr);
                     xfree(login.itm);
                     xfree(login.ppd);
@@ -1534,8 +1488,6 @@ void tick_login(void) {
 
     // is it a new account?
     flags = *(unsigned long long *)(login.chr);
-
-    //xlog("tick_login(): creating new character for %s",login.name);
 
     if (!(flags & CF_USED)) { // character marked as unused, new account
         if ((flags & (CF_WARRIOR | CF_MAGE)) == (CF_WARRIOR | CF_MAGE)) {
@@ -1704,7 +1656,6 @@ void tick_login(void) {
             diff = ch[cn].exp - ch[cn].exp_used;
 
             expe = calc_exp(cn);
-            //charlog(cn,"calc exp = %d (%d), used exp = %d (%d)",exp,exp2level(exp),ch[cn].exp_used,exp2level(ch[cn].exp_used));
             if (ch[cn].exp_used != expe) {
                 elog("char %s: used_exp=%d, calculated=%d", ch[cn].name, ch[cn].exp_used, expe);
             }
@@ -1948,7 +1899,6 @@ int load_depot(int sID, int cID) {
         return 0;
     }
     if (!row[1] || atoi(row[1]) > 0 || !row[2] || atoi(row[2]) > 0 || !row[3] || atoi(row[3]) > 0) {
-        //elog("Depot for sID=%d is loaded somewhere else (%s %s %s).",sID,row[1],row[2],row[3]);
         mysql_free_result_cnt(result);
         return 0;
     }
@@ -2040,8 +1990,6 @@ static void load_char(char *name, char *password) {
         return;
     }
     pthread_mutex_unlock(&data_mutex);
-
-    //xlog("name=%s (%s), ip=%u",name,login.name,login.ip);
     if (is_badpass_ip(&mysql, login.ip)) {
         xlog("ip blocked for %s (%d.%d.%d.%d)", name, (login.ip >> 24) & 255, (login.ip >> 16) & 255, (login.ip >> 8) & 255, (login.ip >> 0) & 255);
         login_toomany();
@@ -2149,7 +2097,6 @@ static void load_char(char *name, char *password) {
 
     // is he supposed to be somewhere else?
     if (allowed != areaID) { // nope, send him to where he belongs
-        //xlog("character is supposed to enter area %d (%d)",allowed,areaID);
         mysql_free_result_cnt(result);
         if (newmirror) {
             sprintf(buf, "update chars set mirror=%d where ID=%d", mirror, ID);
@@ -2167,7 +2114,6 @@ static void load_char(char *name, char *password) {
     // database thinks the player is currently online somewhere
     if (current) {
         if (current != areaID || current_mirror != areaM) { // online in a different area. send him there.
-            //xlog("character is marked active on different area/mirror (%d/%d)",current,current_mirror);
             mysql_free_result_cnt(result);
             if (newmirror) {
                 sprintf(buf, "update chars set mirror=%d where ID=%d", mirror, ID);
@@ -2188,7 +2134,6 @@ static void load_char(char *name, char *password) {
 
     tomirror = get_mirror(areaID, mirror);
     if (areaM != tomirror) {
-        //xlog("character is supposed to enter mirror %d",mirror);
         mysql_free_result_cnt(result);
         if (newmirror) {
             sprintf(buf, "update chars set mirror=%d where ID=%d", mirror, ID);
@@ -3010,8 +2955,6 @@ void db_unlockname(char *name, char *master) {
 
 struct club club[MAXCLUB];
 
-//create table clubs ( ID int primary key, name char(80) not null, paid int not null, money int not null, serial int not null );
-
 int db_create_club(int cnr) {
     char buf[256];
 
@@ -3059,7 +3002,6 @@ void db_read_clubs(void) {
         club[ID].money = money;
         club[ID].paid = paid;
         club[ID].serial = serial;
-        //xlog("got club %d, name %s, paid %d, money %d, serial %d",ID,club[ID].name,club[ID].paid,club[ID].money,club[ID].serial);
     }
 
     mysql_free_result_cnt(result);
@@ -3081,8 +3023,6 @@ void schedule_clubs(void) {
 // clans
 
 extern struct clan clan[];
-
-//create table clubs ( ID int primary key, name char(80) not null, paid int not null, money int not null, serial int not null );
 
 void db_read_clans(void) {
     int ID;
@@ -3116,7 +3056,6 @@ void db_read_clans(void) {
         bzero(&clan[ID], sizeof(struct clan));
         if (row[1]) {
             memcpy(&clan[ID], row[1], sizeof(struct clan));
-            //xlog("read clan %d, name %s",ID,clan[ID].name);
         }
     }
 
@@ -3171,7 +3110,6 @@ void db_update_clan(int cnr) {
     mysql_real_escape_string(&mysql, dbuf, (unsigned char *)&clan[cnr], sizeof(struct clan));
     sprintf(qbuf, "update clans set data='%s' where ID=%d", dbuf, cnr);
     add_query(DT_QUERY, qbuf, "update clan", 0);
-    //xlog("save clan %d data",cnr);
 }
 
 void schedule_clans(void) {

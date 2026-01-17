@@ -140,7 +140,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -715,8 +714,6 @@ void dwarfsmith_driver(int cn, int ret, int lastact) {
             if (ch[co].flags & CF_PLAYER) {
                 ppd = set_data(co, DRD_STAFFER_PPD, sizeof(struct staffer_ppd));
                 switch ((didsay = analyse_text_driver(cn, msg->dat1, (char *)msg->dat2, co))) {
-                    //case 2:         if (ppd && ppd->dwarfsmith_state<=3) { dat->last_talk=0; ppd->dwarfsmith_state=0; }
-                    //break;
                 case 3:
                     if (ch[co].flags & CF_GOD) {
                         say(cn, "reset done");

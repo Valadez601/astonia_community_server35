@@ -677,8 +677,6 @@ void edemontube_driver(int in, int cn) {
                     // remember target
                     *(unsigned short *)(it[in].drdata + 2) = x;
                     *(unsigned short *)(it[in].drdata + 4) = y;
-
-                    //xlog("%s (%d) found %s (%d) at %d,%d",it[in].name,in,it[in2].name,in2,it[in2].x,it[in2].y);
                 }
             }
         }

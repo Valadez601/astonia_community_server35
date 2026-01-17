@@ -489,7 +489,6 @@ void monk_worker_driver(int cn, int ret, int lastact) {
                 remove_message(cn, msg);
                 continue;
             }
-            // if (!char_see_char(cn,co)) { remove_message(cn,msg); continue; }
 
             if (co == workerdat->follow_cn) {
                 if (strcasestr(str, "COME")) {
@@ -601,7 +600,6 @@ void saltmine_item(int in, int cn) {
     if (!cn) {
         // ladder
         if (drdata[0] == 1) {
-            //xlog("item %d, at %d,%d, nr=%d",in,it[in].x,it[in].y,laddernumber);
             if (laddernumber < MAXLADDER) drdata[1] = laddernumber++;
             else xlog("Too many ladders in %s %d!!!", __FILE__, __LINE__);
         }
@@ -687,14 +685,11 @@ void saltmine_item(int in, int cn) {
                 }
 
                 // set the time of the ladder
-                //ppd->laddertime[it[in].drdata[1]]=time(NULL); !!!!!!!!!!!
             }
 
             if (ch[cn].flags & CF_PLAYER) {
                 if (ch[cn].citem) return;
                 if (!(ppd = get_saltmine_ppd(cn))) return;
-
-                // if (!ppd->trusttime) { log_char(cn,LOG_SYSTEM,0,"Nothing happens."); return; }
                 if (!ppd->salt) {
                     log_char(cn, LOG_SYSTEM, 0, "Thou feelst thou should bring salt to the monastery, before rewarding thinself.");
                     return;

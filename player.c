@@ -97,7 +97,6 @@ void kick_player(int nr, char *reason) {
 
     if (player[nr]->state == ST_NORMAL) {
         cn = player[nr]->cn;
-        //elog("kick_player: %d",nr);
         if (cn) {
             if (ch[cn].player != nr) {
                 elog("character-player link wrong in kick_player(): %s %d %d", ch[cn].name, nr, ch[cn].player);
@@ -109,7 +108,6 @@ void kick_player(int nr, char *reason) {
             char_driver(ch[cn].driver, CDT_DEAD, cn, 0, 0);
 
             dlog(cn, 0, "Player left server");
-            //charlog(cn,"Player lost connection");
 
             log_dc(cn);
         }
@@ -237,8 +235,6 @@ static void read_login(int nr) {
         return;
     }
 
-    //xlog("find_login(%s,%s)=%d (cn=%d,ID=%d)",name,password,ret,cn,ID);
-
     remove_input(nr, 20);
 
     if (ret == -1) {
@@ -301,19 +297,15 @@ static void read_login(int nr) {
         return;
     }
 
-    //xlog("nr=%d, cn=%d",nr,cn);
-
     if (area) {
         int server, port;
 
         if (area != -1 && get_area(area, mirror, &server, &port)) {
-            //xlog("player to server %d",area);
             player_to_server(nr, server, port);
             player[nr]->state = ST_EXIT;
             return;
         } else {
             rescue_char(ID);
-            //xlog("rescued char");
             player_client_exit(nr, "Target area server is down. Your character is being transfered to a different area. Please try again.");
             return;
         }
@@ -375,8 +367,6 @@ static void read_login(int nr) {
         if (nologin && !shutdown_at) log_player(nr, LOG_SYSTEM, "\260c3Server is in nologin-mode. Use /shutdown 0 to open it for regular players.");
         plrnotes(ch[cn].ID, ch[cn].sID);
     } else ch[cn].flags &= ~CF_AREACHANGE;
-
-    //questlog_init(cn);
 
     if (ch[cn].resta != areaID || abs(ch[cn].x - ch[cn].restx) > 10 || abs(ch[cn].y - ch[cn].resty) > 10) {
         int login_time, logout_time;
@@ -510,9 +500,6 @@ static void cl_use(int nr, char *buf) {
     if (!in) return;
 
     player_driver_use(nr, in);
-
-    /*player[nr]->action=PAC_USE;
-	player[nr]->act1=in;*/
 }
 
 static void cl_teleport(int nr, char *buf) {
@@ -866,16 +853,6 @@ static void cl_junk_item(int nr) {
 }
 
 static void cl_clientinfo(int nr, struct client_info *ci) {
-    /*int n;
-
-	xlog("player %d: skip=%d, idle=%d",nr,ci->skip,ci->idle);
-	xlog("player %d: sysmem=%dK/%dK",nr,ci->systemfree>>10,ci->systemtotal>>10);
-	xlog("player %d: vidmem=%dK/%dK",nr,ci->vidmemfree>>10,ci->vidmemtotal>>10);
-
-	for (n=0; n<CL_MAX_SURFACE; n++) {
-		if (!ci->surface[n].xres) break;
-		xlog("player %d: surface %d: type=%d, %dx%d",nr,n,ci->surface[n].type,ci->surface[n].xres,ci->surface[n].yres);		
-	}*/
 }
 
 static void cl_ping(int nr, char *ibuf) {
@@ -1723,7 +1700,6 @@ static void player_map(int nr) {
             } else flags = 0;
 
             if (light < 1) {
-                //if (map[m].ch==cn) light=1;	// make player visible to himself all the time
                 if (abs(x - DIST) < 2 && abs(y - DIST) < 2) light = 1;
                 else {
                     flags = 0;
@@ -2102,7 +2078,6 @@ static void player_map(int nr) {
                 if (!player[nr]) return;
 
                 memcpy(player[nr]->ceffect + n, &cef, size);
-                //log_char(cn,LOG_SYSTEM,0,"transmit 1 slot %d type %d",n,ef[fn].type);
             }
             player[nr]->seffect[n] = ef[fn].serial;
         }
@@ -2116,8 +2091,7 @@ static void player_map(int nr) {
 
             if (is_char_ceffect(player[nr]->ceffect[n].generic.type)) {
                 co = player[nr]->ceffect[n].strike.cn;
-                //say(cn,"effe cn=%s (%d), see=%d",ch[co].name,co,char_see_char(cn,co));
-                if (char_see_char(cn, co)) { //fast_los(cn,ch[co].x,ch[co].y)
+                if (char_see_char(cn, co)) {
                     usedef[n] = 1;
                 }
             } else usedef[n] = 1;
@@ -2145,8 +2119,6 @@ static void player_map(int nr) {
             memcpy(player[nr]->ceffect + n, &cef, size);
 
             player[nr]->seffect[n] = ef[fn].serial;
-
-            //log_char(cn,LOG_SYSTEM,0,"transmit 2 slot %d type %d",n,ef[fn].type);
         }
     }
 
@@ -2154,7 +2126,6 @@ static void player_map(int nr) {
     for (n = 0; n < MAXEF; n++) {
         if (usedef[n]) {
             uf |= 1ull << n;
-            //log_char(cn,LOG_SYSTEM,0,"used slot %d",n);
         }
     }
 
@@ -2263,13 +2234,6 @@ static void player_stats(int nr) {
         psend(nr, buf, 3);
         if (!player[nr]) return;
     }
-
-    /*if (ch[cn].flags&CF_GOD) {
-		buf[0]=SV_CYCLES;
-		*(unsigned long*)(buf+1)=cycles;
-		psend(nr,buf,5);
-		if (!player[nr]) return;
-	}*/
 
     // items
     if (ch[cn].flags & CF_ITEMS) {
@@ -2639,23 +2603,18 @@ void write_scrollback(int nr, int cn, char *reason, char *namea, char *nameb) {
             start = 1;
         } else if (start) {
             buf[p++] = 10;
-            //xlog("mark: %s",buf);
-            //p=0;
         }
     }
     for (n = 0; n < player[nr]->scrollpos; n++) {
         if (player[nr]->scrollback[n]) buf[p++] = player[nr]->scrollback[n];
         else {
             buf[p++] = 10;
-            //xlog("mark: %s",buf);
-            //p=0;
         }
     }
     buf[p] = 0;
     sprintf(buf + p, "----------------\n\n");
     sprintf(sub, "Auto Complaint from %s", ch[cn].name);
     sendmail("complaint@astonia.com", sub, buf, "auto@astonia.com", 0);
-    //sendmail("joker@astonia.com",sub,buf,"auto@astonia.com",0);
 }
 
 void tick_player(void) {

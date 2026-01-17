@@ -22,8 +22,6 @@ static void expire_timer(int in, int serial, int x, int y, int expire_sn) {
         free_item(in);
         return;
     }
-
-    //xlog("%s (%d): max=%d, cur=%d, dam=%d",it[in].name,in,it[in].max_damage,it[in].cur_damage,dam);
     elog("could not expire item %s", it[in].name);
 }
 
@@ -63,8 +61,6 @@ static void expire_timer_body(int in, int serial, int x, int y, int dummy) {
         free_item(in);
         return;
     }
-
-    //xlog("%s (%d): max=%d, cur=%d, dam=%d",it[in].name,in,it[in].max_damage,it[in].cur_damage,dam);
     elog("could not expire item %s", it[in].name);
 }
 

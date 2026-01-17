@@ -147,7 +147,6 @@ int build_fighter(int x, int y, int diff, int level) {
 
     ch[cn].exp = ch[cn].exp_used = calc_exp(cn);
     ch[cn].level = exp2level(ch[cn].exp);
-    //if ((diff>100 && ch[cn].level<10) || ch[cn].level>200) ch[cn].level=200;
     ch[cn].level = level;
 
     // create special equipment bonus to equal that of the average player
@@ -216,27 +215,12 @@ int creeper_tab[191] = {
     239};
 
 void tunneldoor(int in, int cn) {
-    int x, y, in2, m, b1, b2, c, b1cnt = 0, b2cnt = 0, co, xoff, yoff, used, n, value; //,want;
+    int x, y, in2, m, b1, b2, c, b1cnt = 0, b2cnt = 0, co, xoff, yoff, used, n, value;
     struct tunnel_ppd *ppd;
 
     if (!cn) { // automatic call
         return;
     }
-
-    /*want=10;
-	printf("\nint creeper_tab[191]={\n");
-	for (m=10; m<400; m++) {
-		co=build_fighter(100,100,m);
-		if (ch[co].level>=want) {
-			printf("%3d",m);
-			want++;
-			if (want==201) break;
-			else printf(",");
-			if (want>10 && want%10==0) printf("\n");			
-		}
-		remove_destroy_char(co);
-	}
-	printf("};\n");*/
 
     ppd = set_data(cn, DRD_TUNNEL_PPD, sizeof(struct tunnel_ppd));
     if (!ppd) return; // oops...
@@ -250,7 +234,6 @@ void tunneldoor(int in, int cn) {
 
                 if (it[in].drdata[0] == 2) {
                     value = level_value(ppd->clevel) / 10.0 / ppd->used[ppd->clevel];
-                    //xlog("value=%f (level=%d)",value,ppd->clevel);
                     log_char(cn, LOG_SYSTEM, 0, "You have been given experience.");
                     give_exp(cn, value);
                     dlog(cn, 0, "got %d exp for solving long tunnel section %d (%d)", value, ppd->clevel, ppd->used[ppd->clevel]);
@@ -258,7 +241,6 @@ void tunneldoor(int in, int cn) {
 
                 if (it[in].drdata[0] == 3) {
                     value = 50 / ppd->used[ppd->clevel];
-                    //xlog("value=%f (level=%d)",value,ppd->clevel);
                     log_char(cn, LOG_SYSTEM, 0, "You have been given military rank.");
                     give_military_pts_no_npc(cn, value, 1);
                     dlog(cn, 0, "got %d military rank for solving long tunnel section %d (%d)", value, ppd->clevel, ppd->used[ppd->clevel]);
@@ -376,7 +358,6 @@ void mean_door(int in, int cn) {
         for (x = it[in].x - 4; x <= it[in].x + 4; x++) {
             for (y = it[in].y + 1; y < it[in].y + 20; y++) {
                 if ((co = map[x + y * MAXMAP].ch) && !(ch[co].flags & CF_PLAYER)) {
-                    //xlog("%d,%d %s",x,y,ch[co].name);
                     return;
                 }
             }
@@ -384,14 +365,11 @@ void mean_door(int in, int cn) {
         map[it[in].x + it[in].y * MAXMAP].fsprite = 0;
         map[it[in].x + it[in].y * MAXMAP].flags &= ~(MF_MOVEBLOCK | MF_SIGHTBLOCK);
         set_sector(it[in].x, it[in].y);
-        //xlog("clear");
     }
 }
 
 int ch_driver(int nr, int cn, int ret, int lastact) {
     switch (nr) {
-        //case CDR_MISSIONGIVE:	mission_giver_driver(cn,ret,lastact); return 1;
-        //case CDR_MISSIONFIGHT:	mission_fighter_driver(cn,ret,lastact); return 1;
 
     default:
         return 0;
@@ -416,7 +394,6 @@ int ch_died_driver(int nr, int cn, int co) {
     switch (nr) {
     default:
         return 0;
-        //case CDR_MISSIONFIGHT:	mission_fighter_dead(cn,co); return 1;
     }
 }
 

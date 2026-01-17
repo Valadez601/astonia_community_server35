@@ -157,7 +157,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -452,10 +451,6 @@ void potion_driver(int in, int cn) {
                  it[in].drdata[1] * POWERSCALE,
                  it[in].drdata[3] * POWERSCALE,
                  it[in].drdata[2] * POWERSCALE);
-
-    //ch[cn].hp=min(ch[cn].hp+it[in].drdata[1]*POWERSCALE,ch[cn].value[0][V_HP]*POWERSCALE);
-    //ch[cn].mana=min(ch[cn].mana+it[in].drdata[2]*POWERSCALE,ch[cn].value[0][V_MANA]*POWERSCALE);
-    //ch[cn].endurance=min(ch[cn].endurance+it[in].drdata[3]*POWERSCALE,ch[cn].value[0][V_ENDURANCE]*POWERSCALE);
 
     if (empty) replace_item_char(in, in2);
     else remove_item_char(in);
@@ -759,8 +754,6 @@ void nightlight_driver(int in, int cn) {
         it[in].drdata[0] = 0;
         it[in].mod_value[0] = 0;
         it[in].sprite--;
-
-        //add_light(it[in].x,it[in].y,-light,0);
     }
 
     if (!it[in].drdata[0] && dlight < 80) {
@@ -772,7 +765,6 @@ void nightlight_driver(int in, int cn) {
         it[in].sprite++;
 
         add_item_light(in);
-        //add_light(it[in].x,it[in].y,light,0);
     }
 
     call_item(IDR_NIGHTLIGHT, in, 0, ticker + TICKS * 30);
@@ -1071,11 +1063,6 @@ void stat_scroll_driver(int in, int cn) {
 
     if (!cn) return; // always make sure its not an automatic call if you don't handle it
     if (!it[in].carried) return;
-
-    /*if (ch[cn].exp_used>ch[cn].exp) {
-		log_char(cn,LOG_SYSTEM,0,"This scroll won't work while you have negative experience.");
-		return;
-	}*/
 
     v = it[in].drdata[0];
     cnt = it[in].drdata[1];
@@ -3569,8 +3556,6 @@ void janitor_driver(int cn, int ret, int lastact) {
         // got an item?
         if (msg->type == NT_GIVE) {
             co = msg->dat1;
-            //destroy_item(ch[cn].citem);
-            //ch[cn].citem=0;
         }
 
         if (msg->type == NT_ITEM) {

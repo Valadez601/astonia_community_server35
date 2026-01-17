@@ -43,13 +43,10 @@ void register_rec_tell(int cn, int coID) {
 
     if (!(dat = set_data(cn, DRD_TELL_DATA, sizeof(struct tell_data)))) return; // OOPS
 
-    //log_char(cn,LOG_SYSTEM,0,"should remove tell %d",coID);
-
     for (n = 0; n < MAXTELL; n++) {
         if (dat->target[n] == coID) {
             dat->target[n] = 0;
             dat->time[n] = 0;
-            //log_char(cn,LOG_SYSTEM,0,"removed tell %d %d",n,coID);
         }
     }
 }

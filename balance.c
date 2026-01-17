@@ -252,7 +252,6 @@ int immunity_reduction(int caster, int subject, int skill_strength) {
     if (ch[subject].value[1][V_RAGE]) immun += ch[subject].rage / POWERSCALE / RAGEMOD;
 
     diff = skill_strength - immun;
-    //stren=max(0.0,1.0+diff/20.0+skill_strength/100.0)*POWERSCALE;
 
     dam = skilldiff2percent(diff);
 

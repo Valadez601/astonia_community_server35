@@ -101,8 +101,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
 
     if (!(ch[co].flags & (CF_PLAYER | CF_PLAYERLIKE))) return 0;
 
-    //if (char_dist(cn,co)>16) return 0;
-
     if (!char_see_char(cn, co)) return 0;
 
     while (isalpha(*text)) text++;
@@ -142,7 +140,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -310,8 +307,6 @@ void swampwhisp(int in, int cn) {
     it[in].sprite = 20934 + it[in].drdata[0];
     set_sector(it[in].x, it[in].y);
     call_item(it[in].driver, in, 0, ticker + 2);
-
-    //xlog("item %d state %d, pos %d,%d",in,it[in].drdata[0],it[in].x,it[in].y);
 }
 
 int player_close(int xc, int yc, int dist) {

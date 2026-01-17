@@ -185,8 +185,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     // ignore our own talk
     if (cn == co) return 0;
 
-    //if (!(ch[co].flags&CF_PLAYER)) return 0;
-
     if (char_dist(cn, co) > 12) return 0;
 
     if (!char_see_char(cn, co)) return 0;
@@ -510,7 +508,6 @@ void take_soldiers(int cn) {
                 for (m = 0; m < MAXSOLDIER; m++) {
                     if (ppd->soldier[m].type) {
                         dat->platoon[m] = ppd->soldier[m].cn;
-                        //say(co,"I am %s, slot %d is %s",ch[co].name,m,ch[dat->platoon[m]].name);
                     } else dat->platoon[m] = 0;
                 }
                 dat->platoon[MAXSOLDIER] = cn;
@@ -535,7 +532,6 @@ void drop_soldiers(int cn) {
                 if (ppd->soldier[n].serial == ch[co].serial) break;
             }
             if (n < MAXSOLDIER) {
-                //say(co,"slot=%d, group=%d, (%d/%d)",n,ch[co].group,ch[co].exp-ch[co].exp_used,ppd->soldier[n].exp);
                 dat = set_data(co, DRD_FARMYDATA, sizeof(struct farmy_data));
                 if (dat) {
                     ppd->soldier[n].emote = dat->emote;
@@ -639,8 +635,6 @@ void platoon_exp(int cn, int cm, int amount, int pts, struct farmy_ppd *ppd) {
     for (n = 0; n < MAXSOLDIER; n++) {
         if (!(co = ppd->soldier[n].cn)) continue;
         if (!ch[co].flags || ch[co].serial != ppd->soldier[n].serial) continue;
-
-        //say(cn,"giving %s exp",ch[co].name);
         ppd->soldier[n].exp += amount;
         ppd->soldier[n].exp += ch[co].exp - ch[co].exp_used;
         ch[co].exp = ch[co].exp_used;
@@ -696,7 +690,6 @@ void do_emote(int cn, struct farmy_data *dat) {
 
         co = bestco;
         n = bestn;
-        //say(cn,"lonely: score=%d, co=%d, n=%d",bestscore,bestco,n);
 
         if (dat->emote.likes[n] < 10) {
             if (hour > 6 && hour < 20) {
@@ -738,7 +731,6 @@ void do_emote(int cn, struct farmy_data *dat) {
 
         co = bestco;
         n = bestn;
-        //say(cn,"bored: score=%d, co=%d, n=%d",bestscore,bestco,n);
 
         if (dat->emote.likes[n] < 0) {
             say(cn, "You stink, %s.", ch[co].name);
@@ -790,7 +782,6 @@ void do_emote(int cn, struct farmy_data *dat) {
 
         co = bestco;
         n = bestn;
-        //say(cn,"afraid: score=%d, co=%d, n=%d",bestscore,bestco,n);
 
         if (dat->emote.likes[n] < 10) {
             say(cn, "Shouldn't we turn back? What do you think, %s?", ch[co].name);
@@ -828,7 +819,6 @@ void do_emote(int cn, struct farmy_data *dat) {
 
         co = bestco;
         n = bestn;
-        //say(cn,"praise: score=%d, co=%d, n=%d",bestscore,bestco,n);
 
         if (dat->emote.likes[n] < 10) {
             say(cn, "Ha! I'm the greatest, right, %s?", ch[co].name);
@@ -1281,7 +1271,6 @@ void fdemon_army(int cn, int ret, int lastact) {
 
     if (dat->leader_cn) {
         if (!(ch[dat->leader_cn].flags) || ch[dat->leader_cn].group != ch[cn].group) { // we lost our master
-            //charlog(cn,"going to disintegrate - leader lost");
             remove_destroy_char(cn);
             return;
         }
@@ -1348,7 +1337,6 @@ void fdemon_army(int cn, int ret, int lastact) {
     if (regenerate_driver(cn)) return;
     if (spell_self_driver(cn)) return;
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 
@@ -1374,7 +1362,6 @@ void fdemon_boss(int cn, int ret, int lastact) {
 
             if ((ch[co].flags & CF_PLAYER) && char_dist(cn, co) < 16 && char_see_char(cn, co) && ch[cn].driver != CDR_LOSTCON &&
                 (ppd = set_data(co, DRD_FARMY_PPD, sizeof(struct farmy_ppd))) && realtime - ppd->boss_timer > 5) {
-                //say(cn,"stage=%d",ppd->boss_stage);
                 switch (ppd->boss_stage) {
                 case 0:
                     if (get_army_rank_int(co) < 3) {
@@ -1638,8 +1625,6 @@ void fdemon_boss(int cn, int ret, int lastact) {
                 drop_soldiers(co);
             }
         }
-
-        //standard_message_driver(cn,msg,dat->aggressive,dat->helper);
         remove_message(cn, msg);
     }
 
@@ -1649,7 +1634,6 @@ void fdemon_boss(int cn, int ret, int lastact) {
     if (regenerate_driver(cn)) return;
     if (spell_self_driver(cn)) return;
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 
@@ -1679,8 +1663,6 @@ void fdemon_light(int in, int cn) {
         in2 = *(unsigned int *)(it[in].drdata + 0) = find_loader(in, 1);
         in3 = *(unsigned int *)(it[in].drdata + 4) = find_loader(in, 2);
         in4 = *(unsigned int *)(it[in].drdata + 8) = find_loader(in, 3);
-
-        //xlog("light at %d,%d found loader %d at %d,%d",it[in].x,it[in].y,in2,it[in2].x,it[in2].y);
     }
     if (!in2) return;
 
@@ -1790,7 +1772,6 @@ void fdemon_loader(int in, int cn) {
         if (ani && --ani == 0) pwr = pwr2;
         if (pwr) {
             pwr--;
-            //notify_area(it[in].x,it[in].y,NT_NPC,NTID_FDEMON,MSG_LOADER,in);
         }
 
         call_item(it[in].driver, in, 0, ticker + TICKS);
@@ -1958,8 +1939,6 @@ void fdemon_cannon(int in, int cn) {
         in2 = *(unsigned int *)(it[in].drdata + 0) = find_loader(in, 1);
         in3 = *(unsigned int *)(it[in].drdata + 4) = find_loader(in, 2);
         in4 = *(unsigned int *)(it[in].drdata + 8) = find_loader(in, 3);
-
-        //xlog("light at %d,%d found loader %d at %d,%d",it[in].x,it[in].y,in2,it[in2].x,it[in2].y);
     }
     if (!in2) return;
 
@@ -2144,7 +2123,6 @@ void fdemon_waypoint(int in, int cn) {
             *(unsigned int *)(it[in].drdata + 8) = ch[cn].ID;
         }
     }
-    //notify_area(it[in].x,it[in].y,NT_NPC,NTID_FDEMON,MSG_WAYPOINT,in);
 
     call_item(it[in].driver, in, 0, ticker + TICKS * 3);
 }
@@ -2173,7 +2151,6 @@ void find_waypoints(void) {
             wp[maxway].x = it[in].x;
             wp[maxway].y = it[in].y;
             wp[maxway].last_enemy = 0;
-            //xlog("found %d at %d,%d",maxway,wp[maxway].x,wp[maxway].y);
             maxway++;
         }
     }
@@ -2188,7 +2165,6 @@ void find_waypoints(void) {
                 if (wp[n].left) {
                     xlog("duplicated left %d,%d removed", wp[wp[n].left].x, wp[wp[n].left].y);
                 }
-                //xlog("%d %d,%d left to %d %d,%d",n,wp[n].x,wp[n].y,m,wp[m].x,wp[m].y);
                 wp[n].left = m;
                 wp[m].right = n;
                 continue;
@@ -2198,7 +2174,6 @@ void find_waypoints(void) {
                 if (wp[n].up) {
                     xlog("duplicated up %d,%d removed", wp[wp[n].up].x, wp[wp[n].up].y);
                 }
-                //xlog("%d %d,%d up to %d %d,%d",n,wp[n].x,wp[n].y,m,wp[m].x,wp[m].y);
                 wp[n].up = m;
                 wp[m].down = n;
                 continue;
@@ -2259,10 +2234,7 @@ int find_way_to_waypoint(int from, int to, int flags) {
         cost = node[cnode].cost;
         cnode++;
 
-        //xlog("considering node %d, cost %d",to,cost);
-
         if ((next = wp[to].right) && fww_flags(next, flags)) {
-            //xlog("right=%d. ok",next);
             if (from == next) return to;
             if (!seen[next]) {
                 seen[next] = 1;
@@ -2271,9 +2243,8 @@ int find_way_to_waypoint(int from, int to, int flags) {
                 node[maxnode].cost = cost + 1;
                 maxnode++;
             }
-        } //else xlog("right=%d, not ok",next);
+        }
         if ((next = wp[to].left) && fww_flags(next, flags)) {
-            //xlog("left=%d. ok",next);
             if (from == next) return to;
             if (!seen[next]) {
                 seen[next] = 1;
@@ -2282,9 +2253,8 @@ int find_way_to_waypoint(int from, int to, int flags) {
                 node[maxnode].cost = cost + 1;
                 maxnode++;
             }
-        } //else xlog("left=%d, not ok",next);
+        }
         if ((next = wp[to].up) && fww_flags(next, flags)) {
-            //xlog("up=%d. ok",next);
             if (from == next) return to;
             if (!seen[next]) {
                 seen[next] = 1;
@@ -2293,9 +2263,8 @@ int find_way_to_waypoint(int from, int to, int flags) {
                 node[maxnode].cost = cost + 1;
                 maxnode++;
             }
-        } //else xlog("up=%d, not ok",next);
+        }
         if ((next = wp[to].down) && fww_flags(next, flags)) {
-            //xlog("down=%d. ok",next);
             if (from == next) return to;
             if (!seen[next]) {
                 seen[next] = 1;
@@ -2304,7 +2273,7 @@ int find_way_to_waypoint(int from, int to, int flags) {
                 node[maxnode].cost = cost + 1;
                 maxnode++;
             }
-        } //else xlog("down=%d, not ok",next);
+        }
         if (maxnode > cnode) qsort(node + cnode, maxnode - cnode, sizeof(struct node), findwaycmp);
         else break;
     }
@@ -2324,7 +2293,6 @@ void add_enemy_to_waypoint(int cn) {
 
     if (n && abs(ch[cn].x - wp[n].x) < 30 && abs(ch[cn].y - wp[n].y) < 30) {
         wp[n].last_enemy = ticker;
-        //log_area(ch[cn].x,ch[cn].y,LOG_SYSTEM,0,20,"enemy at wp %d",n);
     }
 }
 
@@ -2353,22 +2321,16 @@ static int hunt_driver(int cn, struct fdemon_data *dat) {
         }
     }
     if (bestn) {
-        //say(cn,"going to waypoint %d (age %.2fmin)",bestn,bestdiff/24.0/60);
         if (current == bestn) {
-            //say(cn,"already close");
             if (abs(ch[cn].x - wp[bestn].x) + abs(ch[cn].y - wp[bestn].y) > 6 &&
                 move_driver(cn, wp[bestn].x, wp[bestn].y, 6)) {
-                //say(cn,"move succeeded");
                 return 1;
             }
-            //say(cn,"there");
             return 0; // we're there
         }
         target = find_way_to_waypoint(current, bestn, 0);
         if (target) {
-            //say(cn,"moving to enemy at %d from %d via %d",bestn,current,target);
             if (move_driver(cn, wp[target].x, wp[target].y, 6)) {
-                //say(cn,"move succeeded");
                 return 1;
             }
         }
@@ -2407,7 +2369,6 @@ void fdemon_demon(int cn, int ret, int lastact) {
             if (ch[cn].item[30] && (ch[cn].flags & CF_NOBODY)) {
                 ch[cn].flags &= ~(CF_NOBODY);
                 ch[cn].flags |= CF_ITEMDEATH;
-                //xlog("transformed item %s",it[ch[cn].item[30]].name);
             }
         }
 
@@ -2432,12 +2393,10 @@ void fdemon_demon(int cn, int ret, int lastact) {
 
     if (!may_hunt_there(cn, ch[cn].x, ch[cn].y)) {
         dat->gohome = 1;
-        //say(cn,"gohome=1 (%d,%d - %d,%d)",ch[cn].x-ch[cn].tmpx,ch[cn].y-ch[cn].tmpy,ch[cn].tmpx-ch[cn].x,ch[cn].tmpy-ch[cn].y);
     }
 
     if (abs(ch[cn].x - ch[cn].tmpx) < 15 && abs(ch[cn].y - ch[cn].tmpy) < 15) {
         dat->gohome = 0;
-        //say(cn,"gohome=0 (%d,%d)",abs(ch[cn].x-ch[cn].tmpx),abs(ch[cn].y-ch[cn].tmpy));
     }
 
     if (dat->gohome) {

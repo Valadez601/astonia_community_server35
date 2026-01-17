@@ -86,7 +86,6 @@ int swap_move_driver(int cn, int tx, int ty, int mindist) {
 static int tmove_path(int m) {
     if (map[m].flags & MF_MOVEBLOCK) return 0;
     if (map[m].flags & MF_DOOR) return 1;
-    //if (map[m].flags&MF_TMOVEBLOCK) return 0;
 
     return 1;
 }
@@ -352,8 +351,6 @@ int use_driver(int cn, int in, int spec) {
         error = ERR_NOT_USEABLE;
         return 0;
     }
-
-    //if (!char_see_item(cn,in)) { error=ERR_NOT_VISIBLE; return 0; }
 
     dx = it[in].x - ch[cn].x;
     dy = it[in].y - ch[cn].y;
@@ -737,29 +734,6 @@ int call_item(int driver, int in, int cn, int due) {
 
 //-------------- fight driver and helpers ------------------------
 
-/*struct person
-{
-	unsigned int cn;
-	unsigned int ID;
-
-	unsigned short lastx,lasty;
-	unsigned char visible;
-	unsigned char hurtme;
-};
-
-struct fight_driver_data
-{
-	struct person enemy[10];
-
-	int start_dist;		// distance from respawn point at which to start attacking
-	int stop_dist;		// distance from respawn point at which to stop attacking
-	int char_dist;		// distance from character we start attacking
-
-	int home_x,home_y;	// position to compare start_dist and start_dist with
-
-	int lasthit;
-};*/
-
 int fight_driver_flee_eval_path(int x, int y, int dir) {
     int n, score = 0, dx, dy, m, diag;
 
@@ -851,8 +825,6 @@ int fight_driver_flee(int cn) {
     } else if (mindist < 10) {
         ch[cn].speed_mode = SM_NORMAL;
     } else ch[cn].speed_mode = SM_STEALTH;
-
-    //say(cn,"mode=%d",ch[cn].speed_mode);
 
     for (dir = 1; dir < 9; dir++) {
         dir_score[dir] += fight_driver_flee_eval_path(ch[cn].x, ch[cn].y, dir);
@@ -973,21 +945,6 @@ static int earthrain_driver(int cn, int co, int str) {
 }
 
 // earthrain
-/*static int check_earthrain_field(int x,int y)
-{
-	int m,n,fn;
-
-	m=x+y*MAXMAP;
-
-	if (map[m].flags&(MF_SIGHTBLOCK|MF_TSIGHTBLOCK)) return 0;
-
-	for (n=0; n<4; n++) {
-		if ((fn=map[m].ef[n]) && ef[fn].type==EF_EARTHRAIN) return 0;		
-	}
-
-	return 1;
-	
-}*/
 
 // earthmud
 static int check_earthmud_field(int x, int y) {
@@ -1003,29 +960,6 @@ static int check_earthmud_field(int x, int y) {
 
     return 1;
 }
-
-/*static int fight_driver_earthrain_value(int cn,int co)
-{
-	int m,x,y,val,good=0;
-
-
-	m=earthrain_driver(cn,co,0);
-	x=m%MAXMAP;
-	y=m/MAXMAP;
-
-	if (check_earthrain_field(x,y)) good++;
-        if (check_earthrain_field(x+1,y)) good++;
-	if (check_earthrain_field(x-1,y)) good++;
-	if (check_earthrain_field(x,y+1)) good++;
-	if (check_earthrain_field(x,y-1)) good++;
-
-	if (good<1) return 0;
-	if (good<2) val=LOW_PRIO;
-	else if (good<4) val=MED_PRIO;
-	else val=HIGH_PRIO+(good*20);
-
-	return val;
-}*/
 
 static int fight_driver_earthmud_value(int cn, int co) {
     int m, x, y, val, good = 0;
@@ -1271,7 +1205,6 @@ static int task_cmp(const void *a, const void *b) {
 
 // attack specific enemy. enemy should be in the fight driver enemy array for fireball to work
 static int fight_driver_attack_enemy(int cn, int co, int nomove) {
-    //static char *typename[]={"freeze","fireball","ball","flash","warcry","atttack","moveright","moveleft","moveup","movedown","regenerate","distance3","distance7","bless","earthrain","earthmud","heal","ms","attackback","flee","firering","max"};
     struct task task[maxtasktype];
     int maxvalue = 0, maxtask = 0, n, ret, cdist, tdist, tmp;
     int sillyness = ch[cn].level / 2 + 5, val;
@@ -1500,16 +1433,7 @@ static int fight_driver_attack_enemy(int cn, int co, int nomove) {
     }
 
     qsort(task, maxtask, sizeof(task[0]), task_cmp);
-
-    /*//if (ch[cn].flags&CF_PLAYER) {
-		say(cn,"---");
-		for (n=0; n<maxtask; n++) {
-			say(cn,"%d: value %d, type %s",cn,task[n].value,typename[task[n].task]);
-		}
-	//}*/
     for (n = 0; n < maxtask; n++) {
-        //if (ch[cn].flags&CF_PLAYER)
-        //say(cn,"doing %s",typename[task[n].task]);
         if (task[n].task == attackback && (n == maxtask - 1 || task[n + 1].task != attack)) ret = 0;
         else switch (task[n].task) {
             case freeze:
@@ -1587,11 +1511,10 @@ static int fight_driver_attack_enemy(int cn, int co, int nomove) {
                 break;
             }
         if (ret) return 1;
-        //say(cn,"failed.");
     }
 
     // emergency solution... ????
-    if ((!nomove || cdist == 2) && char_dist(cn, co) < 4 && attack_driver(cn, co)) { /* say(cn,"all failed, doing attack"); */
+    if ((!nomove || cdist == 2) && char_dist(cn, co) < 4 && attack_driver(cn, co)) {
         return 1;
     }
 
@@ -1631,13 +1554,11 @@ int fight_driver_add_enemy(int cn, int co, int hurtme, int visible) {
 
     // dont add enemy if he is further than start_dist away from home
     if (!hurtme && dat->start_dist && fight_driver_dist_from_home(cn, co) > dat->start_dist) {
-        //say(cn,"(%d) rejected %s because of home_dist %d",cn,ch[co].name,dat->home_dist);
         return 0;
     }
 
     // dont add enemy if he is further than char_dist away current position
     if (!hurtme && dat->char_dist && char_dist(cn, co) > dat->char_dist) {
-        //say(cn,"(%d) rejected %s because of char_dist %d",cn,ch[co].name,dat->char_dist);
         return 0;
     }
 
@@ -1647,20 +1568,6 @@ int fight_driver_add_enemy(int cn, int co, int hurtme, int visible) {
     if (!hurtme && (map[m].flags & MF_NEUTRAL)) return 0; // dont attack if enemy is in neutral zone and didnt hurt us
 
     ID = charID(co);
-
-    /*for (n=0; n<10; n++)
-		if (dat->enemy[n].ID==ID) break;
-	if (n==10) {
-                memmove(dat->enemy+1,dat->enemy,sizeof(dat->enemy)-sizeof(dat->enemy[0]));
-	} else memmove(dat->enemy+1,dat->enemy,sizeof(dat->enemy)-sizeof(dat->enemy[0])*(10-n));
-	
-	dat->enemy[0].cn=co;
-	dat->enemy[0].ID=ID;
-	dat->enemy[0].lastx=ch[co].x;
-	dat->enemy[0].lasty=ch[co].y;
-	dat->enemy[0].visible=visible;
-	dat->enemy[0].hurtme=hurtme;
-	if (n==10) return 1;*/
 
     for (n = 0; n < 9; n++)
         if (dat->enemy[n].ID == ID) break;
@@ -1676,19 +1583,6 @@ int fight_driver_add_enemy(int cn, int co, int hurtme, int visible) {
     mex = ch[cn].x;
     mey = ch[cn].y;
     qsort(dat->enemy, 10, sizeof(struct person), person_cmp);
-
-    /*if (1 || RANDOM(100)==0) {
-		for (n=0; n<10; n++) {
-			if (!dat->enemy[n].cn) continue;
-			
-			say(cn,"%02d: v=%d, h=%d, d=%d, f=%d",
-			    n,
-			    dat->enemy[n].visible,
-			    dat->enemy[n].hurtme,
-			    abs(mex-dat->enemy[n].lastx)+abs(mey-dat->enemy[n].lasty),
-			    is_facing(cn,dat->enemy[n].cn));
-		}
-	}*/
 
     if (n == 9) return 1;
 
@@ -1745,20 +1639,16 @@ int fight_driver_update(int cn) {
             continue;
         } // not attackable anymore? trash
 
-        //say(cn,"enemy %s at %d %d",ch[co].name,dat->enemy[n].lastx,dat->enemy[n].lasty);
-
         if (char_see_char(cn, co)) {
             // if enemy is too far away from respawn point, remove him from the list
             if (dat->stop_dist && fight_driver_dist_from_home(cn, co) > dat->stop_dist) {
                 dat->enemy[n].cn = dat->enemy[n].ID = 0;
-                //say(cn,"removed enemy %s (stop dist)",ch[co].name);
                 continue;
             }
 
             dat->enemy[n].visible = 1;
             dat->enemy[n].lastx = ch[co].x;
             dat->enemy[n].lasty = ch[co].y;
-            //say(cn,"set %s coords to %d,%d",ch[co].name,ch[co].x,ch[co].y);
         } else dat->enemy[n].visible = 0;
     }
 
@@ -1786,12 +1676,7 @@ int fight_driver_attack_visible(int cn, int nomove) {
             dist = char_dist(cn, dat->enemy[n].cn);
 
             score = (999 - dist) * 10; // distance
-            //if (dat->enemy[n].hurtme) score+=5;	// prefer those who hit me before
             if (is_facing(cn, co)) score += 5; // prefer the one i'm facing
-            //score+=(200-ch[co].level)*5;		// prefer low levels :P
-            //if (!RANDOM(20)) score+=10;		// plus some randomness
-
-            //say(cn,"%s - score %d",ch[co].name,score);
 
             if (score > bscore) {
                 bscore = score;
@@ -1799,8 +1684,6 @@ int fight_driver_attack_visible(int cn, int nomove) {
             }
         }
         if (bn == -1) return 0;
-
-        //say(cn,"target is %s",ch[dat->enemy[bn].cn].name);
         if (fight_driver_attack_enemy(cn, dat->enemy[bn].cn, nomove)) return 1;
         bad[bn] = 1;
     }
@@ -1963,8 +1846,6 @@ void standard_message_driver(int cn, struct msg *msg, int agressive, int helper)
         // is the victim our friend? then help
         if (co != cn && ch[co].group == ch[cn].group) {
             if (!is_valid_enemy(cn, cc, -1)) break;
-
-            //say(cn,"help victim %s against %s",ch[co].name,ch[cc].name);
             fight_driver_add_enemy(cn, cc, 1, 1);
             break;
         }
@@ -1972,8 +1853,6 @@ void standard_message_driver(int cn, struct msg *msg, int agressive, int helper)
         // is the attacker our friend? then help
         if (cc != cn && ch[cc].group == ch[cn].group) {
             if (!is_valid_enemy(cn, co, -1)) break;
-
-            //say(cn,"help attacker %s against %s",ch[cc].name,ch[co].name);
             fight_driver_add_enemy(cn, co, 0, 1);
             break;
         }
@@ -1986,12 +1865,8 @@ void standard_message_driver(int cn, struct msg *msg, int agressive, int helper)
         co = msg->dat1;
         if (!co) break;
 
-        //say(cn,"defend against %s (%d)?",ch[co].name,msg->dat2);
-
         if (ch[cn].group == ch[co].group) break;
         if (!can_attack(cn, co)) break;
-
-        //say(cn,"defend against %s (%d)!",ch[co].name,msg->dat2);
 
         if (!char_see_char(cn, co)) fight_driver_add_enemy(cn, co, 1, 0);
         else fight_driver_add_enemy(cn, co, 1, 1);

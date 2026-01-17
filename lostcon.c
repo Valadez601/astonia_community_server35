@@ -48,7 +48,6 @@ int driver(int type, int nr, int obj, int ret, int lastact) {
 
 struct lostcon_driver_data {
     int timeout;
-    //int last_say;
 };
 
 void lostcon_driver(int cn, int ret, int lastact) {
@@ -91,8 +90,6 @@ void lostcon_driver(int cn, int ret, int lastact) {
         if (msg->type == NT_CHAR) {
 
             co = msg->dat1;
-
-            //if (co && can_attack(cn,co)) fight_driver_add_enemy(cn,co,1,1);	// !!!!!!!!!!
         }
 
         // did we get hit?
@@ -107,7 +104,6 @@ void lostcon_driver(int cn, int ret, int lastact) {
         // did we hear something?
         if (msg->type == NT_TEXT) {
             if (msg->dat1 == 1 && msg->dat3 != cn) { // someone (not us) is talking
-                //xlog("got (%s)",(char*)msg->dat2);
             }
         }
 
@@ -150,10 +146,6 @@ void lostcon_driver(int cn, int ret, int lastact) {
     }
 
     // low on magic shield?
-    /* if (!arena && ch[cn].lifeshield<ch[cn].value[1][V_MAGICSHIELD]*POWERSCALE/MAGICSHIELDMOD/4) {
-		// try respell
-		if (ch[cn].mana>ch[cn].value[1][V_MANA]*POWERSCALE/2 && do_magicshield(cn)) return;
-	} */
 
     fight_driver_update(cn);
     if (fight_driver_attack_visible(cn, 0)) return;
@@ -176,8 +168,6 @@ void lostcon_dead(int cn) {
     if (!dat) return; // oops...
 
     dat->timeout = 0;
-
-    //charlog(cn,"reset lostcon timer");
 }
 
 int ch_driver(int nr, int cn, int ret, int lastact) {

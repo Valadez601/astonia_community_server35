@@ -574,13 +574,7 @@ int mixer_mix(int cn, int in, int power, int duration, double divi) {
         skl[2] = -1;
         val[2] = 0;
         value = 3;
-    } /*else if (cnt==3 && wis==1 && lfe==1 && spr==1) {		// ball
-		skl[0]=V_BALL; if ((val[0]=power/divi/2)) flag=1;
-		skl[1]=-1; val[1]=0;
-		skl[2]=-1; val[2]=0;
-		value=3;
-	} */
-    else if (cnt == 3 && str == 2 && spr == 1) { // immunity
+    } else if (cnt == 3 && str == 2 && spr == 1) { // immunity
         skl[0] = V_IMMUNITY;
         if ((val[0] = power / divi / 2)) flag = 1;
         skl[1] = -1;
@@ -962,31 +956,31 @@ void flower_driver(int in, int cn) {
     switch (it[in].drdata[0]) {
     case 8:
         minlevel = 1;
-        break; //in2=create_item("alc_mushroom1"); break;
+        break;
     case 9:
         minlevel = 1;
-        break; //in2=create_item("alc_mushroom2"); break;
+        break;
     case 10:
         minlevel = 3;
-        break; //in2=create_item("alc_mushroom3"); break;
+        break;
     case 11:
         minlevel = 9;
-        break; //in2=create_item("alc_mushroom4"); break;
+        break;
     case 12:
         minlevel = 11;
-        break; //in2=create_item("alc_mushroom5"); break;
+        break;
     case 13:
         minlevel = 14;
-        break; //in2=create_item("alc_mushroom6"); break;
+        break;
     case 14:
         minlevel = 17;
-        break; //in2=create_item("alc_mushroom7"); break;
+        break;
     case 15:
         minlevel = 21;
-        break; //in2=create_item("alc_mushroom8"); break;
+        break;
     case 16:
         minlevel = 24;
-        break; //in2=create_item("alc_mushroom9"); break;
+        break;
 
     default:
         minlevel = 0;

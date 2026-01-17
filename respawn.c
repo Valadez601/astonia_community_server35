@@ -57,7 +57,6 @@ void register_respawn_death(int cn) {
                 elog("respawn checker death: double entry for %s (%d %d %d)", ch[cn].name, ch[cn].tmp, ch[cn].tmpx, ch[cn].tmpy);
             } else {
                 flag = 1;
-                //xlog("%s (%d %d %d) died after %.2fm",ch[cn].name,ch[cn].tmp,ch[cn].tmpx,ch[cn].tmpy,(realtime-respawn[n].last_respawn)/60.0);
                 respawn[n].last_death = realtime;
                 respawn[n].cn = 0;
             }
@@ -79,7 +78,6 @@ void register_respawn_respawn(int cn) {
                 elog("respawn checker respawn: double entry for %s (%d %d %d)", ch[cn].name, ch[cn].tmp, ch[cn].tmpx, ch[cn].tmpy);
             } else {
                 flag = 1;
-                //xlog("%s (%d %d %d) respawned after %.2fm",ch[cn].name,ch[cn].tmp,ch[cn].tmpx,ch[cn].tmpy,(realtime-respawn[n].last_death)/60.0);
                 respawn[n].last_respawn = realtime;
                 respawn[n].cn = cn;
                 respawn[n].serial = ch[cn].serial;

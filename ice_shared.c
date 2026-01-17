@@ -212,8 +212,6 @@ void freakdoor(int in, int cn) {
         }
     } else you = in;
 
-    //log_char(cn,LOG_SYSTEM,0,"Door %d (%d/%d)",me,in,you);
-
     if (it[in].x != ch[cn].x || it[in].y != ch[cn].y) {
         item_driver(IDR_DOOR, in, cn);
         // open the other door if it is closed and our door was opened

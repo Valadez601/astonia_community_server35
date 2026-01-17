@@ -135,8 +135,6 @@ void ritual_create_char(char *name, int x, int y, int dir, int attackstart) {
     // drop him to map
     if (!drop_char(cn, x, y, 0)) {
         destroy_char(cn);
-        /*destroy_items(cn);
-                free_char(cn);*/
         xlog("drop_char failed (%s,%d)", __FILE__, __LINE__);
         return;
     }
@@ -800,7 +798,7 @@ void lab5_daemon_driver(int cn, int ret, int lastact) {
             } else imm = 0;
 
             if (dat->type == 2) { // gunned
-                if (ch[co].flags & CF_PLAYER && ch[co].y < namecoordy[0] + 25 && char_see_char(cn, co)) fight_driver_add_enemy(cn, co, 1, 1); // dat->aggressive=1;
+                if (ch[co].flags & CF_PLAYER && ch[co].y < namecoordy[0] + 25 && char_see_char(cn, co)) fight_driver_add_enemy(cn, co, 1, 1);
             }
         }
 
@@ -925,7 +923,7 @@ void lab5_item(int in, int cn) {
             } else if (it[in].sprite == 11137) {
                 dx = -1;
                 dy = 0;
-            } else /*if (it[in].sprite==11138)*/ {
+            } else {
                 dx = 0;
                 dy = 1;
             }
@@ -948,7 +946,7 @@ void lab5_item(int in, int cn) {
             } else if (it[in].sprite == 11137) {
                 dx = -1;
                 dy = 0;
-            } else /*if (it[in].sprite==11138)*/ {
+            } else {
                 dx = 0;
                 dy = 1;
             }
@@ -1097,9 +1095,7 @@ void lab5_item(int in, int cn) {
 
         // manapotion
         if (drdata[0] == 12) {
-            // ch[cn].hp=ch[cn].value[0][V_HP]*POWERSCALE;
             ch[cn].mana = ch[cn].value[0][V_MANA] * POWERSCALE;
-            // ch[cn].endurance=ch[cn].value[0][V_ENDURANCE]*POWERSCALE;
             if (ch[cn].value[1][V_MAGICSHIELD]) ch[cn].lifeshield = get_lifeshield_max(cn) * POWERSCALE;
             log_area(ch[cn].x, ch[cn].y, LOG_INFO, cn, 10, "%s drinks a potion.", ch[cn].name);
             remove_item(in);
@@ -1158,7 +1154,6 @@ void lab5_item(int in, int cn) {
                 pd->ritualdaemon = drdata[1];
                 pd->ritualstate = 3;
                 log_char(cn, LOG_SYSTEM, 0, "Mathor tells you: \"The ritual continues. Well done so far, %s.\"", ch[cn].name);
-                // log_char(cn,LOG_SYSTEM,0,"\260c3The Ritual of %s continues.\260c0",daemonname[pd->ritualdaemon]);
             } else {
                 if (drdata[1] == 2) log_char(cn, LOG_SYSTEM, 0, "Mathor tells you: \"Sorry. But a strange power forced me.\"");
                 ritual_hurt(cn, pd, namecoordx[hurttrans[(int)drdata[1]]], namecoordy[hurttrans[(int)drdata[1]]]);

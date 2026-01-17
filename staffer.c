@@ -146,7 +146,6 @@ int analyse_text_driver(int cn, int type, char *text, int co) {
     if (w) {
         for (q = 0; q < sizeof(qa) / sizeof(struct qa); q++) {
             for (n = 0; n < w && qa[q].word[n]; n++) {
-                //say(cn,"word = '%s'",wordlist[n]);
                 if (strcmp(wordlist[n], qa[q].word[n])) break;
             }
             if (n == w && !qa[q].word[n]) {
@@ -359,9 +358,7 @@ void smugglecom_driver(int cn, int ret, int lastact) {
                     ppd->smugglecom_state++;
                     didsay = 1;
                     break;
-                case 2: //quiet_say(cn,"Also, I will reward you for every piece of contraband you bring me. ");
-                    //ppd->smugglecom_state++; didsay=1;
-                    //break;
+                case 2:
                     // fall through intended for now
                 case 3:
                     quiet_say(cn, "Go now, and may Ishtar be with you.");

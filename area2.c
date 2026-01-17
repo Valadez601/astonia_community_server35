@@ -440,7 +440,6 @@ void moonie_driver(int cn, int ret, int lastact) {
     // help friend by blessing him. all checks already done in message loop
     if (friend && do_bless(cn, friend)) return;
 
-    //say(cn,"i am %d",cn);
     do_idle(cn, TICKS);
 }
 

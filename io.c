@@ -155,7 +155,6 @@ static void rec_player(int nr) {
 
     if (len < 1) { // receive failure
         if (errno != EWOULDBLOCK) {
-            //xlog("receive failure, kicking player %d",nr);
             kick_player(nr, NULL);
         }
         return;
@@ -342,8 +341,6 @@ void pflush(void) {
             }
             if (ilen && player[n]) csend(n, player[n]->tbuf, ilen);
         }
-
-        //xlog("ilen=%d, olen=%d",ilen,olen);
 
         if (player[n]) player[n]->tptr = 0;
     }

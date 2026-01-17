@@ -40,7 +40,6 @@ static void insert_queue(int nr, int ac, int ac1, int ac2) {
     for (n = 0; n < 15; n++) {
         if (!player[nr]->queue[n].action) break; // we're done
     }
-    //if (n==16) return;
     // new orders get inserted automatically into last slot
 
     player[nr]->queue[n].action = ac;
@@ -187,7 +186,6 @@ static int run_queue(int nr, int cn) {
 
     for (n = 0; n < 16; n++) {
         if (!player[nr]->queue[n].action) break; // done
-        //say(cn,"nr=%d, ac=%d",n,player[nr]->queue[n].action);
         if ((ret = check_high_prio_task(cn, player[nr]->queue[n].action, player[nr]->queue[n].act1, player[nr]->queue[n].act2))) {
             if (n < 15) memmove(player[nr]->queue + n, player[nr]->queue + n + 1, sizeof(player[nr]->queue[0]) * (16 - n - 1));
             player[nr]->queue[15].action = PAC_IDLE;
@@ -196,7 +194,6 @@ static int run_queue(int nr, int cn) {
     }
     for (n = 0; n < 16; n++) {
         if (!player[nr]->queue[n].action) break; // done
-        //say(cn,"nr=%d, ac=%d",n,player[nr]->queue[n].action);
 
         if (player[nr]->queue[n].action == PAC_FIREBALL2 && player[nr]->queue[n].act1 == cn) noflash = 1;
         if (noflash == 1 && player[nr]->queue[n].action == PAC_FLASH) continue;
@@ -209,7 +206,6 @@ static int run_queue(int nr, int cn) {
     }
     for (n = 0; n < 16; n++) {
         if (!player[nr]->queue[n].action) break; // done
-        //say(cn,"nr=%d, ac=%d",n,player[nr]->queue[n].action);
         if ((ret = check_low_prio_task(cn, player[nr]->queue[n].action, player[nr]->queue[n].act1, player[nr]->queue[n].act2))) {
             if (n < 15) memmove(player[nr]->queue + n, player[nr]->queue + n + 1, sizeof(player[nr]->queue[0]) * (16 - n - 1));
             player[nr]->queue[15].action = PAC_IDLE;
@@ -711,7 +707,6 @@ void tutorial(int cn, int nr, struct tutorial_ppd *ppd) {
 static int ignorechar_check_target(int m) {
     if (map[m].flags & MF_MOVEBLOCK) return 0;
     if (map[m].flags & MF_DOOR) return 1;
-    //if (map[m].ch && (ch[map[m].ch].flags&(CF_PLAYER|CF_PLAYERLIKE)) && ch[map[m].ch].action==AC_IDLE) return 1;
     if ((map[m].flags & MF_TMOVEBLOCK) && map[m].it) return 0;
 
     return 1;
@@ -731,7 +726,6 @@ static int player_move_driver(int cn, int x, int y) {
     if (ch[cn].x == x && ch[cn].y == y) return 0; // we're there. done.
     if (move_driver(cn, x, y, 0)) return 1; // we can go to the exact tile, go there.
     if (abs(ch[cn].x - x) + abs(ch[cn].y - y) < 2) return 0; // exact tile is blocked, but we're just one step away. done.
-    //return move_driver(cn,x,y,1);				// try to go close to target
     if (move_driver(cn, x, y, 1)) return 1; // try to go close to target
 
     return move_driver_ignorechar(cn, x, y, 1);
@@ -858,7 +852,6 @@ void player_driver(int cn, int ret, int last_action) {
         }
 
         if (msg->type == NT_NPC && msg->dat1 == NTID_TUTORIAL) {
-            //say(cn,"got dat2=%d, dat=%s, diff1=%d, cnt=%d, diff2=%d",msg->dat2,ch[msg->dat3].name,realtime-ppd->timer,ppd->give_cnt,realtime-ppd->give_last);
             if (!(ppd->state & TS_DISABLED) && msg->dat2 == 0 && msg->dat3 == cn && realtime - ppd->timer > 10 && ppd->give_cnt < 3 && realtime - ppd->give_last > TF_TIMEOUT && has_item(cn, IID_AREA1_WOODPOTION)) {
                 log_char(cn, LOG_SYSTEM, 0, "#Now would be a good time to hand Lydia the potion you found. Hold down SHIFT and left-click on the potion. Then hold down CTRL (and release shift) and left-click on Lydia.");
                 ppd->give_cnt++;
@@ -871,7 +864,6 @@ void player_driver(int cn, int ret, int last_action) {
                 ppd->give_last = realtime;
                 ppd->timer = realtime;
             }
-            //if (msg->dat2==2525 && msg->dat3==cn) { bzero(ppd,sizeof(*ppd)); ppd->state=4; } // !!!!!!!!!!!!
         }
 
         if (!(ppd->state & TS_DISABLED) && msg->type == NT_DEAD && msg->dat2 == cn && realtime - ppd->timer > 10 && ppd->grave_cnt < 3 && realtime - ppd->grave_last > TF_TIMEOUT) {

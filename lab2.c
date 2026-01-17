@@ -674,7 +674,6 @@ int sizeof_player_data = 0;
 
 #define LAB2_GRAVE_VERSION 2
 #define MAX_DESCRIBED_GRAVE 40
-// #define GRAVE_TWO_BITS
 
 struct described_grave {
     int x, y; // coord of the grave
@@ -1029,8 +1028,6 @@ void lab2_undead_died_driver(int cn, int co) {
             // crypta grave
             player_dat->numcrypt++;
 
-            // log_char(co,LOG_SYSTEM,0,"%d of %d crypt graves done.",player_dat->numcrypt,max_crypt);
-
             if (player_dat->numcrypt == max_crypt - 1) {
                 ppd = set_data(co, DRD_LAB_PPD, sizeof(struct lab_ppd));
                 if (ppd && ppd->timesgotcryptgold == 0) {
@@ -1046,8 +1043,6 @@ void lab2_undead_died_driver(int cn, int co) {
         } else {
             // yard grave
             player_dat->numyard++;
-
-            // log_char(co,LOG_SYSTEM,0,"%d of %d yard graves done.",player_dat->numyard,max_yard);
 
             if (player_dat->numyard == max_yard - 1) {
                 ppd = set_data(co, DRD_LAB_PPD, sizeof(struct lab_ppd));
@@ -1320,7 +1315,7 @@ void lab2_water(int in, int cn) {
             free_item(in2);
 
             log_char(cn, LOG_SYSTEM, 0, "The water inside your bowl is holy now");
-        } else if (it[in].drdata[0] == 4 || it[in].drdata[0] == 5) { // can't happen, item has no IF_USE flag ;-)
+        } else if (it[in].drdata[0] == 4 || it[in].drdata[0] == 5) {
             log_char(cn, LOG_SYSTEM, 0, "Skoll!");
         }
     } else {
