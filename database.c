@@ -1685,7 +1685,6 @@ void tick_login(void) {
     ch[cn].escape_timer = 0;
     ch[cn].supported = 0;
     ch[cn].supporting = 0;
-    ch[cn].flags |= CF_PAID;
 
     if (!ch[cn].tmpa) ch[cn].tmpa = areaID;
     if (ch[cn].resta < 1 || ch[cn].resta >= MAXAREA ||

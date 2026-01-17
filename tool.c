@@ -755,7 +755,7 @@ char *bignumber(int val) {
 }
 
 int look_item(int cn, struct item *in, int slot) {
-    int n, v, m = 0, r = 0, s, ve, cnt = 0, flag = 0;
+    int n, v, m = 0, r = 0, s, ve, cnt = 0;
     double effectivity;
 
     if (!in->name[0]) return 1; // no name means we dont display anything
@@ -786,26 +786,17 @@ int look_item(int cn, struct item *in, int slot) {
                     if (s == V_ARMOR || s == V_WEAPON) log_char(cn, LOG_SYSTEM, 0, "%s %+.2f \260c1(%d: %d+%d)", skill[s].name, v / 20.0, n, s, v);
                     else if (ve != v && s != V_DEFENSE && s != V_OFFENSE && s != V_SPEED) {
                         cnt++;
-                        if (cnt > 1 && !(ch[cn].flags & CF_PAID)) {
-                            log_char(cn, LOG_SYSTEM, 0, "\260c3%s %+d (base: %+d) \260c1(%d: %d+%d)*", skill[s].name, ve, v, n, s, v);
-                            flag = 1;
-                        } else log_char(cn, LOG_SYSTEM, 0, "%s %+d (base: %+d) \260c1(%d: %d+%d)", skill[s].name, ve, v, n, s, v);
+                        log_char(cn, LOG_SYSTEM, 0, "%s %+d (base: %+d) \260c1(%d: %d+%d)", skill[s].name, ve, v, n, s, v);
                     } else log_char(cn, LOG_SYSTEM, 0, "%s %+d \260c1(%d: %d+%d)", skill[s].name, v, n, s, v);
                 } else {
                     if (s == V_ARMOR || s == V_WEAPON) log_char(cn, LOG_SYSTEM, 0, "%s %+.2f", skill[s].name, v / 20.0);
                     else if (ve != v && s != V_DEFENSE && s != V_OFFENSE && s != V_SPEED) {
                         cnt++;
-                        if (cnt > 1 && !(ch[cn].flags & CF_PAID)) {
-                            log_char(cn, LOG_SYSTEM, 0, "\260c3%s %+d (base: %+d)*", skill[s].name, ve, v);
-                            flag = 1;
-                        } else log_char(cn, LOG_SYSTEM, 0, "%s %+d (base: %+d)", skill[s].name, ve, v);
+                        log_char(cn, LOG_SYSTEM, 0, "%s %+d (base: %+d)", skill[s].name, ve, v);
                     } else log_char(cn, LOG_SYSTEM, 0, "%s %+d", skill[s].name, v);
                 }
             }
         }
-    }
-    if (flag) {
-        log_char(cn, LOG_SYSTEM, 0, "\260c3* The 2nd and 3rd modifier can only be used on premium accounts.");
     }
 
     for (n = 0; n < MAXMOD; n++) {
@@ -1526,7 +1517,6 @@ int store_citem(int cn) {
 
     for (n = 30; n < INVENTORYSIZE; n++) {
         if (ch[cn].item[n]) continue;
-        if (!(ch[cn].flags & CF_PAID) && n == UNPAIDINVENTORYSIZE) return 0;
         return swap(cn, n);
     }
     return 0;
@@ -1537,7 +1527,6 @@ int store_item(int cn, int in) {
 
     for (n = 30; n < INVENTORYSIZE; n++) {
         if (ch[cn].item[n]) continue;
-        if (!(ch[cn].flags & CF_PAID) && n == UNPAIDINVENTORYSIZE) return 0;
         ch[cn].item[n] = in;
         it[in].carried = cn;
         return 1;
@@ -1794,7 +1783,6 @@ int give_char_item(int cn, int in) {
     if (!ch[cn].citem) ch[cn].citem = in;
     else {
         for (n = 30; n < INVENTORYSIZE; n++) {
-            if (!(ch[cn].flags & CF_PAID) && n == UNPAIDINVENTORYSIZE) return 0;
             if (!ch[cn].item[n]) {
                 ch[cn].item[n] = in;
                 break;
@@ -1876,7 +1864,6 @@ int cnt_free_inv(int cn) {
     int n, cnt;
 
     for (n = 30, cnt = 0; n < INVENTORYSIZE; n++) {
-        if (!(ch[cn].flags & CF_PAID) && n == UNPAIDINVENTORYSIZE) return cnt;
         if (!ch[cn].item[n]) cnt++;
     }
     return cnt;

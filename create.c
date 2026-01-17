@@ -406,7 +406,7 @@ static char *CF_tab[] = {
     "CF_IDEMON", //25
     "CF_NOGIVE", //26
     "CF_PLAYERLIKE", //27
-    "CF_PAID", //28
+    "CF__UNUSED__", //28
     "CF_PROF", //29
     "CF_ALIVE", //30
     "CF_DEMON", //31
@@ -1532,7 +1532,6 @@ void update_char(int cn) {
 
                     if (v1 != V_ARMOR && v1 != V_WEAPON && v1 != V_LIGHT && v1 != V_SPEED && v1 != V_OFFENSE && v1 != V_DEFENSE && v1 != V_DEMON && v1 != V_COLD) {
                         v = (int)round(it[in].mod_value[m] * effectivity);
-                        if (n < 12 && !(ch[cn].flags & CF_PAID) && ++cnt > 1) continue;
                     } else v = it[in].mod_value[m];
 
                     if (!(ch[cn].flags & CF_WARRIOR) && it[in].driver == IDR_BLESS) bless[v1] += v;

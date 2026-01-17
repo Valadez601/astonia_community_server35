@@ -1240,10 +1240,6 @@ void create_dungeon(int cn, int co, int level, struct master_data *dat) {
         }
         if (!dat->created[n]) free_d++;
     }
-    if (!(ch[co].flags & CF_PAID) && free_d < 3) {
-        say(cn, "Sorry, the remaining dungeons are reserved for paying players.");
-        return;
-    }
     if (best < DUNGEONTIME) {
         say(cn, "Sorry, all dungeons are busy. Please try again in %.2f minutes", (DUNGEONTIME - best) / (TICKS * 60.0));
         return;

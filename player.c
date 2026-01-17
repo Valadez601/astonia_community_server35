@@ -519,11 +519,6 @@ static void cl_use_inv(int nr, char *buf) {
 
     cn = player[nr]->cn;
 
-    if (!(ch[cn].flags & CF_PAID) && pos >= UNPAIDINVENTORYSIZE) {
-        log_char(cn, LOG_SYSTEM, 0, "\260c3These slots can only be used by premium accounts.");
-        return;
-    }
-
     in = ch[cn].item[pos];
 
     if (!in) return;
@@ -2244,12 +2239,7 @@ static void player_stats(int nr) {
                 flags = it[in].flags & (IF_USE | IF_WNHEAD | IF_WNNECK | IF_WNBODY | IF_WNARMS | IF_WNBELT | IF_WNLEGS | IF_WNFEET | IF_WNLHAND | IF_WNRHAND | IF_WNCLOAK | IF_WNLRING | IF_WNRRING | IF_WNTWOHANDED);
                 price = 0;
 
-            } else {
-                if (!(ch[cn].flags & CF_PAID) && n >= UNPAIDINVENTORYSIZE) {
-                    sprite = 5;
-                    price = flags = 0;
-                } else sprite = price = flags = 0;
-            }
+            } else sprite = price = flags = 0;
 
             if (player[nr]->item[n] != sprite || player[nr]->item_flags[n] != flags) {
                 buf[0] = SV_SETITEM;

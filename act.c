@@ -1452,8 +1452,7 @@ void hurt_item(int in, int cn, int divi) {
 
     dam = it[in].complexity / 250000.0 / divi;
 
-    if (ch[cn].flags & CF_PAID) pv = 0.5 - clan_preservation_bonus(cn) / 100.0;
-    else pv = 1.0 - clan_preservation_bonus(cn) / 50.0;
+    pv = 0.5 - clan_preservation_bonus(cn) / 100.0;
     dam = dam * pv;
 
     loss = (int)(dam / 10) * 10;

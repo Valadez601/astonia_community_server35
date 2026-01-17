@@ -1185,10 +1185,7 @@ int swap(int cn, int pos) {
             error = ERR_ILLEGAL_INVPOS;
             return 0;
         } else if (pos < INVENTORYSIZE) { // backpack
-            if (!(ch[cn].flags & CF_PAID) && pos >= UNPAIDINVENTORYSIZE) {
-                log_char(cn, LOG_SYSTEM, 0, "\260c3These slots can only be used by premium accounts.");
-                return 0;
-            }
+            ; // allow
         } else { // >=INVENTORYSIZE, illegal
             error = ERR_ILLEGAL_INVPOS;
             return 0;

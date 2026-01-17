@@ -237,7 +237,7 @@ extern struct item *it;
 #define CF_IDEMON (1ull << 25) // ice-demon capabilities
 #define CF_NOGIVE (1ull << 26) // does not accept items through give
 #define CF_PLAYERLIKE (1ull << 27) // treat like a player when it comes to can_attack
-#define CF_PAID (1ull << 28) // player has paid
+#define CF__UNUSED__ (1ull << 28) // free
 #define CF_PROF (1ull << 29) // update professions
 #define CF_ALIVE (1ull << 30) // living being (infravision etc)
 #define CF_DEMON (1ull << 31) // demonic being (for special weapons)
@@ -331,7 +331,6 @@ extern struct item *it;
 #define SM_STEALTH 2
 
 #define INVENTORYSIZE 70
-#define UNPAIDINVENTORYSIZE 50
 
 // driver data block definition
 struct data {
