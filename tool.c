@@ -618,7 +618,7 @@ void remove_spell(int cn, int in, int pos, int cserial, int iserial) {
         return;
     }
 
-    if (ticker < *(signed long *)(it[in].drdata)) {
+    if (ticker < *(int *)(it[in].drdata)) {
         return;
     }
 
@@ -659,16 +659,16 @@ void heal_tick(int cn, int in, int pos, int cserial, int iserial) {
         return;
     }
 
-    val = *(signed long *)(it[in].drdata + 8) * HEALTICK / HEALDURATION;
+    val = *(int *)(it[in].drdata + 8) * HEALTICK / HEALDURATION;
     ch[cn].hp = min(ch[cn].hp + val, ch[cn].value[0][V_HP] * POWERSCALE);
 
-    val = *(signed long *)(it[in].drdata + 12) * HEALTICK / HEALDURATION;
+    val = *(int *)(it[in].drdata + 12) * HEALTICK / HEALDURATION;
     ch[cn].endurance = min(ch[cn].endurance + val, ch[cn].value[0][V_ENDURANCE] * POWERSCALE);
 
-    val = *(signed long *)(it[in].drdata + 16) * HEALTICK / HEALDURATION;
+    val = *(int *)(it[in].drdata + 16) * HEALTICK / HEALDURATION;
     ch[cn].mana = min(ch[cn].mana + val, ch[cn].value[0][V_MANA] * POWERSCALE);
 
-    if (ticker + HEALTICK < *(signed long *)(it[in].drdata))
+    if (ticker + HEALTICK < *(int *)(it[in].drdata))
         set_timer(ticker + HEALTICK, heal_tick, cn, in, pos, cserial, iserial);
 
     set_sector(ch[cn].x, ch[cn].y); // display new health bar right away
@@ -726,8 +726,8 @@ int add_spell(int cn, int driver, int duration, char *name) {
 
     it[in].driver = driver;
 
-    *(signed long *)(it[in].drdata) = ticker + duration;
-    *(signed long *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata) = ticker + duration;
+    *(int *)(it[in].drdata + 4) = ticker;
 
     it[in].carried = cn;
 
@@ -1458,41 +1458,41 @@ int lowhi_random(int val) {
 int create_spell_timer(int cn, int in, int pos) {
     switch (it[in].driver) {
     case IDR_BLESS:
-        create_show_effect(EF_BLESS, cn, *(signed long *)(it[in].drdata + 4), *(signed long *)(it[in].drdata), 0, it[in].mod_value[0]);
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        create_show_effect(EF_BLESS, cn, *(int *)(it[in].drdata + 4), *(int *)(it[in].drdata), 0, it[in].mod_value[0]);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
     case IDR_WARCRY:
-        create_show_effect(EF_WARCRY, cn, *(signed long *)(it[in].drdata + 4), *(signed long *)(it[in].drdata), 0, 0);
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        create_show_effect(EF_WARCRY, cn, *(int *)(it[in].drdata + 4), *(int *)(it[in].drdata), 0, 0);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
     case IDR_FREEZE:
-        create_show_effect(EF_FREEZE, cn, *(signed long *)(it[in].drdata + 4), *(signed long *)(it[in].drdata), 0, 0);
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        create_show_effect(EF_FREEZE, cn, *(int *)(it[in].drdata + 4), *(int *)(it[in].drdata), 0, 0);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
     case IDR_FLASH:
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
     case IDR_ARMOR:
     case IDR_WEAPON:
     case IDR_HP:
     case IDR_MANA:
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
     case IDR_POTION_SP:
-        create_show_effect(EF_POTION, cn, *(signed long *)(it[in].drdata + 4), *(signed long *)(it[in].drdata), 0, it[in].mod_value[0]);
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        create_show_effect(EF_POTION, cn, *(int *)(it[in].drdata + 4), *(int *)(it[in].drdata), 0, it[in].mod_value[0]);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
 
     case IDR_CURSE:
-        create_show_effect(EF_CURSE, cn, *(signed long *)(it[in].drdata + 4), *(signed long *)(it[in].drdata), 0, -it[in].mod_value[0]);
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        create_show_effect(EF_CURSE, cn, *(int *)(it[in].drdata + 4), *(int *)(it[in].drdata), 0, -it[in].mod_value[0]);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
 
     case IDR_POISON0:
     case IDR_POISON1:
     case IDR_POISON2:
     case IDR_POISON3:
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         set_timer(ticker + TICKS, poison_callback, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
     case IDR_NONOMAGIC:
@@ -1501,12 +1501,12 @@ int create_spell_timer(int cn, int in, int pos) {
     case IDR_INFRARED:
     case IDR_OXYGEN:
     case IDR_UWTALK:
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         break;
     case IDR_HEAL:
-        set_timer(*(unsigned long *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
+        set_timer(*(unsigned int *)(it[in].drdata), remove_spell, cn, in, pos, ch[cn].serial, it[in].serial);
         set_timer(ticker + HEALTICK, heal_tick, cn, in, pos, ch[cn].serial, it[in].serial);
-        create_show_effect(EF_HEAL, cn, *(unsigned long *)(it[in].drdata) - HEALDURATION, *(unsigned long *)(it[in].drdata), 0, 0);
+        create_show_effect(EF_HEAL, cn, *(unsigned int *)(it[in].drdata) - HEALDURATION, *(unsigned int *)(it[in].drdata), 0, 0);
         break;
     }
     return 1;

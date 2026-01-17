@@ -783,8 +783,8 @@ void warpfighter(int cn, int ret, int lastact) {
                     it[in].driver = IDR_FREEZE;
                     it[in].carried = cn;
                     ch[cn].item[fre] = in;
-                    *(signed long *)(it[in].drdata) = ticker + TICKS * 60;
-                    *(signed long *)(it[in].drdata + 4) = ticker;
+                    *(int *)(it[in].drdata) = ticker + TICKS * 60;
+                    *(int *)(it[in].drdata + 4) = ticker;
                     create_spell_timer(cn, in, fre);
                     update_char(cn);
                 }

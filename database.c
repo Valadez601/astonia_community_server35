@@ -441,8 +441,8 @@ int save_char(int cn, int area) {
             *itmp = it[in];
             ilen += sizeof(struct item);
             if (IDR_ISSPELL(itmp->driver)) { // make drdata contain the remaining duration
-                *(signed long *)(itmp->drdata) -= ticker;
-                *(signed long *)(itmp->drdata + 4) -= ticker;
+                *(int *)(itmp->drdata) -= ticker;
+                *(int *)(itmp->drdata + 4) -= ticker;
             }
             itmp++;
         }
@@ -1579,8 +1579,8 @@ void tick_login(void) {
                 update_fix_item(in, cn);
 
                 if (IDR_ISSPELL(it[in].driver)) {
-                    *(signed long *)(it[in].drdata) += ticker;
-                    *(signed long *)(it[in].drdata + 4) += ticker;
+                    *(int *)(it[in].drdata) += ticker;
+                    *(int *)(it[in].drdata + 4) += ticker;
                     create_spell_timer(cn, in, n);
                 } else {
                     if (it[in].driver) {

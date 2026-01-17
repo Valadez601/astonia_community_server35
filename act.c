@@ -564,8 +564,8 @@ static int act_firering(int cn) {
 
     it[in].driver = IDR_FIRE;
 
-    *(signed long *)(it[in].drdata) = ticker + TICKS; // one second
-    *(signed long *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata) = ticker + TICKS; // one second
+    *(int *)(it[in].drdata + 4) = ticker;
 
     it[in].carried = cn;
 
@@ -625,8 +625,8 @@ static int act_fireball(int cn) {
 
     it[in].driver = IDR_FIRE;
 
-    *(signed long *)(it[in].drdata) = ticker + TICKS; // one second
-    *(signed long *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata) = ticker + TICKS; // one second
+    *(int *)(it[in].drdata + 4) = ticker;
 
     it[in].carried = cn;
 
@@ -681,8 +681,8 @@ static int act_flash(int cn) {
 
     it[in].driver = IDR_FLASH;
 
-    *(signed long *)(it[in].drdata) = ticker + duration;
-    *(signed long *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata) = ticker + duration;
+    *(int *)(it[in].drdata + 4) = ticker;
 
     it[in].carried = cn;
 
@@ -710,8 +710,8 @@ static int act_ball(int cn) {
 
     it[in].driver = IDR_FLASHY;
 
-    *(signed long *)(it[in].drdata) = ticker + TICKS; // one second
-    *(signed long *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata) = ticker + TICKS; // one second
+    *(int *)(it[in].drdata + 4) = ticker;
 
     it[in].carried = cn;
 
@@ -784,9 +784,9 @@ int bless_someone(int co, int strength, int duration) {
 
     it[in].driver = IDR_BLESS;
 
-    *(signed long *)(it[in].drdata) = ticker + duration;
-    *(signed long *)(it[in].drdata + 4) = ticker;
-    *(signed long *)(it[in].drdata + 8) = strength;
+    *(int *)(it[in].drdata) = ticker + duration;
+    *(int *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata + 8) = strength;
 
     it[in].carried = co;
 
@@ -825,9 +825,9 @@ int bless_self(int cn) {
     duration = BLESSDURATION;
     if (ch[cn].value[1][V_DURATION]) duration += BLESSDURATION * ch[cn].value[0][V_DURATION] / DURATION;
 
-    *(signed long *)(it[in].drdata) = ticker + duration;
-    *(signed long *)(it[in].drdata + 4) = ticker;
-    *(signed long *)(it[in].drdata + 8) = ch[cn].value[0][V_BLESS];
+    *(int *)(it[in].drdata) = ticker + duration;
+    *(int *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata + 8) = ch[cn].value[0][V_BLESS];
 
     it[in].carried = cn;
 
@@ -896,8 +896,8 @@ static void warcry_someone(int cn, int co, int pwr) {
 
         endtime = ticker + WARCRYDURATION;
 
-        *(signed long *)(it[in].drdata) = endtime;
-        *(signed long *)(it[in].drdata + 4) = ticker;
+        *(int *)(it[in].drdata) = endtime;
+        *(int *)(it[in].drdata + 4) = ticker;
 
         create_spell_timer(co, in, fre);
 
@@ -973,8 +973,8 @@ static int ice_curse(int co, int str, int max) {
 
         it[in].driver = IDR_CURSE;
 
-        *(signed long *)(it[in].drdata) = ticker + duration;
-        *(signed long *)(it[in].drdata + 4) = ticker;
+        *(int *)(it[in].drdata) = ticker + duration;
+        *(int *)(it[in].drdata + 4) = ticker;
 
         it[in].carried = co;
 
@@ -1033,8 +1033,8 @@ static void freeze_someone(int cn, int co) {
 
         endtime = ticker + duration;
 
-        *(signed long *)(it[in].drdata) = endtime;
-        *(signed long *)(it[in].drdata + 4) = ticker;
+        *(int *)(it[in].drdata) = endtime;
+        *(int *)(it[in].drdata + 4) = ticker;
 
         it[in].carried = co;
 
@@ -1088,7 +1088,7 @@ void heal_someone(int cn, int str_heal, int str_end, int str_mana) {
 
     if ((in = ch[cn].item[fre])) {
         str1 = max(max(str_heal, str_end), str_mana);
-        str2 = max(max(*(signed long *)(it[in].drdata + 8), *(signed long *)(it[in].drdata + 12)), *(signed long *)(it[in].drdata + 16));
+        str2 = max(max(*(int *)(it[in].drdata + 8), *(int *)(it[in].drdata + 12)), *(int *)(it[in].drdata + 16));
         if (str1 < str2) return;
 
         destroy_item(in);
@@ -1097,14 +1097,14 @@ void heal_someone(int cn, int str_heal, int str_end, int str_mana) {
     in = create_item("heal_spell");
     if (!in) return;
 
-    *(signed long *)(it[in].drdata + 8) = str_heal;
-    *(signed long *)(it[in].drdata + 12) = str_end;
-    *(signed long *)(it[in].drdata + 16) = str_mana;
+    *(int *)(it[in].drdata + 8) = str_heal;
+    *(int *)(it[in].drdata + 12) = str_end;
+    *(int *)(it[in].drdata + 16) = str_mana;
 
     it[in].driver = IDR_HEAL;
 
-    *(signed long *)(it[in].drdata) = ticker + HEALDURATION;
-    *(signed long *)(it[in].drdata + 4) = ticker;
+    *(int *)(it[in].drdata) = ticker + HEALDURATION;
+    *(int *)(it[in].drdata + 4) = ticker;
 
     it[in].carried = cn;
 
