@@ -56,6 +56,7 @@
 #include "talk.h"
 #include "club.h"
 #include "version.h"
+#include "config.h"
 
 unsigned long long rdtsc(void);
 
@@ -169,7 +170,7 @@ int main(int argc, char *args[]) {
 
     if (argc > 1) {
         while (1) {
-            c = getopt(argc, args, "a:m:i:w:dhc");
+            c = getopt(argc, args, "a:m:i:w:dhcs:f:e");
             if (c == -1) break;
 
             switch (c) {
@@ -182,14 +183,24 @@ int main(int argc, char *args[]) {
             case 'd':
                 demon = 1;
                 break;
+            default:
             case 'h':
-                fprintf(stderr, "Usage: %s [-a <areaID>] [-m <mirror>] [-d] [-c]\n\n-d Demonize\n-c Disable concurrent database access\n\n", args[0]);
+                fprintf(stderr, "Usage: %s [-a <areaID>] [-m <mirror>] [-d] [-c] [-s name=value] [-f filename] [-e]\n\n-d Demonize\n-c Disable concurrent database access\n-s Set config name to value (e.g. dbhost=localhost).\n-f Read config file <filename>.\n-e Read configuration from environment variables.\n", args[0]);
                 exit(0);
             case 'c':
                 multi = 0;
                 break;
             case 'i':
                 if (optarg) serverID = atoi(optarg);
+                break;
+            case 's':
+                config_string(optarg);
+                break;
+            case 'f':
+                config_file(optarg);
+                break;
+            case 'e':
+                config_getenv();
                 break;
             }
         }

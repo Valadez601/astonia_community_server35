@@ -33,37 +33,17 @@
 #include "badip.h"
 
 static MYSQL mysql;
-static char mysqlpass[80];
-
-static void makemysqlpass(void) {
-    static char key1[] = {117, 127, 98, 38, 118, 115, 100, 104, 0};
-    static char key2[] = {"fr5tgs23"};
-    static char key3[] = {"gj56ffe3"};
-    int n;
-
-    for (n = 0; key1[n]; n++) {
-        mysqlpass[n] = key1[n] ^ key2[n] ^ key3[n];
-    }
-    mysqlpass[n] = 0;
-    strcpy(mysqlpass, "tgbdwf3h"); // FIXME!!!
-}
-
-static void destroymysqlpass(void) {
-    bzero(mysqlpass, sizeof(mysqlpass));
-}
+static char mysqlpass[80] = {"tgbdwf3h"};
 
 int init_database(void) {
     // init database client
     if (!mysql_init(&mysql)) return 0;
 
     // try to login as root with our password
-    makemysqlpass();
     if (!mysql_real_connect(&mysql, "localhost", "root", mysqlpass, "mysql", 0, NULL, 0)) {
-        destroymysqlpass();
         fprintf(stderr, "MySQL error: %s (%d)\n", mysql_error(&mysql), mysql_errno(&mysql));
         return 0;
     }
-    destroymysqlpass();
 
     if (mysql_query(&mysql, "use merc35")) {
         fprintf(stderr, "MySQL error: %s (%d)\n", mysql_error(&mysql), mysql_errno(&mysql));

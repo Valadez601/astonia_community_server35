@@ -49,7 +49,8 @@ OBJS=.obj/server.o .obj/io.o .obj/libload.o .obj/tool.o .obj/sleep.o \
 .obj/prof.o .obj/motd.o .obj/ignore.o .obj/tell.o .obj/clanlog.o \
 .obj/respawn.o .obj/poison.o .obj/swear.o .obj/lab.o \
 .obj/consistency.o .obj/btrace.o .obj/club.o .obj/balance.o \
-.obj/questlog.o .obj/badip.o .obj/escape.o .obj/argon.o
+.obj/questlog.o .obj/badip.o .obj/escape.o .obj/argon.o \
+.obj/config.o
 
 
 # ------- Server -----
@@ -59,11 +60,14 @@ server35:	$(OBJS) version
 	$(CC) $(CFLAGS) -o .obj/vers.o -c vers.c
 	$(CC) $(LDRFLAGS) -o server35 $(OBJS) .obj/vers.o -lmysqlclient -lm -lz -ldl -lpthread -largon2
 	
-.obj/server.o:		server.c server.h client.h player.h io.h notify.h libload.h tool.h sleep.h log.h create.h direction.h act.h los.h path.h timer.h effect.h database.h map.h date.h container.h store.h mem.h sector.h chat.h
+.obj/server.o:		server.c server.h client.h player.h io.h notify.h libload.h tool.h sleep.h log.h create.h direction.h act.h los.h path.h timer.h effect.h database.h map.h date.h container.h store.h mem.h sector.h chat.h config.h
 	$(CC) $(CFLAGS) -o .obj/server.o -c server.c
 
 .obj/argon.o:		argon.c argon.h
 	$(CC) $(CFLAGS) -o .obj/argon.o -c argon.c
+
+.obj/config.o:		config.c config.h
+	$(CC) $(CFLAGS) -o .obj/config.o -c config.c
 
 .obj/io.o:		io.c server.h client.h player.h log.h mem.h io.h
 	$(CC) $(CFLAGS) -o $*.o -c $<
@@ -149,7 +153,7 @@ server35:	$(OBJS) version
 .obj/death.o:		death.c server.h log.h timer.h map.h notify.h create.h drdata.h libload.h direction.h error.h act.h talk.h expire.h effect.h database.h tool.h container.h player.h sector.h death.h
 	$(CC) $(CFLAGS) -o .obj/death.o -c death.c
 
-.obj/database.o:	database.c server.h log.h create.h player.h sleep.h tool.h drdata.h drvlib.h timer.h direction.h map.h mem.h database.h misc_ppd.h badip.h
+.obj/database.o:	database.c server.h log.h create.h player.h sleep.h tool.h drdata.h drvlib.h timer.h direction.h map.h mem.h database.h misc_ppd.h badip.h argon.h config.h
 	$(CC) $(CFLAGS) -o .obj/database.o -c database.c
 
 .obj/lookup.o:	lookup.c server.h lookup.h log.h create.h player.h sleep.h tool.h drdata.h drvlib.h timer.h direction.h map.h mem.h database.h
@@ -188,7 +192,7 @@ server35:	$(OBJS) version
 .obj/sector.o:		sector.c server.h mem.h log.h sector.h tool.h
 	$(CC) $(CFLAGS) -o .obj/sector.o -c sector.c
 
-.obj/chat.o:		chat.c chat.h log.h talk.h server.h mem.h
+.obj/chat.o:		chat.c chat.h log.h talk.h server.h mem.h config.h
 	$(CC) $(CFLAGS) -o .obj/chat.o -c chat.c
 
 .obj/statistics.o:	statistics.c statistics.h server.h mem.h drdata.h
@@ -676,10 +680,10 @@ version:	version.c
 # ------- Helper -----
 
 clean:
-	rm server35 .obj/*.o *~ zones/*/*~ runtime/*/*
+	@rm -f server35 .obj/*.o *~ zones/*/*~ runtime/*/*
 	
 pretty:
-	@git ls-files -z -- '*.[ch]' | xargs -0 -r clang-format -i
+	@ls *.c *.h | xargs -r clang-format -i
 
 pretty-check:
-	@git ls-files -z -- '*.[ch]' | xargs -0 -r clang-format --dry-run -Werror
+	@ls *.c *.h | xargs -r clang-format --dry-run -Werror
