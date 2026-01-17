@@ -55,3 +55,7 @@ sudo ufw allow 8080:8090/tcp
 sudo ufw allow 27584:27777/tcp
 sudo ufw enable
 ```
+
+## Account Managment
+There is a very rudimentary (and probably unsafe) php-based account
+management in the folder accman. Read accman/install.md for details.

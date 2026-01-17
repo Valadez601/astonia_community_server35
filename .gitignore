@@ -16,3 +16,4 @@ version
 *.log
 *.o
 vers.c
+accman/var
