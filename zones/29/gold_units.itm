@@ -22,7 +22,7 @@ arg="02E803000"        # 1000
 
 silver_2500:
 name="Pile of Silver"
-description="4000 units of Silver"
+description="2500 units of Silver"
 sprite=51054
 value=25000
 flag=IF_TAKE
