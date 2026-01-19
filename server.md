@@ -26,7 +26,8 @@ export AS35_DBPASS="top secret"
 export AS35_DBNAME=merc35_a
 export AS35_CHATHOST=chat.astonia.com
 
-./server35 -a 3 -m 13 -f server.cnf
+./server35 -a 3 -m 13 -e # -e reads environment variables.
 ```
 
 All options have sensible defaults (localhost, the password from MYSQLPASS, merc35 and localhost, respectively.)
+Command line option order matters. Later settings overwrite earlier ones.
