@@ -38,7 +38,7 @@ int main(int argc, char *args[]) {
     char hash[256];
     int c;
 
-    while (argc > 3) {
+    while (1) {
         c = getopt(argc, args, "s:f:e");
         if (c == -1) break;
         switch (c) {

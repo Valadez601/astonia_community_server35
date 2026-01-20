@@ -107,7 +107,7 @@ int create_char(int user_ID, char *new_user, char *class) {
 int main(int argc, char **args) {
     int c;
 
-    while (argc > 3) {
+    while (1) {
         c = getopt(argc, args, "s:f:e");
         if (c == -1) break;
         switch (c) {
