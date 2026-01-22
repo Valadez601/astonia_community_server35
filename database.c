@@ -81,6 +81,7 @@
 #define DT_SHOWALTS 23
 #define DT_SUMMARY 24
 #define DT_UPDATEGLOBAL 25
+#define DT_LOADDEPOT 26
 
 #define MAXAREA 60
 #define MAXMIRROR 27
@@ -116,6 +117,7 @@ void add_iplog(int ID, unsigned int ip);
 void db_read_clan_membercount(int cnr);
 void db_summary(char *key, int sID);
 void db_update_global(void);
+void db_load_depot_for_char(int cID, int sID);
 
 static pthread_t db_tid;
 static pthread_mutex_t data_mutex;
@@ -370,10 +372,7 @@ void save_depot(int sID, struct depot_ppd *dat, int cID, int leaving) {
     char query[sizeof(struct depot_ppd) * 2 + 12 + 1024 + 160];
     int xlen = 0;
 
-    if (!dat->loaded) {
-        xlog("not saving depot, was not loaded");
-        return;
-    }
+    if (!dat->loaded) return;
 
     if (dat->lastsave == dat->changes) {
         if (leaving) {
@@ -756,6 +755,18 @@ int rescue_char(int ID) {
     return add_query(DT_RESCUE, buf, "rescue char", 0);
 }
 
+int load_depot_for_char(int cID, int sID) {
+    char buf[80], buf2[80], buf3[80];
+
+    sprintf(buf, "%d", cID);
+    sprintf(buf2, "%d", sID);
+
+    sprintf(buf3, "%10d:%10d", sID, cID);
+    server_chat(1039, buf3);
+
+    return add_query(DT_LOADDEPOT, buf, buf2, 0);
+}
+
 int do_rename(int masterID, char *from, char *to) {
     char buf[256];
 
@@ -1061,6 +1072,9 @@ static void db_thread_sub(void) {
         case DT_UPDATEGLOBAL:
             db_update_global();
             break;
+        case DT_LOADDEPOT:
+            db_load_depot_for_char(atoi(opt1), atoi(opt2));
+            break;
         }
 
         // free the strings
@@ -1122,7 +1136,7 @@ void *db_thread(void *dummy) {
 #define LS_FAILED 5 // error, send player away
 #define LS_LOCKED 6 // error, send player away
 #define LS_PASSWD 7 // error, send player away
-#define LS_DUP 8 // error, send player away
+
 #define LS_NOPAY 9 // error, send player away
 #define LS_SHUTDOWN 10 // error, send player away
 #define LS_IPLOCKED 11 // error, send player away
@@ -1221,11 +1235,6 @@ int find_login(char *name, char *password, int *area_ptr, int *cn_ptr, int *mirr
         return -3;
     }
 
-    if (login.status == LS_DUP) { // login failed. send him away and mark login as free
-        login.status = LS_EMPTY;
-        pthread_mutex_unlock(&data_mutex);
-        return -4;
-    }
     if (login.status == LS_NOPAY) { // login failed. send him away and mark login as free
         login.status = LS_EMPTY;
         pthread_mutex_unlock(&data_mutex);
@@ -1364,13 +1373,6 @@ static void login_toomany(void) {
 static void login_nopay(void) {
     pthread_mutex_lock(&data_mutex);
     login.status = LS_NOPAY;
-    login.age = ticker;
-    pthread_mutex_unlock(&data_mutex);
-}
-
-static void login_dup(void) {
-    pthread_mutex_lock(&data_mutex);
-    login.status = LS_DUP;
     login.age = ticker;
     pthread_mutex_unlock(&data_mutex);
 }
@@ -1812,36 +1814,15 @@ static int load_char_pwd(char *pass, int sID, int logout_time, int *ptimeleft) {
     return 0;
 }
 
-static int load_char_dup(int ID, int sID) {
-    MYSQL_RES *result;
-    char buf[256];
-
-    sprintf(buf, "select sID from chars where sID=%d and ID!=%d and current_area!=0 limit 1", sID, ID);
-    if (mysql_query_con(&mysql, buf)) {
-        elog("Failed to select sID.chars ID=%d: Error: %s (%d)", sID, mysql_error(&mysql), mysql_errno(&mysql));
-        return 0;
-    }
-    if (!(result = mysql_store_result_cnt(&mysql))) {
-        elog("Failed to store result: Error: %s (%d)", mysql_error(&mysql), mysql_errno(&mysql));
-        return 0;
-    }
-
-    // found another character online?
-    if (mysql_num_rows(result) > 0) {
-        mysql_free_result_cnt(result);
-        return 0;
-    }
-
-    // all fine
-    mysql_free_result_cnt(result);
-
-    return 1;
-}
-
-int load_depot(int sID, int cID) {
+int load_depot(int sID, int cID, struct depot_ppd *dest) {
     char query[80];
     MYSQL_RES *result;
     MYSQL_ROW row;
+
+    if (!sID || !cID || !dest) {
+        elog("load_depot got illegal input: %d %d %p.", sID, cID, dest);
+        return 0;
+    }
 
     sprintf(query, "select data,area,mirror,cID from depot where ID=%d", sID);
 
@@ -1860,7 +1841,7 @@ int load_depot(int sID, int cID) {
         if (mysql_query_con(&mysql, query)) {
             elog("Failed to create depot sID=%d: Error: %s (%d)", sID, mysql_error(&mysql), mysql_errno(&mysql));
         }
-        bzero(&login.depot, sizeof(login.depot));
+        bzero(dest, sizeof(login.depot));
         return 1;
     }
     if (!(row = mysql_fetch_row(result))) {
@@ -1873,8 +1854,8 @@ int load_depot(int sID, int cID) {
         return 0;
     }
 
-    bzero(&login.depot, sizeof(login.depot));
-    if (row[0]) uncompress_string((unsigned char *)&login.depot, row[0], sizeof(struct depot_ppd));
+    bzero(dest, sizeof(login.depot));
+    if (row[0]) uncompress_string((unsigned char *)dest, row[0], sizeof(struct depot_ppd));
 
     mysql_free_result_cnt(result);
     sprintf(query, "update depot set area=%d, mirror=%d, cID=%d where ID=%d", areaID, areaM, cID, sID);
@@ -2036,14 +2017,6 @@ static void load_char(char *name, char *password) {
         return;
     }
 
-    if (!load_char_dup(ID, atoi(row[0]))) {
-        xlog("duplicate login for ID=%d (%s)", ID, row[3]);
-        mysql_free_result_cnt(result);
-        mysql_query_con(&mysql, "unlock tables");
-        login_dup();
-        return;
-    }
-
     if (nologin && !(atoi(row[11]) & CF_GOD)) {
         mysql_free_result_cnt(result);
         mysql_query_con(&mysql, "unlock tables");
@@ -2153,7 +2126,7 @@ static void load_char(char *name, char *password) {
 
     mysql_free_result_cnt(result);
 
-    if (!load_depot(login.sID, ID)) bzero(&login.depot, sizeof(login.depot));
+    if (!load_depot(login.sID, ID, &login.depot)) bzero(&login.depot, sizeof(login.depot));
     else login.depot.loaded = 1;
 
     // mark character as online in database
@@ -3653,4 +3626,53 @@ void db_summary(char *key, int sID) {
 
 void db_update_global(void) {
     update_global_online();
+}
+
+void db_load_depot_for_char(int cID, int sID) {
+    struct depot_ppd *ppd;
+    int co;
+
+    lock_server();
+
+    for (co = getfirst_char(); co; co = getnext_char(co)) {
+        if (ch[co].sID == sID && ch[co].ID == cID) break;
+    }
+    if (!co || !(ch[co].flags & CF_PLAYER)) {
+        unlock_server();
+        return;
+    }
+
+    ppd = set_data(co, DRD_DEPOT_PPD, sizeof(struct depot_ppd));
+    if (ppd->loaded) {
+        unlock_server();
+        return;
+    }
+
+    if (load_depot(sID, cID, ppd)) {
+        xlog("Loaded depot for %s (sID=%d)", ch[co].name, sID);
+        ppd->loaded = 1;
+    } else {
+        xlog("Could not load depot for %s (sID=%d, this is not an error)", ch[co].name, sID);
+    }
+
+    unlock_server();
+}
+
+void release_depot(int sID, int cID) {
+    struct depot_ppd *depot_ppd;
+    int co, in;
+
+    for (co = getfirst_char(); co; co = getnext_char(co)) {
+        if (ch[co].sID != sID) continue;
+        if (ch[co].ID == cID) continue;
+        depot_ppd = set_data(co, DRD_DEPOT_PPD, sizeof(struct depot_ppd));
+        if (depot_ppd->loaded) {
+
+            if ((in = ch[co].con_in) && (it[in].flags & IF_DEPOT)) ch[co].con_in = 0;
+
+            save_depot(ch[co].sID, depot_ppd, ch[co].ID, 1);
+            bzero(depot_ppd, sizeof(struct depot_ppd));
+            xlog("Released depot from %s (sID=%d)", ch[co].name, sID);
+        }
+    }
 }
