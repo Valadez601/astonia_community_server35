@@ -341,7 +341,6 @@ int main(int argc, char *args[]) {
     // init random number generator
     srand(time_now);
 
-    if (!init_smalloc()) exit(1);
     if (!init_mem()) exit(1);
     if (!init_prof()) exit(1);
     if (!init_log()) exit(1);
