@@ -152,6 +152,7 @@ extern struct map *map;
 #define IF_LABITEM (1ull << 39) // labyrinth item - not saved during area changes
 #define IF_VOID (1ull << 40) // item is in void, .x, .y, .carried, .contained reserved and possibly used by item driver
 #define IF_NOENHANCE (1ull << 41) // item may not be enhanced through orbs/silver/gold/shrines etc.
+#define IF_FORCEUPDATE (1ull << 42) // item needs to be updated client-side, this invalidates the hover-description cache
 
 #define IF_WEAPON (IF_AXE | IF_DAGGER | IF_HAND | IF_STAFF | IF_SWORD | IF_TWOHAND)
 #define IF_WEAR (IF_WNHEAD | IF_WNNECK | IF_WNBODY | IF_WNARMS | IF_WNBELT | IF_WNLEGS | IF_WNFEET | IF_WNLHAND | IF_WNRHAND | IF_WNCLOAK | IF_WNLRING | IF_WNRRING)

@@ -2236,7 +2236,7 @@ static int player_stats_singles(int cn, int nr) {
 
 static int player_stats_items(int cn, int nr) {
     unsigned char buf[256];
-    int n, in, sprite, flags, price;
+    int n, in, sprite, flags, price, force;
 
     if (ch[cn].flags & CF_ITEMS) {
         for (n = 0; n < INVENTORYSIZE; n++) {
@@ -2246,9 +2246,13 @@ static int player_stats_items(int cn, int nr) {
                 flags = it[in].flags & (IF_USE | IF_WNHEAD | IF_WNNECK | IF_WNBODY | IF_WNARMS | IF_WNBELT | IF_WNLEGS | IF_WNFEET | IF_WNLHAND | IF_WNRHAND | IF_WNCLOAK | IF_WNLRING | IF_WNRRING | IF_WNTWOHANDED);
                 price = 0;
 
-            } else sprite = price = flags = 0;
+                if (it[in].flags & IF_FORCEUPDATE) {
+                    it[in].flags &= ~IF_FORCEUPDATE;
+                    force = 1;
+                } else force = 0;
+            } else sprite = price = flags = force = 0;
 
-            if (player[nr]->item[n] != sprite || player[nr]->item_flags[n] != flags) {
+            if (player[nr]->item[n] != sprite || player[nr]->item_flags[n] != flags || force) {
                 buf[0] = SV_SETITEM;
                 buf[1] = n;
                 *(unsigned int *)(buf + 2) = player[nr]->item[n] = sprite;
@@ -2261,9 +2265,14 @@ static int player_stats_items(int cn, int nr) {
         if ((in = ch[cn].citem)) {
             sprite = it[in].sprite;
             flags = it[in].flags & (IF_USE | IF_WNHEAD | IF_WNNECK | IF_WNBODY | IF_WNARMS | IF_WNBELT | IF_WNLEGS | IF_WNFEET | IF_WNLHAND | IF_WNRHAND | IF_WNCLOAK | IF_WNLRING | IF_WNRRING | IF_WNTWOHANDED);
+
+            if (it[in].flags & IF_FORCEUPDATE) {
+                it[in].flags &= ~IF_FORCEUPDATE;
+                force = 1;
+            } else force = 0;
         } else flags = sprite = 0;
 
-        if (player[nr]->citem_sprite != sprite || player[nr]->citem_flags != flags) {
+        if (player[nr]->citem_sprite != sprite || player[nr]->citem_flags != flags || force) {
             buf[0] = SV_SETCITEM;
             *(unsigned int *)(buf + 1) = player[nr]->citem_sprite = sprite;
             *(unsigned int *)(buf + 5) = player[nr]->citem_flags = flags;

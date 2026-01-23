@@ -1727,6 +1727,9 @@ void shrine_welding(int in, int cn, int nr, int level, struct shrine_ppd *ppd) {
     set_item_requirements(in2);
     set_item_name(in2);
 
+    it[in1].flags |= IF_FORCEUPDATE;
+    it[in2].flags |= IF_FORCEUPDATE;
+
     ch[cn].flags |= CF_ITEMS;
 
     shrine_set(nr, ppd);
