@@ -13,8 +13,6 @@
 #include "btrace.h"
 #include "mem.h"
 
-#undef DEBUG
-
 static pthread_mutex_t alloc_mutex;
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -608,4 +606,3 @@ void *srealloc(void *ptr, int nbytes, int nr) {
     return next;
 }
 
-//-------------------------------------------
