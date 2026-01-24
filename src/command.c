@@ -2382,7 +2382,7 @@ int command(int cn, char *ptr) // 1=ok, 0=repeat
                 return 1;
             }
         }
-        log_char(cn, LOG_SYSTEM, 0, "No Bless found.");
+        log_char(cn, LOG_SYSTEM, 0, "No stat potion found.");
         return 1;
     }
 
@@ -2391,6 +2391,7 @@ int command(int cn, char *ptr) // 1=ok, 0=repeat
         log_char(cn, LOG_SYSTEM, 0, "NoFlask %s.", (ch[cn].flags & CF_NOFLASK) ? "enabled" : "disabled");
         return 1;
     }
+    
     if (cmdcmp(ptr, "status", 0)) {
         struct depot_ppd *depot_ppd;
 

@@ -754,7 +754,7 @@ int mixer_use(int cn, int in) {
     }
 
     if (!(fre = may_add_spell(cn, IDR_POTION_SP))) {
-        log_char(cn, LOG_SYSTEM, 0, "Another potion is still active.");
+        log_char(cn, LOG_SYSTEM, 0, "Another potion is still active. Use /killpotion to remove it.");
         return 0;
     }
 
