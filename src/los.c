@@ -227,4 +227,7 @@ int door_los(int cn, int xc, int yc, int tx, int ty, int maxdist, int dx, int dy
     return tmp;
 }
 
-//--------------------------
+void reset_los_for_char(int cn) {
+    if (cn < 1 || cn >= MAXCHARS) return;
+    bzero(los + cn, sizeof(struct los));
+}

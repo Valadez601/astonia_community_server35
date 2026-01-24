@@ -37,3 +37,4 @@ int init_los(void);
 void reset_los(int xc, int yc);
 int los_can_see(int cn, int xc, int yc, int tx, int ty, int maxdist);
 int update_los(int cn, int xc, int yc, int maxdist);
+void reset_los_for_char(int cn);

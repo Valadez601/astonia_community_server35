@@ -32,6 +32,7 @@
 #include "btrace.h"
 #include "item_id.h"
 #include "spell.h"
+#include "los.h"
 
 #define safecpy(a, b)                 \
     {                                 \
@@ -1235,6 +1236,9 @@ int alloc_char(void) {
 
     // erase character data (pure safety measure
     bzero(ch + cn, sizeof(struct character));
+
+    // also reset LOS cache
+    reset_los_for_char(cn);
 
     // flags character as used
     ch[cn].flags |= CF_USED;
