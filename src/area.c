@@ -43,8 +43,8 @@ static struct section section[] =
         {"Mad Mages", 7}, //12
         {"Mad Knights", 8}, //13
         {"Cameron", 0}, //14
-        {"Creeper Death Run", 14}, //15
-        {"Creepers", 13}, //16
+        {"Creeper Death Run", 16}, //15
+        {"Creepers", 14}, //16
         {"Zombie Showdown", 13}, //17
         {"Zombie II", 13}, //18
         {"Zombie III", 13}, //19
