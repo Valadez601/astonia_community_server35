@@ -810,6 +810,10 @@ void flask_driver(int in, int cn) {
     if (!(in2 = ch[cn].citem)) {
         if (shaken) { // potion is ready
             if (!mixer_use(cn, in)) return;
+            if (ch[cn].flags & CF_NOFLASK) {
+                remove_item_char(in);
+                return;
+            }
             strcpy(it[in].name, "Empty Potion");
             switch (size) {
             case 1:
