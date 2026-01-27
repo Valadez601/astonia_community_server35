@@ -812,6 +812,7 @@ void flask_driver(int in, int cn) {
             if (!mixer_use(cn, in)) return;
             if (ch[cn].flags & CF_NOFLASK) {
                 remove_item_char(in);
+                free_item(in);
                 return;
             }
             strcpy(it[in].name, "Empty Potion");
